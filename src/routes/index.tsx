@@ -1,25 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/site/Hero";
-import { About, Approach, China, Contact, Marquee, Services } from "@/components/site/Sections";
-import { Cases, Makers, PortsMap, Team } from "@/components/site/More";
+import { Marquee } from "@/components/site/Sections";
+import { Makers } from "@/components/site/More";
+import { CtaBand, PartsSearch, ServicesTeaser, Stats, Testimonials, Timeline } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
-
-const TITLE = "ActivMarine | Marine Engineering, Supply & Solutions — Shanghai";
-const DESC =
-  "Former seafarers and marine surveyors delivering ship spares, technical services, China sourcing, docking supervision and marine surveys from Shanghai.";
+import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: "description", content: DESC },
-      { name: "theme-color", content: "#0c2340" },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESC },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => seo(
+    "ActivMarine | Marine Engineering, Supply & Solutions — Shanghai",
+    "Former seafarers and marine surveyors delivering ship spares, technical services, China sourcing, docking supervision and marine surveys from Shanghai.",
+  ),
   component: Index,
 });
 
@@ -30,15 +21,13 @@ function Index() {
         <>
           <Hero onQuote={open} />
           <Marquee />
-          <About />
-          <Services />
+          <Stats />
+          <ServicesTeaser />
+          <Timeline />
           <Makers />
-          <Approach />
-          <Cases />
-          <Team />
-          <China />
-          <PortsMap />
-          <Contact onQuote={open} />
+          <Testimonials />
+          <PartsSearch />
+          <CtaBand onQuote={open} />
         </>
       )}
     </PageShell>

@@ -233,13 +233,12 @@ export function Footer() {
           </div>
           <div>
             <p className="eyebrow">Explore</p>
-            {NAV.map((n) => <a key={n.href} href={n.href} className="mt-3 block text-sm text-muted-foreground hover:text-primary">{n.label}</a>)}
-            <Link to="/insights" className="mt-3 block text-sm text-muted-foreground hover:text-primary">Insights</Link>
+            {NAV.map((n) => <Link key={n.to} to={n.to} className="mt-3 block text-sm text-muted-foreground hover:text-primary">{n.label}</Link>)}
             <Link to="/privacy" className="mt-3 block text-sm text-muted-foreground hover:text-primary">Privacy policy</Link>
           </div>
           <div>
             <p className="eyebrow">Services</p>
-            {SERVICES.map((s) => <span key={s.n} className="mt-3 block text-sm text-muted-foreground">{s.title}</span>)}
+            {SERVICES.map((s) => <Link key={s.n} to="/services/$slug" params={{ slug: s.slug }} className="mt-3 block text-sm text-muted-foreground hover:text-primary">{s.title}</Link>)}
             <a href={`mailto:${CONTACT.email}`} className="mt-3 block text-sm text-primary">{CONTACT.email}</a>
           </div>
         </div>

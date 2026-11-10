@@ -1,4 +1,4 @@
-type Svc = { n: string; tag: string; title: string; text: string };
+type Svc = { n: string; slug: string; tag: string; title: string; text: string; points: string[] };
 export const CONTACT = {
   email: "office@activ-marine.com",
   // Placeholder details from the handover — replace when the owner supplies verified ones.
@@ -11,21 +11,23 @@ export const CONTACT = {
 };
 
 export const NAV = [
-  { href: "/#about", label: "About" },
-  { href: "/#solutions", label: "Solutions" },
-  { href: "/#approach", label: "Approach" },
-  { href: "/#team", label: "Team" },
-  { href: "/#network", label: "Network" },
-  { href: "/#contact", label: "Contact" },
-];
+  { to: "/about", label: "About" },
+  { to: "/services", label: "Services" },
+  { to: "/cases", label: "Projects" },
+  { to: "/network", label: "Network" },
+  { to: "/gallery", label: "Gallery" },
+  { to: "/insights", label: "Insights" },
+  { to: "/faq", label: "FAQ" },
+  { to: "/contact", label: "Contact" },
+] as const;
 
 export const SERVICES: readonly [Svc, Svc, Svc, Svc, Svc, Svc] = [
-  { n: "01", tag: "Supply", title: "Ship Spares & Equipment", text: "Machinery parts, deck equipment, consumables and technical supplies for day-to-day operations." },
-  { n: "02", tag: "Service", title: "Technical Services", text: "Engineering support, troubleshooting and repairs for propulsion engines, generators, cranes, engine and deck machinery, piping and steel work. Electrical and electronic repairs, including control systems, automation and fault diagnosis." },
-  { n: "03", tag: "Sourcing", title: "China Sourcing & Procurement", text: "Direct contact with manufacturers in China, connecting your technical requirements with suitable products, competitive quotations and coordinated delivery." },
-  { n: "04", tag: "Delivery", title: "Logistics & Coordination", text: "Shipment planning and communication to bring marine requirements closer to the vessel." },
-  { n: "05", tag: "Docking", title: "Docking Agency & Supervision", text: "Shipyard coordination, docking agency support and on-site repair supervision, keeping scope, quality, progress and costs in focus throughout the docking." },
-  { n: "06", tag: "Inspection", title: "Marine Surveys & Inspections", text: "Vessel condition surveys, pre-purchase inspections and repair assessments, with clear findings to support maintenance, purchasing and operational decisions." },
+  { n: "01", slug: "ship-spares", tag: "Supply", title: "Ship Spares & Equipment", text: "Machinery parts, deck equipment, consumables and technical supplies for day-to-day operations.", points: ["Engine, pump and compressor spares", "Deck and mooring equipment", "Consumables and safety items", "Genuine, OEM and quality alternatives"] },
+  { n: "02", slug: "technical-services", tag: "Service", title: "Technical Services", text: "Engineering support, troubleshooting and repairs for propulsion engines, generators, cranes, engine and deck machinery, piping and steel work. Electrical and electronic repairs, including control systems, automation and fault diagnosis.", points: ["Main and auxiliary engine overhauls", "Crane and deck machinery repairs", "Piping and steel work", "Electrical, automation and PLC fault diagnosis"] },
+  { n: "03", slug: "china-sourcing", tag: "Sourcing", title: "China Sourcing & Procurement", text: "Direct contact with manufacturers in China, connecting your technical requirements with suitable products, competitive quotations and coordinated delivery.", points: ["Direct access to Chinese manufacturers", "Technical matching to drawings and maker references", "Competitive, transparent quotations", "Pre-shipment inspection"] },
+  { n: "04", slug: "logistics", tag: "Delivery", title: "Logistics & Coordination", text: "Shipment planning and communication to bring marine requirements closer to the vessel.", points: ["Consolidation in Shanghai", "Customs clearance coordination", "Launch and truck delivery to vessel", "Live status updates to superintendents"] },
+  { n: "05", slug: "docking-supervision", tag: "Docking", title: "Docking Agency & Supervision", text: "Shipyard coordination, docking agency support and on-site repair supervision, keeping scope, quality, progress and costs in focus throughout the docking.", points: ["Yard selection and specification review", "Docking agency on site", "Daily progress and cost reports", "Quality checks and sign-off"] },
+  { n: "06", slug: "marine-surveys", tag: "Inspection", title: "Marine Surveys & Inspections", text: "Vessel condition surveys, pre-purchase inspections and repair assessments, with clear findings to support maintenance, purchasing and operational decisions.", points: ["Condition and pre-purchase surveys", "Damage and repair assessments", "On/off-hire surveys", "Clear photo-documented reports"] },
 ];
 
 export const STEPS = [
@@ -41,7 +43,6 @@ export const ENQUIRY_TYPES = [
 
 export const TAGS = ["Merchant Shipping", "Ship Management", "Marine Engineering", "Technical Procurement", "Spare Parts"];
 
-export const NAV_PAGES = [{ to: "/insights", label: "Insights" }] as const;
 
 // ——— Illustrative mockup content (replace with approved real data) ———
 export const TEAM = [
@@ -92,4 +93,34 @@ export const ARTICLES = [
   { slug: "what-a-pre-purchase-survey-covers", title: "What a pre-purchase survey really covers", date: "2026-07-21", read: "4 min",
     excerpt: "The checks that protect a buyer — and the limits of what a survey can tell you.",
     body: ["A pre-purchase inspection gives a buyer an independent view of the vessel's condition and maintenance standard.", "Typical scope covers hull and deck, machinery spaces, cargo gear, safety equipment, certificates and records.", "It is a visual, non-destructive inspection: it highlights risk areas and recommends further tests, rather than guaranteeing hidden condition.", "Clear findings with photos help the buyer negotiate and plan the first docking after delivery."] },
+];
+
+export const STATS = [
+  { value: 18, suffix: "+", label: "Years at sea & ashore" },
+  { value: 240, suffix: "+", label: "Vessels supported" },
+  { value: 12, suffix: "", label: "Chinese ports covered" },
+  { value: 2, suffix: "h", label: "Typical first response" },
+];
+
+export const TIMELINE = [
+  { t: "00:00", title: "Urgent call received", text: "Chief Engineer reports a failed fuel pump on a bulk carrier due at Ningbo." },
+  { t: "00:45", title: "Requirement confirmed", text: "Maker reference, drawings and photos reviewed with the superintendent." },
+  { t: "03:00", title: "Part located", text: "Matching unit sourced directly from a manufacturer near Shanghai." },
+  { t: "20:00", title: "Inspected & cleared", text: "Pre-shipment check, paperwork and customs coordinated." },
+  { t: "36:00", title: "Delivered on board", text: "Launch delivery at anchorage; engineer attends fitting and testing." },
+];
+
+export const TESTIMONIALS = [
+  { quote: "They understood the problem before we finished explaining it. Parts were alongside the next morning.", name: "Technical Superintendent", org: "European bulk operator" },
+  { quote: "Independent, honest docking supervision. The final invoice matched the plan.", name: "Fleet Manager", org: "Ship management company, Cyprus" },
+  { quote: "Finally a Shanghai partner who speaks engineer and speaks Chinese.", name: "Chief Engineer", org: "Tanker fleet, Greece" },
+];
+
+export const FAQ = [
+  { q: "Which ports do you cover?", a: "Shanghai, Ningbo-Zhoushan, Qingdao, Tianjin, Dalian, Xiamen, Guangzhou and other Chinese ports, by launch, truck or air." },
+  { q: "Do you supply genuine maker parts?", a: "Yes. We supply genuine, OEM and quality alternatives, always stating clearly which one you are getting." },
+  { q: "How fast can you respond?", a: "We answer most enquiries within two hours, around the clock, and can attend on board at short notice." },
+  { q: "How are customs and delivery handled?", a: "We coordinate customs clearance, ship's spares in transit and final delivery to the vessel with the local agent." },
+  { q: "What payment terms do you offer?", a: "Bank transfer in USD, EUR or CNY. Credit terms are available for established clients." },
+  { q: "Is there a warranty?", a: "Parts carry the manufacturer's warranty; our repair work is covered by our own workmanship guarantee." },
 ];
