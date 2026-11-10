@@ -32,9 +32,11 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
   // Restart the incoming clip while it is still invisible, so its full 8 s fits the on-screen
   // window (fade-in + hold + fade-out = 7.5 s) and its own loop point is never seen.
   useEffect(() => {
+    if (firstRun.current) { firstRun.current = false; return; }
     const v = vids.current[active];
-    if (v && active !== 0) v.currentTime = 0;
+    if (v) v.currentTime = 0;
   }, [active]);
+  const firstRun = useRef(true);
   const prev = (active - 1 + CLIPS.length) % CLIPS.length;
   // All clips keep playing in the background so a crossfade never reveals a frozen or seeking frame.
   useEffect(() => {
