@@ -73,6 +73,7 @@
   --color-abyss: var(--abyss);
   --color-burgundy: var(--burgundy);
   --color-mustard: var(--mustard);
+  --color-burgundy-bright: var(--burgundy-bright);
   --font-display: "Bebas Neue", "Barlow", sans-serif;
   --font-sans: "Barlow", system-ui, sans-serif;
   --animate-marquee: marquee 40s linear infinite;
@@ -84,6 +85,7 @@
   --background: oklch(0.17 0.04 255);
   --burgundy: oklch(0.45 0.1 15);
   --mustard: oklch(0.78 0.1 85);
+  --burgundy-bright: oklch(0.58 0.15 15);
   --foreground: oklch(0.96 0.012 90);
   --card: oklch(0.22 0.05 252);
   --card-foreground: oklch(0.96 0.01 220);

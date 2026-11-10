@@ -81,7 +81,7 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
             </span>
           ))}
           <span className="block overflow-hidden">
-            <motion.span className="text-tide block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ delay: 1.2, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}>
+            <motion.span className="text-burgundy-bright block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ delay: 1.2, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               in Action.
             </motion.span>
           </span>
