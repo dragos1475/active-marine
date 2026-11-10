@@ -45,8 +45,8 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
 
   return (
     <section ref={ref} id="top" className="grain relative h-[100svh] min-h-[680px] overflow-hidden bg-abyss">
-      <motion.div style={{ scale }} className="absolute inset-0">
-        <motion.div initial={{ opacity: 0, scale: 1.15 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0">
+      <motion.div style={{ scale }} className="absolute inset-0 isolate">
+        <motion.div initial={{ opacity: 0, scale: 1.15 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 isolate">
           {CLIPS.map((c, i) => (
             <video
               key={c.src}
@@ -59,18 +59,16 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
                 transitionProperty: "opacity, transform",
                 transitionTimingFunction: "cubic-bezier(0.45, 0, 0.55, 1), linear",
                 transitionDuration: i === active ? `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` : i === prev ? `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` : "0ms, 0ms",
-                zIndex: i === active ? 2 : i === prev ? 1 : 0,
-                willChange: "opacity, transform",
               }}
               className={`absolute inset-0 h-full w-full object-cover ${i === active ? "scale-110 opacity-100" : i === prev ? "scale-110 opacity-0" : "scale-100 opacity-0"}`}
             />
           ))}
         </motion.div>
       </motion.div>
-      <div className="absolute inset-0 bg-side" />
-      <div className="absolute inset-0 bg-veil" />
+      <div className="absolute inset-0 z-[1] bg-side" />
+      <div className="absolute inset-0 z-[1] bg-veil" />
 
-      <motion.div style={{ y, opacity: fade }} className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32 pt-28">
+      <motion.div style={{ y, opacity: fade }} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32 pt-28">
         <motion.p initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8, duration: 1 }} className="eyebrow mb-6 flex items-center gap-4">
           <span className="h-px w-12 bg-primary" /> Shanghai · Engineering · Supply · Solutions
         </motion.p>
