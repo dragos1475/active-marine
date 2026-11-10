@@ -14,8 +14,8 @@ const CLIPS = [
   { src: v3.url, label: "Shanghai port" },
   { src: v4.url, label: "Engine room" },
 ];
-const HOLD_MS = 7000; // time each clip stays on screen
-const FADE_MS = 3000; // slow crossfade between clips
+const HOLD_MS = 5000; // time each clip stays on screen
+const FADE_MS = 2500; // slow crossfade between clips
 
 export function Hero({ onQuote }: { onQuote: () => void }) {
   const ref = useRef<HTMLElement>(null);
@@ -29,6 +29,12 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
     const t = setInterval(() => setActive((a) => (a + 1) % CLIPS.length), HOLD_MS);
     return () => clearInterval(t);
   }, []);
+  // Restart the incoming clip while it is still invisible, so its full 8 s fits the on-screen
+  // window (fade-in + hold + fade-out = 7.5 s) and its own loop point is never seen.
+  useEffect(() => {
+    const v = vids.current[active];
+    if (v && active !== 0) v.currentTime = 0;
+  }, [active]);
   const prev = (active - 1 + CLIPS.length) % CLIPS.length;
   // All clips keep playing in the background so a crossfade never reveals a frozen or seeking frame.
   useEffect(() => {
