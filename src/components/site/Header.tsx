@@ -12,7 +12,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
   const { scrollY } = useScroll();
-  useMotionValueEvent(scrollY, "change", (v) => setSolid(v > 40));
+  useMotionValueEvent(scrollY, "change", (v) => { setSolid(v > 40); setMega(false); });
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
