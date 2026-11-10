@@ -1,10 +1,21 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import video from "@/assets/hero_ship_cinematic.mp4.asset.json";
+import v1 from "@/assets/hero_ship_cinematic.mp4.asset.json";
+import v2 from "@/assets/ship_golden_hour_aerial.mp4.asset.json";
+import v3 from "@/assets/shanghai_port_aerial.mp4.asset.json";
+import v4 from "@/assets/engine_room_cinematic.mp4.asset.json";
 import poster from "@/assets/hero.png.asset.json";
 
 const words = ["Marine", "Expertise"];
+const CLIPS = [
+  { src: v1.url, label: "At sea" },
+  { src: v2.url, label: "Golden hour" },
+  { src: v3.url, label: "Shanghai port" },
+  { src: v4.url, label: "Engine room" },
+];
+const HOLD_MS = 7000; // time each clip stays on screen
+const FADE_MS = 3000; // slow crossfade between clips
 
 export function Hero({ onQuote }: { onQuote: () => void }) {
   const ref = useRef<HTMLElement>(null);
@@ -12,19 +23,35 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.25]);
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const [active, setActive] = useState(0);
+  const vids = useRef<(HTMLVideoElement | null)[]>([]);
+  useEffect(() => {
+    const t = setInterval(() => setActive((a) => (a + 1) % CLIPS.length), HOLD_MS);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => {
+    const v = vids.current[active];
+    if (v) { v.currentTime = 0; void v.play().catch(() => {}); }
+  }, [active]);
 
   return (
     <section ref={ref} id="top" className="grain relative h-[100svh] min-h-[680px] overflow-hidden bg-abyss">
       <motion.div style={{ scale }} className="absolute inset-0">
-        <motion.video
-          initial={{ opacity: 0, scale: 1.15 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
-          src={video.url}
-          poster={poster.url}
-          autoPlay muted loop playsInline
-          className="h-full w-full object-cover"
-        />
+        <motion.div initial={{ opacity: 0, scale: 1.15 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0">
+          {CLIPS.map((c, i) => (
+            <video
+              key={c.src}
+              ref={(el) => { vids.current[i] = el; }}
+              src={c.src}
+              poster={i === 0 ? poster.url : undefined}
+              autoPlay={i === 0}
+              muted loop playsInline
+              preload={i === 0 ? "auto" : "metadata"}
+              style={{ transitionDuration: `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` }}
+              className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] ease-in-out ${i === active ? "scale-110 opacity-100" : "scale-100 opacity-0"}`}
+            />
+          ))}
+        </motion.div>
       </motion.div>
       <div className="absolute inset-0 bg-side" />
       <div className="absolute inset-0 bg-veil" />
@@ -61,6 +88,20 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
           </div>
         </motion.div>
       </motion.div>
+
+      <div className="absolute bottom-10 right-6 z-10 hidden gap-4 md:flex">
+        {CLIPS.map((c, i) => (
+          <button key={c.label} onClick={() => setActive(i)} aria-label={`Show ${c.label}`} className="group w-24 text-left">
+            <span className="block h-px w-full overflow-hidden bg-input">
+              <span
+                className={`block h-full bg-primary ${i === active ? "w-full transition-[width] ease-linear" : "w-0"}`}
+                style={i === active ? { transitionDuration: `${HOLD_MS}ms` } : undefined}
+              />
+            </span>
+            <span className={`mt-2 block text-[0.6rem] uppercase tracking-[0.25em] ${i === active ? "text-foreground" : "text-muted-foreground"}`}>{c.label}</span>
+          </button>
+        ))}
+      </div>
 
       <motion.a href="#about" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }} className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">
         Scroll
