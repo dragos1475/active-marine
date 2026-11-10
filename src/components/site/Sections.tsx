@@ -56,7 +56,7 @@ export function About() {
   );
 }
 
-function ServiceCard({ s, className = "", image }: { s: (typeof SERVICES)[number]; className?: string; image?: string }) {
+function ServiceCard({ s, className = "", image }: { s: (typeof SERVICES)[0]; className?: string; image?: string }) {
   return (
     <motion.article
       whileHover={{ y: -6 }}

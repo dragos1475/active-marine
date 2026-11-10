@@ -1,3 +1,4 @@
+type Svc = { n: string; tag: string; title: string; text: string };
 export const CONTACT = {
   email: "office@activ-marine.com",
   // Placeholder details from the handover — replace when the owner supplies verified ones.
@@ -17,7 +18,7 @@ export const NAV = [
   { href: "#contact", label: "Contact" },
 ];
 
-export const SERVICES = [
+export const SERVICES: readonly [Svc, Svc, Svc, Svc, Svc, Svc] = [
   { n: "01", tag: "Supply", title: "Ship Spares & Equipment", text: "Machinery parts, deck equipment, consumables and technical supplies for day-to-day operations." },
   { n: "02", tag: "Service", title: "Technical Services", text: "Engineering support, troubleshooting and repairs for propulsion engines, generators, cranes, engine and deck machinery, piping and steel work. Electrical and electronic repairs, including control systems, automation and fault diagnosis." },
   { n: "03", tag: "Sourcing", title: "China Sourcing & Procurement", text: "Direct contact with manufacturers in China, connecting your technical requirements with suitable products, competitive quotations and coordinated delivery." },
