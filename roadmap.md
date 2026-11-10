@@ -1,11 +1,11 @@
 # Roadmap
-- [ ] 1. Quote form — user chose mockup only for now (no database); keeps copy-to-email
+- [x] 1. Quote form — user chose mockup only for now (no database); keeps copy-to-email
 - [ ] 2. Real contact details — blocked: waiting for owner's verified phone/WeChat/WhatsApp/address/company
-- [ ] 3. Floating WhatsApp / WeChat button
-- [ ] 4. Privacy policy page
-- [ ] 5. Team section (illustrative mockup)
-- [ ] 6. Case studies (illustrative)
-- [ ] 7. Makers / certifications strip (mockup)
-- [ ] 8. China ports map with drawn clients (mockup)
-- [ ] 11. Insights / articles pages
-- [ ] 13. Stats dashboard (mockup with demo numbers)
+- [x] 3. Floating WhatsApp / WeChat button
+- [x] 4. Privacy policy page
+- [x] 5. Team section (illustrative mockup)
+- [x] 6. Case studies (illustrative)
+- [x] 7. Makers / certifications strip (mockup)
+- [x] 8. China ports map with drawn clients (mockup)
+- [x] 11. Insights / articles pages
+- [x] 13. Stats dashboard (mockup with demo numbers)
