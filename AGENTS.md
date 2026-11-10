@@ -29,4 +29,4 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 
-- The homepage is a verbatim port of the handover HTML (markup in src/site-markup.ts, styles in src/site.css, behaviour in the index route effect) — keeps the approved design pixel-identical.
+- Homepage is composed of section components in src/components/site/ with motion (motion/react) for scroll/reveal animation; shared site content lives in src/components/site/content.ts — keeps copy editable in one place.
