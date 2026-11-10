@@ -91,7 +91,7 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
             Led by former seafarers and marine surveyors. Practical engineering, dependable marine supply and responsive technical solutions for vessels and operators.
           </p>
           <div className="flex flex-wrap gap-3">
-            <a href="#solutions" className="group inline-flex items-center gap-3 bg-primary px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:shadow-glow">
+            <a href="/#solutions" className="group inline-flex items-center gap-3 bg-primary px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:shadow-glow">
               Explore Solutions <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
             </a>
             <button onClick={onQuote} className="glass inline-flex items-center gap-3 border border-input px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary">
@@ -115,7 +115,7 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
         ))}
       </div>
 
-      <motion.a href="#about" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }} className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">
+      <motion.a href="/#about" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }} className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">
         Scroll
         <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
           <ArrowDown className="h-4 w-4 text-primary" />

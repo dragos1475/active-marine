@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
-import { NAV, CONTACT } from "./content";
+import { Link } from "@tanstack/react-router";
+import { NAV, NAV_PAGES, CONTACT } from "./content";
 import { Logo } from "./Reveal";
 
 export function Header({ onQuote }: { onQuote: () => void }) {
@@ -17,7 +18,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
       className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid ? "glass border-b border-border" : ""}`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6">
-        <a href="#top" className="flex items-center gap-3" aria-label="ActivMarine home">
+        <a href="/#top" className="flex items-center gap-3" aria-label="ActivMarine home">
           <Logo />
           <span className="leading-none">
             <span className="block font-display text-2xl tracking-[0.12em]">ACTIVMARINE</span>
@@ -29,6 +30,11 @@ export function Header({ onQuote }: { onQuote: () => void }) {
             <a key={n.href} href={n.href} className="text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:text-primary">
               {n.label}
             </a>
+          ))}
+          {NAV_PAGES.map((n) => (
+            <Link key={n.to} to={n.to} className="text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:text-primary" activeProps={{ className: "text-primary" }}>
+              {n.label}
+            </Link>
           ))}
         </nav>
         <div className="flex items-center gap-3">
@@ -47,6 +53,9 @@ export function Header({ onQuote }: { onQuote: () => void }) {
             <a key={n.href} href={n.href} onClick={() => setOpen(false)} className="block border-b border-border py-4 font-display text-3xl">
               {n.label}
             </a>
+          ))}
+          {NAV_PAGES.map((n) => (
+            <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="block border-b border-border py-4 font-display text-3xl">{n.label}</Link>
           ))}
           <button onClick={() => { setOpen(false); onQuote(); }} className="mt-6 w-full bg-primary py-4 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground">
             Request a Quote
