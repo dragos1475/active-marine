@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- The homepage is a verbatim port of the handover HTML (markup in src/site-markup.ts, styles in src/site.css, behaviour in the index route effect) — keeps the approved design pixel-identical.

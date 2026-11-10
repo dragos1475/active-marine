@@ -1,0 +1,7 @@
+[
+ {"capability":"code","source":"index.html one-page site","outcome":"migrate","status":"verified","next_action":"none"},
+ {"capability":"assets","source":"3 PNG images","outcome":"migrate","status":"verified","next_action":"none"},
+ {"capability":"rfq form","source":"client-only copy-to-clipboard demo","outcome":"preserve as-is","status":"verified","next_action":"Optional: real submission + drawing uploads (handover step 2) needs Lovable Cloud"},
+ {"capability":"schema/records/auth/endpoints/secrets","source":"none detected","outcome":"n/a","status":"verified","next_action":"none"},
+ {"capability":"cutover","source":"target domain activ-marine.com","outcome":"pending","status":"pending","next_action":"Publish and connect domain"}
+]
