@@ -56,11 +56,11 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
       <div className="absolute inset-0 bg-side" />
       <div className="absolute inset-0 bg-veil" />
 
-      <motion.div style={{ y, opacity: fade }} className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32">
+      <motion.div style={{ y, opacity: fade }} className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32 pt-28">
         <motion.p initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8, duration: 1 }} className="eyebrow mb-6 flex items-center gap-4">
           <span className="h-px w-12 bg-primary" /> Shanghai · Engineering · Supply · Solutions
         </motion.p>
-        <h1 className="text-[clamp(4.5rem,13vw,12rem)] uppercase">
+        <h1 className="text-[clamp(4rem,min(13vw,17svh),12rem)] uppercase">
           {words.map((w, i) => (
             <span key={w} className="block overflow-hidden">
               <motion.span className="block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ delay: 0.9 + i * 0.15, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}>
