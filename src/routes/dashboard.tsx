@@ -48,9 +48,11 @@ function Dashboard() {
               <p className="eyebrow">Quote requests per week</p>
               <div className="mt-8 flex h-64 items-end gap-3">
                 {WEEKS.map((w, i) => (
-                  <div key={i} className="flex flex-1 flex-col items-center gap-2">
+                  <div key={i} className="flex h-full flex-1 flex-col items-center gap-2">
                     <span className="text-xs text-muted-foreground">{w}</span>
+                    <div className="flex w-full flex-1 items-end">
                     <motion.div initial={{ height: 0 }} animate={{ height: `${(w / max) * 100}%` }} transition={{ delay: i * 0.08, duration: 0.8 }} className="w-full bg-tide" />
+                    </div>
                     <span className="text-[0.6rem] text-muted-foreground">W{i + 38}</span>
                   </div>
                 ))}

@@ -62,15 +62,15 @@ export const CERTS = ["ISO 9001 (planned)", "IMPA member (planned)", "IIMS surve
 
 // Ports positioned in % on the stylised map (x, y).
 export const PORTS = [
-  { name: "Dalian", x: 71, y: 22 },
-  { name: "Tianjin", x: 62, y: 27 },
-  { name: "Qingdao", x: 68, y: 36 },
-  { name: "Shanghai", x: 76, y: 52, hq: true },
-  { name: "Ningbo", x: 77, y: 58 },
-  { name: "Zhoushan", x: 81, y: 56 },
-  { name: "Xiamen", x: 70, y: 75 },
-  { name: "Guangzhou", x: 58, y: 84 },
-  { name: "Shenzhen", x: 61, y: 87 },
+  { name: "Dalian", x: 73, y: 19 },
+  { name: "Tianjin", x: 61, y: 26 },
+  { name: "Qingdao", x: 68, y: 38 },
+  { name: "Shanghai", x: 74, y: 52, hq: true },
+  { name: "Ningbo", x: 75, y: 57 },
+  { name: "Zhoushan", x: 79, y: 55 },
+  { name: "Xiamen", x: 68, y: 75 },
+  { name: "Guangzhou", x: 56, y: 84 },
+  { name: "Shenzhen", x: 59, y: 87 },
 ];
 
 export const CLIENTS = [

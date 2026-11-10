@@ -93,7 +93,7 @@ export function Makers() {
 }
 
 // Very simplified, stylised outline of China's eastern coast (decorative, not to scale).
-const COAST = "M40 8 L58 6 L70 12 L78 16 L74 22 L66 24 L64 28 L70 30 L72 36 L66 40 L72 46 L78 50 L80 56 L78 62 L74 68 L72 74 L66 80 L60 86 L52 90 L44 92 L36 88 L30 80 L26 66 L22 50 L26 34 L32 20 Z";
+const COAST = "M0 0 L58 0 L64 10 L72 16 L74 21 L69 24 L63 24 L60 28 L64 33 L69 35 L66 40 L68 46 L73 50 L74 55 L75 59 L72 64 L69 72 L66 77 L60 82 L56 86 L50 89 L42 92 L34 96 L28 100 L0 100 Z";
 
 export function PortsMap() {
   const [hover, setHover] = useState<string | null>(null);
