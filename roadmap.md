@@ -1,0 +1,11 @@
+# Roadmap
+- [ ] 1. Real quote form: store requests + drawing uploads (Cloud), owner email when domain verified
+- [ ] 2. Real contact details — blocked: waiting for owner's verified phone/WeChat/WhatsApp/address/company
+- [ ] 3. Floating WhatsApp / WeChat button
+- [ ] 4. Privacy policy page
+- [ ] 5. Team section (illustrative mockup)
+- [ ] 6. Case studies (illustrative)
+- [ ] 7. Makers / certifications strip (mockup)
+- [ ] 8. China ports map with drawn clients (mockup)
+- [ ] 11. Insights / articles pages
+- [ ] 13. Stats: visitors + quote requests
