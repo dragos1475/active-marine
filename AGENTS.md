@@ -30,3 +30,4 @@ use the editor.
 <!-- LOVABLE:END -->
 
 - Homepage is composed of section components in src/components/site/ with motion (motion/react) for scroll/reveal animation; shared site content lives in src/components/site/content.ts — keeps copy editable in one place.
+- Every page wraps content in PageShell (header, footer, floating chat, quote dialog) — keeps chrome and the quote CTA consistent across routes.

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight, Mail } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Reveal, Logo } from "./Reveal";
 import { CONTACT, SERVICES, STEPS, TAGS, NAV } from "./content";
 import engine from "@/assets/engine-room.jpg";
@@ -233,6 +234,8 @@ export function Footer() {
           <div>
             <p className="eyebrow">Explore</p>
             {NAV.map((n) => <a key={n.href} href={n.href} className="mt-3 block text-sm text-muted-foreground hover:text-primary">{n.label}</a>)}
+            <Link to="/insights" className="mt-3 block text-sm text-muted-foreground hover:text-primary">Insights</Link>
+            <Link to="/privacy" className="mt-3 block text-sm text-muted-foreground hover:text-primary">Privacy policy</Link>
           </div>
           <div>
             <p className="eyebrow">Services</p>

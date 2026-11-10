@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
-import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
-import { About, Approach, China, Contact, Footer, Marquee, Services } from "@/components/site/Sections";
-import { QuoteDialog } from "@/components/site/QuoteDialog";
+import { About, Approach, China, Contact, Marquee, Services } from "@/components/site/Sections";
+import { Cases, Makers, PortsMap, Team } from "@/components/site/More";
+import { PageShell } from "@/components/site/PageShell";
 
 const TITLE = "ActivMarine | Marine Engineering, Supply & Solutions — Shanghai";
 const DESC =
@@ -25,23 +24,23 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [quote, setQuote] = useState(false);
-  const open = useCallback(() => setQuote(true), []);
-  const close = useCallback(() => setQuote(false), []);
   return (
-    <div className="overflow-x-clip">
-      <Header onQuote={open} />
-      <main>
-        <Hero onQuote={open} />
-        <Marquee />
-        <About />
-        <Services />
-        <Approach />
-        <China />
-        <Contact onQuote={open} />
-      </main>
-      <Footer />
-      <QuoteDialog open={quote} onClose={close} />
-    </div>
+    <PageShell>
+      {(open) => (
+        <>
+          <Hero onQuote={open} />
+          <Marquee />
+          <About />
+          <Services />
+          <Makers />
+          <Approach />
+          <Cases />
+          <Team />
+          <China />
+          <PortsMap />
+          <Contact onQuote={open} />
+        </>
+      )}
+    </PageShell>
   );
 }
