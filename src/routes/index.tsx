@@ -73,7 +73,7 @@ function Index() {
     }, o);
     $<HTMLFormElement>("#rfqForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const v = Object.fromEntries(new FormData(e.target as HTMLFormElement).entries()) as Record<string, string>;
+      const v = Object.fromEntries(new FormData(e.target as HTMLFormElement).entries()) as { name: string; company: string; vessel: string; email: string; phone: string; type: string; details: string };
       const files = Array.from(drawings.files ?? []).map((f) => f.name).join("\n") || "None selected";
       const msg = `ACTIVMARINE — REQUEST FOR QUOTATION\n\nName: ${v.name}\nCompany: ${v.company}\nVessel: ${v.vessel}\nEmail: ${v.email}\nPhone: ${v.phone}\nType: ${v.type}\n\nRequirements:\n${v.details}\n\nDrawings (attach separately):\n${files}`;
       const success = $("#copySuccess");
