@@ -6,7 +6,7 @@ import { Reveal } from "./Reveal";
 import { MockLabel } from "./More";
 import { CONTACT, FAQ, SERVICES, STATS, TESTIMONIALS, TIMELINE } from "./content";
 
-export function PageHero({ eyebrow, title, accent, text, image }: { eyebrow: string; title: string; accent: string; text?: string; image?: string }) {
+export function PageHero({ eyebrow, title, accent, text, image }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined }) {
   return (
     <section className="relative overflow-hidden pb-20 pt-40">
       {image && (
