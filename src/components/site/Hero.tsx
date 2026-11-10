@@ -59,8 +59,6 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
                 transitionProperty: "opacity, transform",
                 transitionTimingFunction: "cubic-bezier(0.45, 0, 0.55, 1), linear",
                 transitionDuration: i === active ? `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` : i === prev ? `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` : "0ms, 0ms",
-                zIndex: i === active ? 2 : i === prev ? 1 : 0,
-                willChange: "opacity, transform",
               }}
               className={`absolute inset-0 h-full w-full object-cover ${i === active ? "scale-110 opacity-100" : i === prev ? "scale-110 opacity-0" : "scale-100 opacity-0"}`}
             />
