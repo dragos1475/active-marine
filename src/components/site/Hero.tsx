@@ -29,10 +29,11 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
     const t = setInterval(() => setActive((a) => (a + 1) % CLIPS.length), HOLD_MS);
     return () => clearInterval(t);
   }, []);
+  const prev = (active - 1 + CLIPS.length) % CLIPS.length;
+  // All clips keep playing in the background so a crossfade never reveals a frozen or seeking frame.
   useEffect(() => {
-    const v = vids.current[active];
-    if (v) { v.currentTime = 0; void v.play().catch(() => {}); }
-  }, [active]);
+    vids.current.forEach((v) => v && void v.play().catch(() => {}));
+  }, []);
 
   return (
     <section ref={ref} id="top" className="grain relative h-[100svh] min-h-[680px] overflow-hidden bg-abyss">
@@ -44,11 +45,16 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
               ref={(el) => { vids.current[i] = el; }}
               src={c.src}
               poster={i === 0 ? poster.url : undefined}
-              autoPlay={i === 0}
-              muted loop playsInline
-              preload={i === 0 ? "auto" : "metadata"}
-              style={{ transitionDuration: `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` }}
-              className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] ease-in-out ${i === active ? "scale-110 opacity-100" : "scale-100 opacity-0"}`}
+              autoPlay muted loop playsInline
+              preload="auto"
+              style={{
+                transitionProperty: "opacity, transform",
+                transitionTimingFunction: "cubic-bezier(0.45, 0, 0.55, 1), linear",
+                transitionDuration: i === active ? `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` : i === prev ? `${FADE_MS}ms, ${HOLD_MS + FADE_MS}ms` : "0ms, 0ms",
+                zIndex: i === active ? 2 : i === prev ? 1 : 0,
+                willChange: "opacity, transform",
+              }}
+              className={`absolute inset-0 h-full w-full object-cover ${i === active ? "scale-110 opacity-100" : i === prev ? "scale-110 opacity-0" : "scale-100 opacity-0"}`}
             />
           ))}
         </motion.div>
