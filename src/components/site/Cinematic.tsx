@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 
-const INTRO_MS = 3000;
+const INTRO_MS = 5000;
 
 /** First-visit cinematic intro (once per browser session). */
 export function Intro() {
