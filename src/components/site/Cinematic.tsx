@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 
 const INTRO_MS = 3000;
 
@@ -14,12 +14,10 @@ export function Intro() {
     return () => clearTimeout(t);
   }, []);
   return (
-    <AnimatePresence>
+    <>
       {show && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background grain"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.45, ease: "easeOut" } }}
+        <div
+          className="am-intro fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background grain"
           onClick={() => setShow(false)}
         >
           <motion.svg viewBox="0 0 52 52" className="h-24 w-24" initial={false}>
@@ -33,9 +31,9 @@ export function Intro() {
           <motion.p className="mt-4 text-xs uppercase tracking-[0.4em] text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.5 }}>
             Shanghai · Marine Expertise
           </motion.p>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 

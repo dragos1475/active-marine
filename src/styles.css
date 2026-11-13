@@ -141,6 +141,9 @@
 
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
+@keyframes intro-fade { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
+.am-intro { animation: intro-fade 3s ease-out forwards; }
+
 @utility bg-tide { background-image: var(--gradient-tide); }
 @utility bg-veil { background-image: var(--gradient-veil); }
 @utility bg-side { background-image: var(--gradient-side); }
