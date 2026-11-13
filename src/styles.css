@@ -143,6 +143,16 @@
 
 @keyframes intro-fade { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
 .am-intro { animation: intro-fade 5s ease-out forwards; }
+@keyframes intro-wave { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.am-intro-wave {
+  stroke-dasharray: 1;
+  animation: intro-wave 1.4s ease-in-out 0.2s both;
+}
+@keyframes intro-horizon {
+  from { clip-path: inset(0 50%); }
+  to { clip-path: inset(0 0); }
+}
+.am-intro-horizon { animation: intro-horizon 2s ease-in-out 0.5s both; }
 
 @utility bg-tide { background-image: var(--gradient-tide); }
 @utility bg-veil { background-image: var(--gradient-veil); }

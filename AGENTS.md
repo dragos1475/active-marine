@@ -33,3 +33,4 @@ use the editor.
 - Every page wraps content in PageShell (header, footer, floating chat, quote dialog) — keeps chrome and the quote CTA consistent across routes.
 - Site is multi-page: each section area has its own route (about, services + services/$slug, cases, network, gallery, faq, contact, insights); main nav lives in NAV in content.ts and the Services mega-menu reads SERVICES — avoids an endless single page and gives each area its own SEO head.
 - Keep homepage text outside animated transforms and opacity layers; the intro exits by fading rather than translating — prevents abrupt title motion and preserves sharp text above the videos.
+- Animate the intro wave and horizon with CSS, separate from static text and without a grain overlay — keeps the title crisp and the line animation independent of Motion scheduling.
