@@ -21,8 +21,6 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.25]);
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
-  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const [active, setActive] = useState(0);
   const vids = useRef<(HTMLVideoElement | null)[]>([]);
   useEffect(() => {
@@ -68,25 +66,25 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
       <div className="absolute inset-0 z-[1] bg-side" />
       <div className="absolute inset-0 z-[1] bg-veil" />
 
-      <motion.div style={{ y, opacity: fade }} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32 pt-28">
-        <motion.p initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8, duration: 1 }} className="eyebrow mb-6 flex items-center gap-4">
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32 pt-28">
+        <p className="eyebrow mb-6 flex items-center gap-4">
           <span className="h-px w-12 bg-primary" /> Shanghai · Engineering · Supply · Solutions
-        </motion.p>
+        </p>
         <h1 className="text-[clamp(4rem,min(13vw,17svh),12rem)] uppercase">
-          {words.map((w, i) => (
-            <span key={w} className="block overflow-hidden">
-              <motion.span className="block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ delay: 0.9 + i * 0.15, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}>
+          {words.map((w) => (
+            <span key={w} className="block">
+              <span className="block">
                 {w}
-              </motion.span>
+              </span>
             </span>
           ))}
-          <span className="block overflow-hidden">
-            <motion.span className="text-burgundy-bright block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ delay: 1.2, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}>
+          <span className="block">
+            <span className="text-burgundy-bright block">
               in Action.
-            </motion.span>
+            </span>
           </span>
         </h1>
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 1 }} className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <p className="max-w-md text-lg font-light leading-relaxed text-muted-foreground">
             Led by former seafarers and marine surveyors. Practical engineering, dependable marine supply and responsive technical solutions for vessels and operators.
           </p>
@@ -98,8 +96,8 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
               Request a Quote
             </button>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       <div className="absolute bottom-10 right-6 z-10 hidden gap-4 md:flex">
         {CLIPS.map((c, i) => (

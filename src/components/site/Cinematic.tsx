@@ -19,14 +19,14 @@ export function Intro() {
         <motion.div
           className="fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background grain"
           initial={{ opacity: 1 }}
-          exit={{ y: "-100%", transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] } }}
+          exit={{ opacity: 0, transition: { duration: 0.45, ease: "easeOut" } }}
           onClick={() => setShow(false)}
         >
-          <motion.svg viewBox="0 0 52 52" className="h-24 w-24" initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }}>
+          <motion.svg viewBox="0 0 52 52" className="h-24 w-24" initial={false}>
             <motion.path d="M25.5 4 47 42H36L25.5 22 15.5 42H5Z" className="fill-primary" />
             <motion.path d="M8 43c10-8 18-8 28-2 4 2 8 3 12 1" className="stroke-foreground" strokeWidth="4" fill="none" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.2, duration: 0.7 }} />
           </motion.svg>
-          <motion.div className="mt-6 font-display text-5xl tracking-[0.3em] md:text-7xl" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6, ease: "easeOut" }}>
+          <motion.div className="mt-6 font-display text-5xl tracking-[0.3em] md:text-7xl" initial={false}>
             ACTIVMARINE
           </motion.div>
           <motion.div className="mt-4 h-px bg-tide" initial={{ width: 0 }} animate={{ width: 240 }} transition={{ delay: 0.7, duration: 0.7, ease: "easeInOut" }} />

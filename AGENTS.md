@@ -32,3 +32,4 @@ use the editor.
 - Homepage is composed of section components in src/components/site/ with motion (motion/react) for scroll/reveal animation; shared site content lives in src/components/site/content.ts — keeps copy editable in one place.
 - Every page wraps content in PageShell (header, footer, floating chat, quote dialog) — keeps chrome and the quote CTA consistent across routes.
 - Site is multi-page: each section area has its own route (about, services + services/$slug, cases, network, gallery, faq, contact, insights); main nav lives in NAV in content.ts and the Services mega-menu reads SERVICES — avoids an endless single page and gives each area its own SEO head.
+- Keep homepage text outside animated transforms and opacity layers; the intro exits by fading rather than translating — prevents abrupt title motion and preserves sharp text above the videos.
