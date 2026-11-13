@@ -54,7 +54,7 @@ export function Cursor() {
       x = e.clientX; y = e.clientY;
       const el = (e.target as HTMLElement).closest<HTMLElement>("[data-cursor],a,button,img,video");
       setActive(!!el);
-      setLabel(el?.dataset.cursor ?? (el && (el.tagName === "IMG" || el.tagName === "VIDEO") ? "View" : null));
+      setLabel(el?.dataset['cursor'] ?? (el && (el.tagName === "IMG" || el.tagName === "VIDEO") ? "View" : null));
     };
     const loop = () => {
       cx += (x - cx) * 0.2; cy += (y - cy) * 0.2;
