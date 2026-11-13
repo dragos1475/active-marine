@@ -22,15 +22,15 @@ export function Intro() {
           exit={{ y: "-100%", transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] } }}
           onClick={() => setShow(false)}
         >
-          <motion.svg viewBox="0 0 52 52" className="h-24 w-24" initial={{ opacity: 0, scale: 0.8, filter: "blur(12px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} transition={{ duration: 0.8, ease: "easeOut" }}>
+          <motion.svg viewBox="0 0 52 52" className="h-24 w-24" initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }}>
             <motion.path d="M25.5 4 47 42H36L25.5 22 15.5 42H5Z" className="fill-primary" />
-            <motion.path d="M8 43c10-8 18-8 28-2 4 2 8 3 12 1" className="stroke-foreground" strokeWidth="4" fill="none" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.9 }} />
+            <motion.path d="M8 43c10-8 18-8 28-2 4 2 8 3 12 1" className="stroke-foreground" strokeWidth="4" fill="none" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.2, duration: 0.7 }} />
           </motion.svg>
-          <motion.div className="mt-6 font-display text-5xl tracking-[0.3em] md:text-7xl" initial={{ opacity: 0, letterSpacing: "0.8em" }} animate={{ opacity: 1, letterSpacing: "0.3em" }} transition={{ delay: 0.3, duration: 0.9, ease: "easeOut" }}>
+          <motion.div className="mt-6 font-display text-5xl tracking-[0.3em] md:text-7xl" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6, ease: "easeOut" }}>
             ACTIVMARINE
           </motion.div>
-          <motion.div className="mt-4 h-px bg-tide" initial={{ width: 0 }} animate={{ width: 240 }} transition={{ delay: 1.0, duration: 0.9, ease: "easeInOut" }} />
-          <motion.p className="mt-4 text-xs uppercase tracking-[0.4em] text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3, duration: 0.6 }}>
+          <motion.div className="mt-4 h-px bg-tide" initial={{ width: 0 }} animate={{ width: 240 }} transition={{ delay: 0.7, duration: 0.7, ease: "easeInOut" }} />
+          <motion.p className="mt-4 text-xs uppercase tracking-[0.4em] text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.5 }}>
             Shanghai · Marine Expertise
           </motion.p>
         </motion.div>
@@ -47,11 +47,11 @@ export function Cursor() {
   const [enabled, setEnabled] = useState(false);
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return;
-    setEnabled(true);
     document.documentElement.classList.add("am-cursor");
-    let x = 0, y = 0, cx = 0, cy = 0, raf = 0;
+    let x = 0, y = 0, cx = 0, cy = 0, raf = 0, started = false;
     const move = (e: PointerEvent) => {
       x = e.clientX; y = e.clientY;
+      if (!started) { started = true; cx = x; cy = y; setEnabled(true); }
       const el = (e.target as HTMLElement).closest<HTMLElement>("[data-cursor],a,button,img,video");
       setActive(!!el);
       setLabel(el?.dataset['cursor'] ?? (el && (el.tagName === "IMG" || el.tagName === "VIDEO") ? "View" : null));
