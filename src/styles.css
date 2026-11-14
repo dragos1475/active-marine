@@ -185,6 +185,17 @@
 
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
+.am-intro {
+  --background: oklch(0.29 0.028 245);
+  --foreground: oklch(0.95 0.01 220);
+  --primary: oklch(0.76 0.09 190);
+  --muted-foreground: oklch(0.77 0.023 215);
+  --mustard: oklch(0.78 0.1 85);
+  --border: oklch(0.48 0.025 235);
+  --gradient-tide: linear-gradient(135deg, var(--primary), oklch(0.74 0.075 215) 70%, var(--mustard));
+  color-scheme: dark;
+}
+
 @keyframes intro-fade { from { opacity: 1; } to { opacity: 0; } }
 .am-intro-leaving { animation: intro-fade 0.75s ease-out forwards; }
 @keyframes intro-wave { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
