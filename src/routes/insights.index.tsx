@@ -3,7 +3,8 @@ import { ArrowUpRight } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { Reveal } from "@/components/site/Reveal";
 import { ARTICLES } from "@/components/site/content";
-import shipyard from "@/assets/china-port-daylight.jpg";
+import { MARITIME_IMAGES } from "@/components/site/imagery";
+const shipyard = MARITIME_IMAGES.drydock;
 
 export const Route = createFileRoute("/insights/")({
   head: () => ({
@@ -46,6 +47,7 @@ function Insights() {
             {rest.map((a, i) => (
               <Reveal key={a.slug} delay={i * 0.1}>
                 <Link to="/insights/$slug" params={{ slug: a.slug }} className="group flex h-full flex-col justify-between border border-border bg-card p-10 transition-colors hover:border-primary">
+                  <img src={i === 0 ? MARITIME_IMAGES.spares : MARITIME_IMAGES.drydock} alt={i === 0 ? "Illustrative precision marine spare parts" : "Illustrative vessel hull ready for survey"} loading="lazy" width={1536} height={1024} className="mb-6 h-24 w-36 border border-border object-cover" />
                   <div className="flex items-center justify-between"><p className="eyebrow">{a.date} · {a.read}</p><ArrowUpRight className="h-5 w-5 text-primary transition-transform group-hover:rotate-45" /></div>
                   <h2 className="mt-10 text-4xl uppercase">{a.title}</h2>
                   <p className="mt-3 text-muted-foreground">{a.excerpt}</p>

@@ -3,7 +3,7 @@ import { Cases } from "@/components/site/More";
 import { CtaBand, PageHero, Testimonials } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
-import shipyard from "@/assets/china-port-daylight.jpg";
+import shipyard from "@/assets/marine-drydock-daylight.jpg";
 
 export const Route = createFileRoute("/cases")({
   head: () => seo("Projects & case studies | ActivMarine", "How ActivMarine solved urgent spare parts, electrical repair and dry-docking challenges in Chinese ports."),

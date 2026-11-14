@@ -6,11 +6,11 @@ import { CtaBand, PageHero } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { Reveal } from "@/components/site/Reveal";
 import { seo } from "@/lib/seo";
-import engine from "@/assets/engine-room.jpg";
-import shipyard from "@/assets/shipyard-night.jpg";
+import engine from "@/assets/marine-engine-machinery.jpg";
+import shipyard from "@/assets/marine-drydock-daylight.jpg";
 import parts from "@/assets/marine-spares-electronics.png.asset.json";
 import hero from "@/assets/hero.png.asset.json";
-import office from "@/assets/office-team-final.png.asset.json";
+import port from "@/assets/marine-port-logistics.jpg";
 import v2 from "@/assets/ship_golden_hour_aerial.mp4.asset.json";
 import v3 from "@/assets/shanghai_port_aerial.mp4.asset.json";
 import v4 from "@/assets/engine_room_cinematic.mp4.asset.json";
@@ -20,9 +20,9 @@ const ITEMS: Item[] = [
   { src: v2.url, label: "Golden hour transit", video: true, span: "md:col-span-4 md:row-span-2" },
   { src: engine, label: "Engine room attendance", span: "md:col-span-2" },
   { src: parts.url, label: "Spares & electronics", span: "md:col-span-2" },
-  { src: shipyard, label: "Night shift at the yard", span: "md:col-span-3" },
+  { src: shipyard, label: "Illustrative daylight dry dock", span: "md:col-span-3" },
   { src: v3.url, label: "Shanghai port", video: true, span: "md:col-span-3" },
-  { src: office.url, label: "Shanghai office", span: "md:col-span-2" },
+  { src: port, label: "Illustrative port logistics", span: "md:col-span-2" },
   { src: hero.url, label: "Delivery at anchorage", span: "md:col-span-2" },
   { src: v4.url, label: "Machinery overhaul", video: true, span: "md:col-span-2" },
 ];

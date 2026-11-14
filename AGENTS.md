@@ -39,3 +39,5 @@ use the editor.
 - All site surfaces and photographic text washes inherit the shared daylight semantic tokens in src/styles.css; keep glass surfaces and shadows token-based — ensures every page, menu, form and map stays readable under the same theme.
 - ThemeProvider owns the light/medium/dark choice at the root and restores browser storage after hydration; theme overrides include the homepage's scoped wash — keeps navigation persistent without SSR browser access or mismatched markup.
 - Interior page imagery uses PageHero's theme-aware image wash or MaritimeImage's compact photo band, with generated scenes described as illustrative where descriptive alt text is present — adds restrained maritime color without obscuring text or implying verified company photography.
+
+- Use the shared imagery module for service thumbnails and service-page photos so each subject remains consistent across navigation touchpoints.

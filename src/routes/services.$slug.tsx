@@ -5,16 +5,7 @@ import { PageShell } from "@/components/site/PageShell";
 import { Reveal } from "@/components/site/Reveal";
 import { CtaBand, PageHero } from "@/components/site/Extras";
 import { SERVICES } from "@/components/site/content";
-import engine from "@/assets/engine-room.jpg";
-import shipyard from "@/assets/shipyard-night.jpg";
-import parts from "@/assets/marine-spares-electronics.png.asset.json";
-import hero from "@/assets/hero.png.asset.json";
-import office from "@/assets/office-team-final.png.asset.json";
-
-const IMAGES: Record<string, string> = {
-  "ship-spares": parts.url, "technical-services": engine, "china-sourcing": office.url,
-  logistics: hero.url, "docking-supervision": shipyard, "marine-surveys": engine,
-};
+import { SERVICE_IMAGES } from "@/components/site/imagery";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -43,7 +34,7 @@ function ServicePage() {
     <PageShell>
       {(open) => (
         <>
-          <PageHero eyebrow={`${s.n} · ${s.tag}`} title={s.title} accent="" text={s.text} image={IMAGES[s.slug]} />
+          <PageHero eyebrow={`${s.n} · ${s.tag}`} title={s.title} accent="" text={s.text} image={SERVICE_IMAGES[s.slug]?.src} />
           <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-2">
             <Reveal>
               <p className="eyebrow">What's included</p>
@@ -64,6 +55,7 @@ function ServicePage() {
             <div className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
               {others.map((o) => (
                 <Link key={o.slug} to="/services/$slug" params={{ slug: o.slug }} className="group bg-background p-6 hover:bg-card">
+                  <img src={SERVICE_IMAGES[o.slug]?.src} alt={SERVICE_IMAGES[o.slug]?.alt} loading="lazy" width={1536} height={1024} className="mb-4 h-20 w-full border border-border object-cover" />
                   <span className="font-display text-lg text-muted-foreground group-hover:text-mustard">{o.n}</span>
                   <span className="mt-2 block font-display text-2xl uppercase leading-none">{o.title}</span>
                 </Link>
