@@ -35,4 +35,4 @@ use the editor.
 - Keep homepage text outside animated transforms and opacity layers; the intro exits by fading rather than translating — prevents abrupt title motion and preserves sharp text above the videos.
 - Animate the intro wave and horizon with CSS, separate from static text and without a grain overlay — keeps the title crisp and the line animation independent of Motion scheduling.
 - Keep Vercel's asset-prefix rewrite pointing to the original Lovable media service — asset pointers contain relative URLs that otherwise resolve to missing files on external hosting; page routes must remain untouched.
-- The homepage uses a static daylight vessel image with locally scoped semantic light tokens and no startup overlay; use the native browser cursor — keeps the first screen clear and controls immediate.
+- The homepage uses a static daylight vessel image with locally scoped semantic light tokens, preceded by the logo and CSS-animated line intro once per browser session for five seconds; keep the native browser cursor and do not load legacy videos — preserves the opening identity without restoring the dark video background.

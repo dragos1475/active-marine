@@ -4,6 +4,7 @@ import { Marquee } from "@/components/site/Sections";
 import { Makers } from "@/components/site/More";
 import { CtaBand, PartsSearch, ServicesTeaser } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
+import { Intro } from "@/components/site/Cinematic";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -19,6 +20,7 @@ function Index() {
     <PageShell>
       {(open) => (
         <>
+          <Intro />
           <Hero onQuote={open} />
           <Marquee />
           <ServicesTeaser />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const INTRO_MS = 5000;
+const INTRO_SESSION_KEY = "am-intro-daylight";
 
 /** First-visit cinematic intro (once per browser session). */
 export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () => void }) {
@@ -9,8 +10,8 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
   const [leaving, setLeaving] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(5);
   useEffect(() => {
-    if (sessionStorage.getItem("am-intro")) { onDone?.(); return; }
-    sessionStorage.setItem("am-intro", "1");
+    if (sessionStorage.getItem(INTRO_SESSION_KEY)) { onDone?.(); return; }
+    sessionStorage.setItem(INTRO_SESSION_KEY, "1");
     setShow(true);
     const t = setTimeout(() => setElapsed(true), INTRO_MS - 750);
     return () => clearTimeout(t);
@@ -33,7 +34,7 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
     <>
       {show && (
         <div
-          className={`am-intro ${leaving ? "am-intro-leaving" : ""} fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background px-6`}
+          className={`am-intro ${leaving ? "am-intro-leaving" : ""} fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background px-6 text-foreground`}
           onClick={() => { setShow(false); onDone?.(); }}
         >
           <svg viewBox="0 0 52 52" className="h-24 w-24" aria-hidden="true">
