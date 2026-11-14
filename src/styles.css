@@ -154,6 +154,13 @@
 }
 .am-intro-horizon { animation: intro-horizon 2s ease-in-out 0.5s both; }
 
+@keyframes loading-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes loading-wait { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@keyframes loading-beacon { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+.am-loading-progress { animation: loading-progress 5s linear both; }
+.am-loading-wait { animation: loading-wait 1.8s ease-in-out infinite; }
+.am-loading-beacon { animation: loading-beacon 1.8s ease-in-out infinite; }
+
 @utility bg-tide { background-image: var(--gradient-tide); }
 @utility bg-veil { background-image: var(--gradient-veil); }
 @utility bg-side { background-image: var(--gradient-side); }

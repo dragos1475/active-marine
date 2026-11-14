@@ -7,6 +7,7 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
   const [show, setShow] = useState(false);
   const [elapsed, setElapsed] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(5);
   useEffect(() => {
     if (sessionStorage.getItem("am-intro")) { onDone?.(); return; }
     sessionStorage.setItem("am-intro", "1");
@@ -20,6 +21,14 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
     const t = setTimeout(() => { setShow(false); onDone?.(); }, 750);
     return () => clearTimeout(t);
   }, [show, elapsed, ready, onDone]);
+  useEffect(() => {
+    if (!show) return;
+    const started = Date.now();
+    const timer = setInterval(() => {
+      setSecondsLeft(Math.max(0, Math.ceil((INTRO_MS - (Date.now() - started)) / 1000)));
+    }, 200);
+    return () => clearInterval(timer);
+  }, [show]);
   return (
     <>
       {show && (
@@ -38,6 +47,23 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
           <p className="mt-5 text-center text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Shanghai · Marine Expertise
           </p>
+          <div className="absolute bottom-12 left-1/2 w-72 max-w-[calc(100%-3rem)] -translate-x-1/2 sm:bottom-16">
+            <div role="status" aria-live="polite" className="mb-4 flex h-5 items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="flex items-center gap-2">
+                <span className={`h-1 w-1 rounded-full ${ready ? "bg-primary" : "am-loading-beacon bg-mustard"}`} aria-hidden="true" />
+                {secondsLeft > 0 ? "Loading" : ready ? "Opening film" : "Buffering film"}
+              </span>
+              <span className="min-w-10 text-right tabular-nums text-mustard">
+                {secondsLeft > 0 ? `0${secondsLeft}s` : ready ? "Ready" : "…"}
+              </span>
+            </div>
+            <div className="relative h-px overflow-hidden bg-border" aria-hidden="true">
+              <div className={`h-full w-full origin-left bg-tide ${secondsLeft === 0 && !ready ? "am-loading-wait" : "am-loading-progress"}`} />
+            </div>
+            <div className="mt-3 flex justify-between text-[9px] uppercase tracking-[0.2em] text-muted-foreground/60" aria-hidden="true">
+              <span>ActivMarine</span><span>Shanghai / At sea</span>
+            </div>
+          </div>
         </div>
       )}
     </>
