@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Check, CircleAlert, Copy, Plus, X } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, CircleAlert, Copy, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTACT, ENQUIRY_TYPES, PORTS } from "./content";
 import {
@@ -169,7 +169,10 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
           <datalist id="enquiry-ports">{PORTS.map((p) => <option key={p.name} value={p.name} />)}</datalist>
         </label>
         <label className={`${label} col-span-2 md:col-span-1`}>Enquiry type
-          <select name="type" value={fields.type} onChange={setField("type")} className={field}>{ENQUIRY_TYPES.map((t) => <option key={t}>{t}</option>)}</select>
+          <span className="relative block">
+            <select name="type" value={fields.type} onChange={setField("type")} className={`${field} appearance-none pr-11`}>{ENQUIRY_TYPES.map((t) => <option key={t}>{t}</option>)}</select>
+            <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          </span>
         </label>
         <label className={label}>Vessel ETA<input name="eta" type="date" value={fields.eta} onChange={setField("eta")} className={field} /></label>
         <label className={label}>Required by<input name="requiredBy" type="date" value={fields.requiredBy} onChange={setField("requiredBy")} className={field} /></label>

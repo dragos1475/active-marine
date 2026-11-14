@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { animate, motion, useInView, AnimatePresence } from "motion/react";
-import { ArrowUpRight, Plus, Search, Quote } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Plus, Search, Quote } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Reveal } from "./Reveal";
 import { Button } from "@/components/ui/button";
@@ -62,7 +62,7 @@ export function Situations() {
   const navigate = useNavigate();
   const [port, setPort] = useState("");
   const [eta, setEta] = useState("");
-  const control = "w-full border border-input bg-muted px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary";
+  const control = "w-full border border-input bg-muted px-4 py-3 text-base font-normal tracking-normal text-foreground outline-none transition-colors focus:border-primary";
   const caption = "flex flex-col gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
   return (
     <section className="mx-auto max-w-7xl px-6 py-14 md:py-24">
@@ -79,10 +79,14 @@ export function Situations() {
       >
         <p className="col-span-2 font-display text-2xl uppercase leading-none md:col-span-1 md:pb-3">Vessel calling China?</p>
         <label className={caption}>Port
-          <select value={port} onChange={(e) => setPort(e.target.value)} className={control}>
-            <option value="">Any port or not sure yet</option>
-            {PORTS.map((p) => <option key={p.name}>{p.name}</option>)}
-          </select>
+          {/* The browser's own arrow sits on the border; this one is drawn inside the field instead. */}
+          <span className="relative block">
+            <select value={port} onChange={(e) => setPort(e.target.value)} className={`${control} appearance-none pr-11`}>
+              <option value="">Any port</option>
+              {PORTS.map((p) => <option key={p.name}>{p.name}</option>)}
+            </select>
+            <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          </span>
         </label>
         <label className={caption}>Vessel ETA<input type="date" value={eta} onChange={(e) => setEta(e.target.value)} className={control} /></label>
         <Button type="submit" className="col-span-2 h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] md:col-span-1">Send enquiry <ArrowUpRight /></Button>
