@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PORTS } from "@/components/site/content";
-import { beaufort, cacheUntil, compassPoint, readWind, toKnots } from "@/lib/port-wind";
+import { beaufort, cacheUntil, compassPoint, readWind, strongest, toKnots } from "@/lib/port-wind";
 
 const forecast = {
   properties: {
@@ -37,7 +37,22 @@ describe("Port wind", () => {
 
   it("reads the forecast hour that has already started", () => {
     const wind = readWind("Ningbo", forecast, new Date("2026-11-14T22:40:00Z"));
-    expect(wind).toEqual({ name: "Ningbo", speedKn: 16, gustKn: 24, directionDeg: 345, compass: "NNW", beaufort: 4, validAt: "2026-11-14T22:00:00Z" });
+    expect(wind).toMatchObject({ name: "Ningbo", speedKn: 16, gustKn: 24, directionDeg: 345, compass: "NNW", beaufort: 4, validAt: "2026-11-14T22:00:00Z" });
+  });
+
+  it("builds a two-day outlook in three-hour steps from the current hour", () => {
+    const start = Date.parse("2026-11-14T22:00:00Z");
+    const hourly = { properties: { timeseries: Array.from({ length: 60 }, (_, h) => ({
+      time: new Date(start + h * 3600000).toISOString().replace(".000Z", "Z"),
+      data: { instant: { details: { wind_speed: h === 9 ? 15 : 5, wind_from_direction: 90 } } },
+    })) } };
+    const wind = readWind("Ningbo", hourly, new Date(start + 20 * 60000));
+    expect(wind?.outlook).toHaveLength(17);
+    expect(wind?.outlook[0]?.time).toBe("2026-11-14T22:00:00Z");
+    expect(wind?.outlook[1]?.time).toBe("2026-11-15T01:00:00Z");
+    expect(wind?.outlook.at(-1)?.time).toBe("2026-11-16T22:00:00Z");
+    expect(strongest(wind?.outlook ?? [])).toMatchObject({ time: "2026-11-15T07:00:00Z", speedKn: 29, beaufort: 7 });
+    expect(strongest([])).toBeNull();
   });
 
   it("copes with a missing gust and with a forecast that starts in the future", () => {

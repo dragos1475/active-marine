@@ -7,7 +7,7 @@ import { PAGE_IMAGES } from "@/components/site/imagery";
 const deck = PAGE_IMAGES.contact;
 
 export const Route = createFileRoute("/contact")({
-  head: () => seo("Contact ActivMarine | China enquiries", "Email, call or message ActivMarine in China for spares, repairs, sourcing, docking or surveys."),
+  head: () => seo("Contact Activ Marine | China enquiries", "Email, call or message Activ Marine in China for spares, repairs, sourcing, docking or surveys."),
   component: () => (
     <PageShell>
       {(open) => (

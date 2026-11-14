@@ -9,9 +9,9 @@ const shipyard = PLACEMENT_IMAGES["insights-main"].src;
 export const Route = createFileRoute("/insights/")({
   head: () => ({
     meta: [
-      { title: "Insights | ActivMarine — Practical notes from China" },
+      { title: "Insights | Activ Marine — Practical notes from China" },
       { name: "description", content: "Practical guidance on dry-docking in China, sourcing marine spares and vessel surveys from former seafarers." },
-      { property: "og:title", content: "Insights | ActivMarine" },
+      { property: "og:title", content: "Insights | Activ Marine" },
       { property: "og:description", content: "Practical guidance on dry-docking in China, sourcing marine spares and vessel surveys." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -5,7 +5,7 @@ import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/services/")({
-  head: () => seo("Services | ActivMarine — Spares, repairs, sourcing, docking, surveys", "Ship spares, technical and electrical repairs, China sourcing, logistics, docking supervision and marine surveys across China."),
+  head: () => seo("Services | Activ Marine — Spares, repairs, sourcing, docking, surveys", "Ship spares, technical and electrical repairs, China sourcing, logistics, docking supervision and marine surveys across China."),
   component: () => (
     <PageShell>
       {(open) => (

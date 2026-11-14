@@ -28,7 +28,7 @@ const ITEMS: Item[] = [
 ];
 
 export const Route = createFileRoute("/gallery")({
-  head: () => seo("Gallery | ActivMarine in the field", "Photos and film from engine rooms, shipyards and ports where ActivMarine supports vessels."),
+  head: () => seo("Gallery | Activ Marine in the field", "Photos and film from engine rooms, shipyards and ports where Activ Marine supports vessels."),
   component: Gallery,
 });
 

@@ -3,7 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight, Check, Printer } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { CtaBand, PageHero } from "@/components/site/Extras";
-import { CONTACT, FAQ, SERVICES, STEPS } from "@/components/site/content";
+import { CONTACT, FAQ, SERVICES, SPARE_TYPES, STEPS } from "@/components/site/content";
 import { SERVICE_IMAGES, RELATED_SERVICE_IMAGES } from "@/components/site/imagery";
 
 export const Route = createFileRoute("/services/$slug")({
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/services/$slug")({
     return s;
   },
   head: ({ loaderData }) => {
-    const t = loaderData ? `${loaderData.title} | ActivMarine China` : "Service not found | ActivMarine";
+    const t = loaderData ? `${loaderData.title} | Activ Marine China` : "Service not found | Activ Marine";
     const d = loaderData?.text ?? "This service page does not exist.";
     return { meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, ...(loaderData ? [] : [{ name: "robots", content: "noindex" }])] };
   },
@@ -53,6 +53,55 @@ const COMMON_TERMS = [
 const sheetLabel = "text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground";
 const sheetRow = "grid gap-3 border-b border-border py-5 md:grid-cols-[13rem_1fr] md:gap-8 print:grid-cols-[11rem_1fr] print:gap-6 print:py-3";
 
+const SPARE_ROWS = [
+  { label: "What it is", key: "what" },
+  { label: "Usually chosen for", key: "chosenFor" },
+  { label: "What to ask for", key: "askFor" },
+] as const;
+
+/** Genuine, OEM or alternative: the choice every spares enquiry comes down to, side by side. */
+function SpareTypes() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 pb-8 print:pt-6">
+      <p className="eyebrow">Genuine, OEM or alternative</p>
+      <h2 className="mt-4 text-3xl uppercase md:text-4xl">Three kinds of part, one clear label.</h2>
+      <p className="mt-4 max-w-2xl text-muted-foreground">Every item we quote is marked as one of these three, so you always know what you are buying. Tell us in the enquiry which you will accept.</p>
+      {/* A real table from tablet up; on phones each kind of part becomes its own card. */}
+      <div className="mt-8 hidden border border-border md:block print:block">
+        <table className="w-full border-collapse text-sm">
+          <thead className="border-b border-border bg-muted">
+            <tr>
+              <td className="w-44 px-4 py-3" />
+              {SPARE_TYPES.map((type) => <th key={type.name} scope="col" className="px-4 py-3 text-left font-display text-xl font-normal uppercase tracking-wide">{type.name}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {SPARE_ROWS.map((row) => (
+              <tr key={row.key} className="border-b border-border align-top last:border-0">
+                <th scope="row" className={`px-4 py-4 text-left ${sheetLabel}`}>{row.label}</th>
+                {SPARE_TYPES.map((type) => <td key={type.name} className="px-4 py-4 leading-relaxed">{type[row.key]}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-8 grid gap-4 md:hidden print:hidden">
+        {SPARE_TYPES.map((type) => (
+          <div key={type.name} className="border border-border p-5">
+            <h3 className="font-display text-2xl uppercase">{type.name}</h3>
+            <dl className="mt-3 grid gap-3 text-sm">
+              {SPARE_ROWS.map((row) => <div key={row.key}><dt className={sheetLabel}>{row.label}</dt><dd className="mt-1 leading-relaxed">{type[row.key]}</dd></div>)}
+            </dl>
+          </div>
+        ))}
+      </div>
+      <p className="mt-5 text-sm text-muted-foreground print:hidden">
+        More on the trade-offs in <Link to="/insights/$slug" params={{ slug: "sourcing-genuine-spares" }} className="text-primary underline underline-offset-4">Genuine, OEM-equivalent or copy? Sourcing spares wisely</Link>.
+      </p>
+    </section>
+  );
+}
+
 function ServicePage() {
   const s = Route.useLoaderData();
   const others = SERVICES.filter((x) => x.slug !== s.slug);
@@ -91,7 +140,7 @@ function ServicePage() {
               </dl>
               <p className="mt-6 hidden text-sm print:block">{CONTACT.company} · {CONTACT.email}</p>
             </div>
-            <aside className="glass self-start border border-border p-8 lg:sticky lg:top-28 print:hidden">
+            <aside className="glass self-start border border-border p-8 lg:sticky lg:top-36 print:hidden">
               <p className="eyebrow">{s.ask}?</p>
               <p className="mt-5 text-muted-foreground">Send what you have, even if it is incomplete. The enquiry form opens with this service already selected.</p>
               <Button asChild className="mt-7 h-auto w-full rounded-none py-4 text-xs font-bold uppercase tracking-[0.2em] hover:shadow-glow">
@@ -103,6 +152,7 @@ function ServicePage() {
               <a href={`mailto:${CONTACT.email}`} className="mt-5 block text-sm text-primary underline underline-offset-4">{CONTACT.email}</a>
             </aside>
           </section>
+          {s.slug === "ship-spares" && <SpareTypes />}
           <section className="mx-auto max-w-7xl px-6 py-16 print:hidden">
             <p className="eyebrow">Other services</p>
             <div className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">

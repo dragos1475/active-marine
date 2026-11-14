@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { MessageCircle, X, MapPin, ArrowUp, ArrowUpRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getPortWind } from "@/lib/port-wind.functions";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { PortPanel } from "./PortPanel";
 import { Reveal } from "./Reveal";
 import { TEAM, CASES, MAKERS, CERTS, PORTS, CONTACT } from "./content";
 import { PLACEMENT_IMAGES } from "./imagery";
@@ -103,8 +104,7 @@ export function Makers() {
 const chinaTime = (iso: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Shanghai", weekday: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
 
 export function PortsMap() {
-  const navigate = useNavigate();
-  const enquire = (port: string) => { void navigate({ to: "/enquiry", search: { part: "", port } }); };
+  const [selected, setSelected] = useState<string | null>(null);
   // Fetched in the browser after the page is up, so a slow or failed forecast never holds the page back.
   const { data, isPending, isError } = useQuery({ queryKey: ["port-wind"], queryFn: () => getPortWind(), staleTime: 30 * 60 * 1000, retry: 1 });
   const wind = new Map((data?.ports ?? []).map((entry) => [entry.name, entry]));
@@ -126,7 +126,7 @@ export function PortsMap() {
             const labelY = 75 + i * 66;
             const here = wind.get(p.name);
             // Clicking a port on the map is a shortcut; the table under the map is the accessible route.
-            return <g key={p.name} onClick={() => enquire(p.name)} className="group cursor-pointer">
+            return <g key={p.name} onClick={() => setSelected(p.name)} className="group cursor-pointer">
               <path d={`M${x} ${y} L475 ${labelY} H510`} fill="none" className="stroke-border group-hover:stroke-primary" strokeWidth="2" />
               <circle cx={x} cy={y} r="6" className="fill-primary" />
               <rect x="505" y={labelY - 24} width="190" height="56" fill="transparent" />
@@ -141,7 +141,7 @@ export function PortsMap() {
         <p className="eyebrow">Wind at the ports</p>
         <p className="mt-3 text-sm text-muted-foreground">
           {validAt ? `Forecast for the hour from ${chinaTime(validAt)}, China time.` : isPending ? "Loading the wind forecast…" : "The wind forecast is not available right now."}
-          {" "}Pick a port to start an enquiry with it already filled in; for any other Chinese port, name it in the enquiry.
+          {" "}Select a port for its 48-hour outlook; for any other Chinese port, name it in the enquiry.
         </p>
         <div className="mt-5 border border-border">
           <table className="w-full border-collapse text-sm">
@@ -160,7 +160,9 @@ export function PortsMap() {
                 const blank = isPending ? "…" : "—";
                 return (
                   <tr key={p.name} className="border-b border-border last:border-0">
-                    <th scope="row" className="px-2 py-3 text-left font-semibold text-foreground sm:px-3">{p.name}</th>
+                    <th scope="row" className="px-2 py-3 text-left sm:px-3">
+                      <button type="button" onClick={() => setSelected(p.name)} aria-haspopup="dialog" className="font-semibold text-foreground underline decoration-border underline-offset-4 hover:text-primary hover:decoration-primary">{p.name}</button>
+                    </th>
                     <td className="px-2 py-3 tabular-nums sm:px-3">{here ? `${here.speedKn} kn` : blank}</td>
                     <td className="px-2 py-3 sm:px-3">
                       {here ? (
@@ -190,6 +192,7 @@ export function PortsMap() {
           <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">CC BY 4.0</a>.
         </p>
       </div>
+      <PortPanel port={selected} wind={selected ? wind.get(selected) : undefined} loading={isPending} onClose={() => setSelected(null)} />
     </section>
   );
 }

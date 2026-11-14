@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight, Check, Mail } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Reveal, Logo } from "./Reveal";
+import { ThemeSelector } from "./ThemeSelector";
 import { CONTACT, SERVICES, STEPS, TAGS, NAV } from "./content";
 import { LIST_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 import approachWide from "@/assets/about-logistics-underway.jpg";
@@ -20,7 +21,7 @@ export function About() {
         </Reveal>
         <Reveal delay={0.2} className="flex flex-col justify-end gap-6 text-lg font-light leading-relaxed text-muted-foreground lg:col-span-5">
           <p>
-            Run by former seafarers and marine surveyors, ActivMarine brings first-hand operational experience, technical understanding, marine equipment sourcing and service coordination together in one focused offering.
+            Run by former seafarers and marine surveyors, Activ Marine brings first-hand operational experience, technical understanding, marine equipment sourcing and service coordination together in one focused offering.
           </p>
           <p>
             Our presence in China puts us closer to the manufacturers and shipyards your vessel depends on — fewer layers between you and the people doing the work.
@@ -153,7 +154,7 @@ export function Contact({ onQuote }: { onQuote: () => void }) {
     <section id="contact" className="relative overflow-hidden py-32">
       <div className="relative mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2">
         <Reveal>
-          <p className="eyebrow">Contact ActivMarine</p>
+          <p className="eyebrow">Contact Activ Marine</p>
           <h2 className="mt-6 text-[clamp(3.5rem,9vw,8rem)] uppercase">Tell us what<br /><span className="text-tide">your vessel needs.</span></h2>
           <p className="mt-6 max-w-md text-muted-foreground">Speak with our team about spare parts, technical services, docking or marine surveys.</p>
           <a href={`mailto:${CONTACT.email}`} className="mt-8 inline-flex items-center gap-3 font-display text-[clamp(1.8rem,3.5vw,3rem)] text-primary hover:underline">
@@ -161,7 +162,7 @@ export function Contact({ onQuote }: { onQuote: () => void }) {
           </a>
           <div className="mt-8">
             <Button onClick={onQuote} className="h-auto rounded-none group inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:shadow-glow">
-              Request a Quote <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+              Send enquiry <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
             </Button>
           </div>
         </Reveal>
@@ -212,8 +213,9 @@ export function Footer() {
           </div>
         </div>
         <div className="select-none overflow-hidden font-display text-[22vw] leading-[0.8] text-muted opacity-60">ACTIVMARINE</div>
-        <div className="flex flex-wrap justify-between gap-4 border-t border-border py-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border py-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
           <span>© 2026 Activ Marine Limited · China</span>
+          <span className="flex items-center gap-2">Appearance <ThemeSelector /></span>
           <span>Keeping the maritime world moving</span>
         </div>
       </div>

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Copy, Plus, X } from "lucide-react";
+import { ArrowUpRight, Check, CircleAlert, Copy, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTACT, ENQUIRY_TYPES, PORTS } from "./content";
 import {
-  DRAFT_STORAGE_KEY, ITEM_COLUMNS, MAX_ITEMS, applyPaste, buildEnquiry, emptyFields, emptyItem, fitsInMailto, formatWhen, hasContent, isValidImo, mailtoHref,
-  makeReference, nextEnquiry, parseDraft, parsePastedCells, responseTimes, type EnquiryFields, type EnquiryItem, type FieldKey, type ItemKey,
+  DRAFT_STORAGE_KEY, ITEM_COLUMNS, MAX_ITEMS, applyPaste, buildEnquiry, dateWarnings, emptyFields, emptyItem, enquiryGaps, fitsInMailto, formatWhen, hasContent, isValidImo,
+  localDate, mailtoHref, makeReference, nextEnquiry, parseDraft, parsePastedCells, responseTimes, type EnquiryFields, type EnquiryItem, type FieldKey, type ItemKey,
 } from "@/lib/enquiry";
 
 const field = "w-full border border-input bg-muted px-4 py-3 text-base font-normal tracking-normal text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary";
@@ -74,7 +74,9 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
   const [restored, setRestored] = useState(false);
   const [saved, setSaved] = useState(false);
   const action = useRef<"email" | "copy">("email");
-  const reference = useRef("");
+  // Reference and today's date are only known in the browser, so they are set after hydration.
+  const [reference, setReference] = useState("");
+  const [today, setToday] = useState("");
   const { fields, items } = state;
 
   // The draft lives in this browser only: restore it once after hydration, then keep it up to date.
@@ -86,6 +88,8 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
       // Storage can be unavailable (private mode); the form still works without a draft.
     }
     if (draft) setState(withStart(draft.fields, draft.items, { part, type, port, eta }));
+    setReference(makeReference());
+    setToday(localDate(new Date()));
     setRestored(true);
     // Start values are read once, when the page opens.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,7 +123,7 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
     setFiles([]);
     setResult(null);
     setError("");
-    reference.current = "";
+    setReference(makeReference());
   };
   const startNext = () => reset((current) => nextEnquiry(current).fields);
   const forget = () => reset(() => emptyFields());
@@ -132,8 +136,7 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
       return;
     }
     setError("");
-    reference.current ||= makeReference();
-    const enquiry = buildEnquiry({ ...fields, reference: reference.current, items, files });
+    const enquiry = buildEnquiry({ ...fields, reference, items, files });
     let copied = true;
     try {
       await navigator.clipboard.writeText(enquiry.body);
@@ -141,15 +144,19 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
       copied = false;
     }
     const emailed = action.current === "email";
-    if (emailed) window.location.href = mailtoHref(CONTACT.email, enquiry, reference.current);
-    setResult({ reference: reference.current, subject: enquiry.subject, text: enquiry.body, copied, emailed, fits: fitsInMailto(enquiry.body), preparedAt: new Date() });
+    if (emailed) window.location.href = mailtoHref(CONTACT.email, enquiry, reference);
+    setResult({ reference, subject: enquiry.subject, text: enquiry.body, copied, emailed, fits: fitsInMailto(enquiry.body), preparedAt: new Date() });
   }
 
   const filled = items.filter(hasContent).length;
   const imoWarning = fields.imo.trim() !== "" && !isValidImo(fields.imo);
+  const preview = buildEnquiry({ ...fields, reference, items, files });
+  const gaps = enquiryGaps(fields, items);
+  const dateIssues = today ? dateWarnings(fields, today) : [];
 
   return (
-    <form onSubmit={submit} className="mt-10 flex flex-col gap-10">
+    <form onSubmit={submit} className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="flex min-w-0 flex-col gap-10">
       <fieldset className="grid gap-5 md:grid-cols-2">
         <legend className={legend}>01 · Vessel &amp; delivery</legend>
         <label className={label}>Vessel<input name="vessel" value={fields.vessel} onChange={setField("vessel")} required placeholder="Vessel name" className={field} /></label>
@@ -166,6 +173,7 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
         </label>
         <label className={label}>Vessel ETA<input name="eta" type="date" value={fields.eta} onChange={setField("eta")} className={field} /></label>
         <label className={label}>Required by<input name="requiredBy" type="date" value={fields.requiredBy} onChange={setField("requiredBy")} className={field} /></label>
+        {dateIssues.length > 0 && <p role="status" className="text-sm text-burgundy md:col-span-2">{dateIssues.join(" ")} Please check; you can still send the enquiry.</p>}
         <label className="flex cursor-pointer items-start gap-3 border border-input bg-muted px-4 py-3 md:col-span-2">
           <input name="urgent" type="checkbox" checked={fields.urgent} onChange={(e) => { const urgent = e.target.checked; setState((current) => ({ ...current, fields: { ...current.fields, urgent } })); }} className="mt-1 h-4 w-4 accent-[var(--burgundy)]" />
           <span><span className="block text-sm font-semibold text-foreground">Urgent</span><span className="block text-sm text-muted-foreground">The vessel is waiting or at risk of delay. The email subject is marked URGENT.</span></span>
@@ -249,6 +257,26 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
           </div>
         )}
       </div>
+      </div>
+
+      {/* Desktop only: the email exactly as it will be prepared, updated while the visitor types. */}
+      <aside aria-label="Enquiry preview" className="hidden lg:block">
+        <div className="sticky top-36 border border-border bg-card p-6">
+          <p className="eyebrow">Your enquiry so far</p>
+          {gaps.length > 0 ? (
+            <ul className="mt-5 grid gap-2 text-sm">
+              {gaps.map((gap) => <li key={gap} className="flex items-start gap-2 text-muted-foreground"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-mustard" />{gap}</li>)}
+            </ul>
+          ) : (
+            <p className="mt-5 flex items-start gap-2 text-sm text-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Everything we usually ask for is here.</p>
+          )}
+          {gaps.length > 0 && <p className="mt-3 text-xs text-muted-foreground">None of these is required. Each one saves a round of questions.</p>}
+          <p className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Subject</p>
+          <p className="mt-2 break-words text-sm font-semibold text-foreground">{preview.subject}</p>
+          <p className="mt-5 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Email text</p>
+          <pre className="mt-2 max-h-[22rem] overflow-auto whitespace-pre-wrap break-words border border-border bg-muted p-3 font-mono text-xs leading-relaxed text-foreground">{preview.body}</pre>
+        </div>
+      </aside>
     </form>
   );
 }

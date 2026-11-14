@@ -8,7 +8,7 @@ import { PAGE_IMAGES } from "@/components/site/imagery";
 const port = PAGE_IMAGES.network;
 
 export const Route = createFileRoute("/network")({
-  head: () => seo("China ports network | ActivMarine", "Support across all Chinese ports including Hong Kong."),
+  head: () => seo("China ports network | Activ Marine", "Support across all Chinese ports including Hong Kong."),
   component: () => (
     <PageShell>
       {(open) => (

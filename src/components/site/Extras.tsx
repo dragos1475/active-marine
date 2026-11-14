@@ -11,7 +11,7 @@ import { HOME_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 /** compact: a smaller title and less height, for pages where the content below matters more than the heading. */
 export function PageHero({ eyebrow, title, accent, text, image, compact = false }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined; compact?: boolean }) {
   return (
-    <section className={`relative overflow-hidden print:pb-4 print:pt-0 ${compact ? "pb-12 pt-32" : "pb-20 pt-40"}`}>
+    <section className={`relative overflow-hidden print:pb-4 print:pt-0 ${compact ? "pb-12 pt-40" : "pb-20 pt-44"}`}>
       {image && (
         <>
           <motion.img src={image} alt="" initial={{ scale: 1.05 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full object-cover object-right print:hidden" />
@@ -85,7 +85,7 @@ export function Situations() {
           </select>
         </label>
         <label className={caption}>Vessel ETA<input type="date" value={eta} onChange={(e) => setEta(e.target.value)} className={control} /></label>
-        <Button type="submit" className="h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em]">Start enquiry <ArrowUpRight /></Button>
+        <Button type="submit" className="h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em]">Send enquiry <ArrowUpRight /></Button>
       </form>
       <div className="grid gap-px border border-border bg-border md:grid-cols-3">
         {SERVICES.map((s, i) => (
@@ -231,7 +231,7 @@ export function CtaBand({ onQuote, children = "Tell us what the vessel needs." }
     <section className="mx-auto max-w-7xl px-6 py-24 print:hidden">
       <Reveal className="flex flex-col items-start justify-between gap-8 border-t border-border pt-16 md:flex-row md:items-end">
         <h2 className="text-[clamp(3rem,7vw,6rem)] uppercase">{children}</h2>
-        <Button onClick={onQuote} className="h-auto rounded-none inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Request a Quote <ArrowUpRight className="h-4 w-4" /></Button>
+        <Button onClick={onQuote} className="h-auto rounded-none inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Send enquiry <ArrowUpRight className="h-4 w-4" /></Button>
       </Reveal>
     </section>
   );

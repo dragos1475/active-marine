@@ -12,14 +12,19 @@ export const CONTACT = {
   placeholder: true,
 };
 
-export const NAV = [
-  { to: "/about", label: "About" },
+// The header carries the five destinations a client needs; FAQ and Insights are reached from the footer.
+export const HEADER_NAV = [
   { to: "/services", label: "Services" },
-  { to: "/cases", label: "Projects" },
   { to: "/network", label: "Network" },
+  { to: "/cases", label: "Projects" },
+  { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
+] as const;
+
+export const NAV = [
+  ...HEADER_NAV,
   { to: "/insights", label: "Insights" },
   { to: "/faq", label: "FAQ" },
-  { to: "/contact", label: "Contact" },
 ] as const;
 
 export const SERVICES: readonly [Svc, Svc, Svc, Svc, Svc, Svc] = [
@@ -30,6 +35,29 @@ export const SERVICES: readonly [Svc, Svc, Svc, Svc, Svc, Svc] = [
   { n: "05", slug: "docking-supervision", tag: "Docking", title: "Docking Agency & Supervision", text: "Shipyard coordination, docking agency support and on-site repair supervision, keeping scope, quality, progress and costs in focus throughout the docking.", points: ["Yard selection and specification review", "Docking agency on site", "Daily progress and cost reports", "Quality checks and sign-off"], ask: "The vessel is going into dock", enquiry: "Docking agency & supervision", need: ["Repair specification or work list", "Vessel particulars and class status", "Planned docking window and any preferred yards", "Budget and reporting expectations"] },
   { n: "06", slug: "marine-surveys", tag: "Inspection", title: "Marine Surveys & Inspections", text: "Vessel condition surveys, pre-purchase inspections and repair assessments, with clear findings to support maintenance, purchasing and operational decisions.", points: ["Condition and pre-purchase surveys", "Damage and repair assessments", "On/off-hire surveys", "Clear photo-documented reports"], ask: "I need a survey or inspection", enquiry: "Marine surveys & inspections", need: ["Type of survey and its purpose", "Vessel particulars and current location", "Preferred dates and access arrangements", "Reports, certificates or records already available"] },
 ];
+
+// Shown on the ship spares page. General guidance, in line with the FAQ ("always stating clearly
+// which one you are getting") and the sourcing article — wording to be confirmed by the company.
+export const SPARE_TYPES = [
+  {
+    name: "Genuine",
+    what: "Supplied through the equipment maker's own channel, under the maker's part number.",
+    chosenFor: "Critical components, and equipment under maker warranty or close class attention.",
+    askFor: "The maker's own packing and documentation.",
+  },
+  {
+    name: "OEM",
+    what: "Made by the manufacturer that produces the part for the maker, sold outside the maker's channel.",
+    chosenFor: "The same specification where the maker's branding is not required.",
+    askFor: "The manufacturer's identification and material certificates.",
+  },
+  {
+    name: "Quality alternative",
+    what: "An independent equivalent made to the same dimensions and specification.",
+    chosenFor: "Consumables and non-critical items, where a reliable equivalent can save cost.",
+    askFor: "Drawings, photos or a sample for matching, and an inspection before shipment.",
+  },
+] as const;
 
 export const STEPS = [
   { n: "01", title: "Understand the requirement", text: "Equipment details, technical specifications, drawings, maker references and delivery needs." },

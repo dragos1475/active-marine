@@ -6,7 +6,7 @@ import { PAGE_IMAGES } from "@/components/site/imagery";
 const vessel = PAGE_IMAGES.faq;
 
 export const Route = createFileRoute("/faq")({
-  head: () => seo("FAQ | ActivMarine — Delivery, customs, payment, warranty", "Answers on ports covered, genuine parts, response times, customs, payment terms and warranty."),
+  head: () => seo("FAQ | Activ Marine — Delivery, customs, payment, warranty", "Answers on ports covered, genuine parts, response times, customs, payment terms and warranty."),
   component: () => (
     <PageShell>
       {(open) => (

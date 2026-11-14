@@ -8,7 +8,7 @@ import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => seo(
-    "ActivMarine | Marine Engineering, Supply & Solutions — China",
+    "Activ Marine | Marine Engineering, Supply & Solutions — China",
     "Former seafarers and marine surveyors delivering ship spares, technical services, China sourcing, docking supervision and marine surveys across China.",
   ),
   component: Index,

@@ -3,9 +3,9 @@ import { useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { Menu, X, ArrowUpRight, ChevronDown } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { NAV, SERVICES, CONTACT } from "./content";
+import { HEADER_NAV, SERVICES, CONTACT } from "./content";
 import { Logo } from "./Reveal";
-import { ThemeSelector } from "./ThemeSelector";
+import { useChinaTime } from "./PortPanel";
 
 const linkCls = "text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:text-primary";
 
@@ -13,6 +13,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
+  const chinaTime = useChinaTime();
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (v) => { setSolid(v > 40); setMega(false); });
   return (
@@ -23,9 +24,17 @@ export function Header({ onQuote }: { onQuote: () => void }) {
       className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid || mega ? "glass border-b border-border" : "bg-background border-b border-border"}`}
       onMouseLeave={() => setMega(false)}
     >
+      {/* Status strip: the office's local time and the response commitment, on every page. */}
+      <div className="border-b border-border bg-abyss text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="mx-auto flex h-8 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 3xl:mx-0 3xl:max-w-none 3xl:px-[7vw]">
+          <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />China <span className="tabular-nums text-foreground">{chinaTime ?? "--:--"}</span></span>
+          <span><span className="hidden sm:inline">Enquiries acknowledged within 2 hours</span><span className="sm:hidden">Acknowledged within 2 h</span></span>
+          <a href={`mailto:${CONTACT.email}`} className="hidden normal-case tracking-normal text-foreground hover:text-primary md:inline">{CONTACT.email}</a>
+        </div>
+      </div>
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 3xl:mx-0 3xl:max-w-none 3xl:px-[7vw]">
         <div className="flex min-w-0 items-center gap-6 3xl:gap-12">
-          <Link to="/" className="flex items-center gap-3" aria-label="ActivMarine home">
+          <Link to="/" className="flex items-center gap-3" aria-label="Activ Marine home">
             <Logo />
             <span className="leading-none">
               <span className="block font-display text-2xl tracking-[0.12em]">ACTIVMARINE</span>
@@ -33,7 +42,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
             </span>
           </Link>
           <nav className="hidden items-center gap-4 xl:flex 3xl:gap-8" aria-label="Main navigation">
-            {NAV.map((n) =>
+            {HEADER_NAV.map((n) =>
               n.to === "/services" ? (
                 <button key={n.to} onMouseEnter={() => setMega(true)} onClick={() => setMega(!mega)} aria-expanded={mega} className={`${linkCls} inline-flex items-center gap-1`}>
                   {n.label} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${mega ? "rotate-180" : ""}`} />
@@ -45,9 +54,8 @@ export function Header({ onQuote }: { onQuote: () => void }) {
           </nav>
         </div>
         <div className="flex shrink-0 items-center gap-3">
-          <ThemeSelector />
           <Button onClick={onQuote} className="h-auto rounded-none group hidden items-center gap-2 bg-primary px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-all hover:shadow-glow sm:inline-flex">
-            Request a Quote <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            Send enquiry <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Button>
           <button className="p-2 xl:hidden" aria-label="Toggle navigation" aria-expanded={open} onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
@@ -79,8 +87,8 @@ export function Header({ onQuote }: { onQuote: () => void }) {
 
       <AnimatePresence>
         {open && (
-          <motion.nav initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="glass max-h-[calc(100svh-5rem)] overflow-y-auto border-t border-border px-6 pb-8 xl:hidden">
-            {NAV.map((n, i) => (
+          <motion.nav initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="glass max-h-[calc(100svh-7rem)] overflow-y-auto border-t border-border px-6 pb-8 xl:hidden">
+            {HEADER_NAV.map((n, i) => (
               <motion.div key={n.to} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
                 <Link to={n.to} onClick={() => setOpen(false)} className="block border-b border-border py-4 font-display text-3xl">{n.label}</Link>
                 {n.to === "/services" && (
@@ -94,7 +102,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
             ))}
             <a href={`mailto:${CONTACT.email}`} className="mt-6 block text-sm text-primary">{CONTACT.email}</a>
             <button onClick={() => { setOpen(false); onQuote(); }} className="mt-6 w-full bg-primary py-4 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground">
-              Request a Quote
+              Send enquiry
             </button>
           </motion.nav>
         )}

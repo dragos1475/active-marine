@@ -9,7 +9,7 @@ import { PAGE_IMAGES } from "@/components/site/imagery";
 const deck = PAGE_IMAGES.about;
 
 export const Route = createFileRoute("/about")({
-  head: () => seo("About ActivMarine | Former seafarers in China", "Who we are: former mariners, engineers and surveyors supporting ship owners and managers across China."),
+  head: () => seo("About Activ Marine | Former seafarers in China", "Who we are: former mariners, engineers and surveyors supporting ship owners and managers across China."),
   component: () => (
     <PageShell>
       {(open) => (

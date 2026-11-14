@@ -206,3 +206,30 @@ export function responseTimes(sentAt: Date): { acknowledgeBy: Date; indicationBy
 export function formatWhen(date: Date, timeZone?: string): string {
   return new Intl.DateTimeFormat("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit", ...(timeZone ? { timeZone } : {}) }).format(date);
 }
+
+// ——— Live preview: what is still missing, and dates that look wrong ———
+
+/** Details the office usually has to ask for next. None of them stops the enquiry from being sent. */
+export function enquiryGaps(fields: EnquiryFields, items: EnquiryItem[]): string[] {
+  const gaps: string[] = [];
+  if (!items.some(hasContent) && !fields.details.trim()) gaps.push("No items or description yet");
+  if (!fields.port.trim()) gaps.push("No port or yard");
+  if (!fields.eta) gaps.push("No vessel ETA");
+  if (!fields.requiredBy) gaps.push("No required-by date");
+  if (!fields.imo.trim()) gaps.push("No IMO number");
+  return gaps;
+}
+
+/** Dates already behind us are almost always a slip of the date picker. `today` is YYYY-MM-DD. */
+export function dateWarnings(fields: Pick<EnquiryFields, "eta" | "requiredBy">, today: string): string[] {
+  const warnings: string[] = [];
+  if (fields.eta && fields.eta < today) warnings.push("The vessel ETA is in the past.");
+  if (fields.requiredBy && fields.requiredBy < today) warnings.push("The required-by date is in the past.");
+  return warnings;
+}
+
+/** Local calendar date as YYYY-MM-DD, the format date inputs use. */
+export function localDate(now: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}

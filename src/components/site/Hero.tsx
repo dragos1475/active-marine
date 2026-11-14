@@ -19,7 +19,7 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
         <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground">Led by former seafarers and marine surveyors. Send the maker, model or part number: we source, inspect and deliver to the vessel, and put engineers on board when the job needs them.</p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           {/* On phones the fixed action bar already carries Send enquiry and Email. */}
-          <Button size="lg" onClick={onQuote} className="hidden h-auto rounded-none px-6 py-4 sm:inline-flex text-xs font-bold uppercase tracking-widest">Send Enquiry <ArrowUpRight /></Button>
+          <Button size="lg" onClick={onQuote} className="hidden h-auto rounded-none px-6 py-4 sm:inline-flex text-xs font-bold uppercase tracking-widest">Send enquiry <ArrowUpRight /></Button>
           <Button asChild variant="outline" size="lg" className="h-auto rounded-none px-6 py-4 text-xs font-bold uppercase tracking-widest"><Link to="/services">Explore Services <ArrowUpRight /></Link></Button>
         </div>
         <p className="mt-4 hidden text-sm text-muted-foreground sm:block">

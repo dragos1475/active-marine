@@ -13,14 +13,14 @@ export const Route = createFileRoute("/insights/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.title} | ActivMarine Insights` },
+          { title: `${loaderData.title} | Activ Marine Insights` },
           { name: "description", content: loaderData.excerpt },
           { property: "og:title", content: loaderData.title },
           { property: "og:description", content: loaderData.excerpt },
           { property: "og:type", content: "article" },
           { name: "twitter:card", content: "summary_large_image" },
         ]
-      : [{ title: "Article unavailable | ActivMarine" }, { name: "robots", content: "noindex" }],
+      : [{ title: "Article unavailable | Activ Marine" }, { name: "robots", content: "noindex" }],
   }),
   notFoundComponent: () => (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
@@ -46,7 +46,7 @@ function Article() {
           </div>
           <div className="mt-16 border-l-2 border-primary bg-muted p-8">
             <p className="font-display text-3xl uppercase">Facing this on your vessel?</p>
-            <Button onClick={open} className="h-auto rounded-none mt-4 bg-primary px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground">Request a Quote</Button>
+            <Button onClick={open} className="h-auto rounded-none mt-4 bg-primary px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground">Send enquiry</Button>
           </div>
         </article>
       )}

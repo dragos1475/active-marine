@@ -24,10 +24,10 @@ export const Route = createFileRoute("/enquiry")({
 
 function Enquiry() {
   const { part, type = "", port = "", eta = "" } = Route.useSearch();
-  return <PageShell>{() => <section className="mx-auto max-w-5xl px-6 pb-24 pt-36">
+  return <PageShell>{() => <section className="mx-auto max-w-7xl px-6 pb-24 pt-36">
     <p className="eyebrow">Activ Marine Limited · China</p>
     <h1 className="mt-6 text-5xl uppercase sm:text-7xl">Send an Enquiry</h1>
-    <img src={PLACEMENT_IMAGES.enquiry.src} alt="Illustrative marine piston, cylinder liner and precision spare parts" loading="lazy" width={1536} height={1024} className="mt-8 h-32 w-full border-y border-border object-cover sm:h-40" />
+    <img src={PLACEMENT_IMAGES.enquiry.src} alt="Illustrative marine piston, cylinder liner and precision spare parts" loading="lazy" width={1536} height={1024} className="mt-8 h-32 w-full max-w-5xl border-y border-border object-cover sm:h-40" />
     <p className="mt-6 max-w-3xl leading-relaxed text-muted-foreground">We acknowledge all enquiries within 2 hours, while trying our best to have you an indication on availability and pricing within 48 hours.</p>
     <p className="mt-4 max-w-3xl text-sm text-muted-foreground">This form prepares your enquiry as an email to <a className="text-primary underline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Nothing is sent automatically: open it in your email app or copy the text, attach any drawings, then send.</p>
     <EnquiryForm part={part} type={type} port={port} eta={eta} />

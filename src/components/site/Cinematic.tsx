@@ -73,7 +73,7 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
               <div className={`h-full w-full origin-left bg-tide ${secondsLeft === 0 && !ready ? "am-loading-wait" : "am-loading-progress"}`} />
             </div>
             <div className="mt-3 flex justify-between text-[9px] uppercase tracking-[0.2em] text-muted-foreground/60" aria-hidden="true">
-              <span>ActivMarine</span><span>China / At sea</span>
+              <span>Activ Marine</span><span>China / At sea</span>
             </div>
           </div>
         </div>

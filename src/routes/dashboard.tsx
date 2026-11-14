@@ -6,9 +6,9 @@ import { MockLabel } from "@/components/site/More";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard (demo) | ActivMarine" },
+      { title: "Dashboard (demo) | Activ Marine" },
       { name: "description", content: "Demo overview of website visits and quotation requests." },
-      { property: "og:title", content: "Dashboard (demo) | ActivMarine" },
+      { property: "og:title", content: "Dashboard (demo) | Activ Marine" },
       { property: "og:description", content: "Demo overview of website visits and quotation requests." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

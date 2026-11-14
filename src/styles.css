@@ -8,6 +8,13 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+/* Fonts ship with the site (no third-party font host), so they also load where Google Fonts is unreachable. */
+@import "@fontsource/bebas-neue/400.css";
+@import "@fontsource/barlow/300.css";
+@import "@fontsource/barlow/400.css";
+@import "@fontsource/barlow/500.css";
+@import "@fontsource/barlow/600.css";
+@import "@fontsource/barlow/700.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -300,7 +307,7 @@
   :root[data-theme="medium"] .daylight-hero { --hero-wash: linear-gradient(90deg, oklch(0.87 0.014 220 / 97%), oklch(0.87 0.014 220 / 85%)); }
   :root[data-theme="dark"] .daylight-hero { --hero-wash: linear-gradient(90deg, oklch(0.19 0.025 245 / 97%), oklch(0.19 0.025 245 / 85%)); }
   /* On phones the hero is as tall as its content, so the key figures stay on the first screen. */
-  .daylight-hero > div:last-child { min-height: 0; padding-top: 7.5rem; padding-bottom: 2.5rem; }
+  .daylight-hero > div:last-child { min-height: 0; padding-top: 9.5rem; padding-bottom: 2.5rem; }
 }
 
 
