@@ -8,20 +8,45 @@ import { CONTACT, SERVICES, STEPS, TAGS, NAV } from "./content";
 import { LIST_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 import approachWide from "@/assets/about-logistics-underway.jpg";
 
-const MARQUEE = ["Ship Spares", "Technical Services", "China Sourcing", "Logistics", "Docking Supervision", "Marine Surveys"];
+const MARQUEE = [
+  { t: "Ship Spares", d: "OEM & genuine parts" },
+  { t: "Technical Services", d: "Riding squads, on call" },
+  { t: "China Sourcing", d: "Direct from the makers" },
+  { t: "Logistics", d: "Port-side delivery" },
+  { t: "Docking Supervision", d: "Owner's representation" },
+  { t: "Marine Surveys", d: "Condition & damage" },
+];
 
 export function Marquee() {
   const items = [...MARQUEE, ...MARQUEE];
   return (
-    <div className="overflow-hidden border-y border-border bg-abyss py-6">
-      <div className="flex w-max animate-marquee gap-12">
-        {items.map((t, i) => (
-          <span key={i} className="flex items-center gap-12 font-display text-4xl uppercase text-muted-foreground">
-            {t} <span className="text-primary">✦</span>
-          </span>
-        ))}
+    <section aria-label="Capabilities" className="am-ticker relative overflow-hidden border-y border-border bg-abyss">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-5 text-[0.65rem] uppercase tracking-[0.35em] text-muted-foreground">
+        <span>Capabilities — Index</span>
+        <span className="hidden sm:inline">All Chinese ports · incl. Hong Kong</span>
+        <span className="text-burgundy">N° 01—06</span>
       </div>
-    </div>
+      <div className="am-ticker-mask py-6">
+        <div className="flex w-max animate-marquee items-baseline gap-14 hover:[animation-play-state:paused]">
+          {items.map((m, i) => (
+            <span key={i} className="flex items-baseline gap-5">
+              <sup className="font-sans text-xs font-medium tracking-[0.2em] text-primary">{String((i % MARQUEE.length) + 1).padStart(2, "0")}</sup>
+              <span className={`font-display text-6xl uppercase leading-none tracking-[0.02em] md:text-7xl ${i % 2 ? "am-outline" : "text-foreground"}`}>{m.t}</span>
+              <span aria-hidden className="mx-2 h-px w-16 self-center bg-mustard/70" />
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="am-ticker-mask border-t border-border/60 py-3">
+        <div className="flex w-max animate-marquee-rev gap-10">
+          {items.map((m, i) => (
+            <span key={i} className="flex items-center gap-10 font-sans text-sm italic tracking-wide text-muted-foreground">
+              {m.d} <span className="not-italic text-mustard">/</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

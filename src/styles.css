@@ -80,7 +80,8 @@
   --color-burgundy-bright: var(--burgundy-bright);
   --font-display: "Bebas Neue", "Barlow", sans-serif;
   --font-sans: "Barlow", system-ui, sans-serif;
-  --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee: marquee 60s linear infinite;
+  --animate-marquee-rev: marquee 80s linear infinite reverse;
 }
 
 :root {
@@ -300,3 +301,7 @@
   :root[data-theme="dark"] .daylight-hero { --hero-wash: linear-gradient(90deg, oklch(0.19 0.025 245 / 97%), oklch(0.19 0.025 245 / 85%)); }
   .daylight-hero > div:last-child { min-height: 720px; }
 }
+
+.am-outline { color: transparent; -webkit-text-stroke: 1px var(--foreground); opacity: 0.75; }
+.am-ticker-mask { -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+@media (prefers-reduced-motion: reduce) { .am-ticker .animate-marquee, .am-ticker .animate-marquee-rev { animation: none; } }
