@@ -11,6 +11,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --breakpoint-3xl: 160rem;
+}
+
 /*
  * Design system definition.
  *

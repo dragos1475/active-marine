@@ -75,7 +75,7 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
       <div className="absolute inset-0 z-[1] bg-side" />
       <div className="absolute inset-0 z-[1] bg-veil" />
 
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32 pt-28">
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-32 pt-28 3xl:mx-0 3xl:max-w-none 3xl:justify-center 3xl:px-[7vw] 3xl:pb-0 3xl:pt-0">
         <p className="eyebrow mb-6 flex items-center gap-4">
           <span className="h-px w-12 bg-primary" /> Shanghai · Engineering · Supply · Solutions
         </p>
@@ -93,7 +93,7 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
             </span>
           </span>
         </h1>
-        <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between 3xl:max-w-4xl 3xl:justify-start 3xl:gap-16">
           <p className="max-w-md text-lg font-light leading-relaxed text-muted-foreground">
             Led by former seafarers and marine surveyors. Practical engineering, dependable marine supply and responsive technical solutions for vessels and operators.
           </p>
