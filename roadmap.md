@@ -1,4 +1,5 @@
 # Roadmap
+- [x] Give every photographic placement a distinct relevant image across all pages, retaining all 74 placements; verified on desktop and mobile with uniqueness tests.
 - [x] Replace unsuitable rope and people imagery with relevant maritime subjects; add compact images to service and workflow touchpoints.
 - [x] Add restrained daylight maritime photography to About, Network, Contact, FAQ and Enquiry; brighten Projects and Insights imagery and keep text readable in every theme.
 - [x] Add a persistent Light / Medium / Dark selector to desktop and mobile navigation, covering all pages and the homepage image wash.

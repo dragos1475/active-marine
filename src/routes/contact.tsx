@@ -3,7 +3,8 @@ import { Contact } from "@/components/site/Sections";
 import { PageHero, ShanghaiClock } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
-import deck from "@/assets/marine-port-logistics.jpg";
+import { PAGE_IMAGES } from "@/components/site/imagery";
+const deck = PAGE_IMAGES.contact;
 
 export const Route = createFileRoute("/contact")({
   head: () => seo("Contact ActivMarine | China enquiries", "Email, call or message ActivMarine in China for spares, repairs, sourcing, docking or surveys."),

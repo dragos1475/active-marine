@@ -4,7 +4,8 @@ import { PortsMap } from "@/components/site/More";
 import { CtaBand, PageHero, ShanghaiClock } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
-import port from "@/assets/china-port-daylight.jpg";
+import { PAGE_IMAGES } from "@/components/site/imagery";
+const port = PAGE_IMAGES.network;
 
 export const Route = createFileRoute("/network")({
   head: () => seo("China ports network | ActivMarine", "Support across all Chinese ports including Hong Kong."),

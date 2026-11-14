@@ -5,8 +5,8 @@ import { ArrowUpRight, Mail } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Reveal, Logo } from "./Reveal";
 import { CONTACT, SERVICES, STEPS, TAGS, NAV } from "./content";
-import { MARITIME_IMAGES, SERVICE_IMAGES } from "./imagery";
-const { machinery: engine, drydock: shipyard, spares, logistics } = MARITIME_IMAGES;
+import { LIST_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
+import approachWide from "@/assets/about-logistics-underway.jpg";
 
 const MARQUEE = ["Ship Spares", "Technical Services", "China Sourcing", "Logistics", "Docking Supervision", "Marine Surveys"];
 
@@ -56,14 +56,14 @@ export function About() {
   );
 }
 
-function ServiceCard({ s, className = "", image }: { s: (typeof SERVICES)[0]; className?: string; image?: string }) {
+function ServiceCard({ s, className = "", image }: { s: (typeof SERVICES)[0]; className?: string; image?: string | undefined }) {
   return (
     <motion.article
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
       className={`group relative flex flex-col justify-end overflow-hidden border border-border bg-card p-8 shadow-deep ${className}`}
     >
-      {!image && SERVICE_IMAGES[s.slug] && <img src={SERVICE_IMAGES[s.slug]?.src} alt={SERVICE_IMAGES[s.slug]?.alt} loading="lazy" width={1536} height={1024} className="mb-6 h-24 w-36 border border-border object-cover" />}
+      {!image && LIST_SERVICE_IMAGES[s.slug] && <img src={LIST_SERVICE_IMAGES[s.slug]?.src} alt={LIST_SERVICE_IMAGES[s.slug]?.alt} loading="lazy" width={1536} height={1024} className="mb-6 h-24 w-36 border border-border object-cover" />}
       {image && (
         <>
           <img src={image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-[1.5s] group-hover:scale-110" />
@@ -95,11 +95,11 @@ export function Services() {
         <p className="max-w-xs text-muted-foreground">Six connected areas of support designed around the practical demands of shipping and ship management.</p>
       </Reveal>
       <div className="grid auto-rows-[minmax(280px,auto)] gap-4 md:grid-cols-6">
-        <Reveal className="md:col-span-4 md:row-span-2"><ServiceCard s={b} image={engine} className="h-full min-h-[560px]" /></Reveal>
+        <Reveal className="md:col-span-4 md:row-span-2"><ServiceCard s={b} image={LIST_SERVICE_IMAGES[b.slug]?.src} className="h-full min-h-[560px]" /></Reveal>
         <Reveal delay={0.1} className="md:col-span-2"><ServiceCard s={a} className="h-full" /></Reveal>
         <Reveal delay={0.2} className="md:col-span-2"><ServiceCard s={d} className="h-full bg-secondary" /></Reveal>
-        <Reveal className="md:col-span-3"><ServiceCard s={c} image={spares} className="h-full min-h-[380px]" /></Reveal>
-        <Reveal delay={0.1} className="md:col-span-3"><ServiceCard s={e} image={shipyard} className="h-full min-h-[380px]" /></Reveal>
+        <Reveal className="md:col-span-3"><ServiceCard s={c} image={LIST_SERVICE_IMAGES[c.slug]?.src} className="h-full min-h-[380px]" /></Reveal>
+        <Reveal delay={0.1} className="md:col-span-3"><ServiceCard s={e} image={LIST_SERVICE_IMAGES[e.slug]?.src} className="h-full min-h-[380px]" /></Reveal>
         <Reveal className="md:col-span-6"><ServiceCard s={f} className="h-full bg-tide [&_p]:text-primary-foreground [&_*]:text-primary-foreground" /></Reveal>
       </div>
     </section>
@@ -123,7 +123,7 @@ export function Approach() {
         <div className="space-y-4">
           {STEPS.map((s, i) => (
             <Reveal key={s.n} delay={i * 0.1} className="group border border-border bg-card p-10 transition-colors hover:border-primary">
-              <div className="flex items-start justify-between gap-6"><div className="text-tide font-display text-8xl">{s.n}</div><img src={[spares, engine, logistics][i]} alt={["Illustrative marine spare parts", "Illustrative marine engine", "Illustrative vessel delivery terminal"][i]} loading="lazy" width={1536} height={1024} className="h-20 w-28 shrink-0 border border-border object-cover sm:h-24 sm:w-36" /></div>
+              <div className="flex items-start justify-between gap-6"><div className="text-tide font-display text-8xl">{s.n}</div><img src={PLACEMENT_IMAGES[`approach-${i}` as "approach-0" | "approach-1" | "approach-2"].src} alt={["Illustrative marine spare parts", "Illustrative marine engine", "Illustrative vessel delivery terminal"][i]} loading="lazy" width={1536} height={1024} className="h-20 w-28 shrink-0 border border-border object-cover sm:h-24 sm:w-36" /></div>
               <h3 className="mt-4 text-4xl uppercase">{s.title}</h3>
               <p className="mt-3 text-muted-foreground">{s.text}</p>
             </Reveal>
@@ -134,7 +134,7 @@ export function Approach() {
         </div>
       </div>
       <div ref={ref} className="relative mt-32 h-[80vh] overflow-hidden">
-        <motion.img style={{ y }} src={logistics} alt="Illustrative container vessel and port logistics in daylight" loading="lazy" className="absolute inset-0 h-[130%] w-full -translate-y-[15%] object-cover" />
+        <motion.img style={{ y }} src={approachWide} alt="Illustrative container vessel and port logistics in daylight" loading="lazy" className="absolute inset-0 h-[130%] w-full -translate-y-[15%] object-cover" />
         <div className="absolute inset-0 bg-veil" />
         <div className="absolute bottom-10 left-6 right-6 mx-auto max-w-7xl">
           <p className="font-display text-[clamp(2.5rem,6vw,5rem)] uppercase">Keeping the maritime world moving.</p>
@@ -152,7 +152,7 @@ export function China() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
   return (
     <section ref={ref} id="china" className="grain relative overflow-hidden py-40">
-      <motion.img style={{ y: bgY }} src={shipyard} alt="" loading="lazy" className="absolute inset-0 h-[120%] w-full object-cover opacity-30" />
+      <motion.img style={{ y: bgY }} src={PLACEMENT_IMAGES["network-background"].src} alt="" loading="lazy" className="absolute inset-0 h-[120%] w-full object-cover opacity-30" />
       <div className="absolute inset-0 bg-veil" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
         <Reveal>
@@ -170,7 +170,7 @@ export function China() {
         <Reveal delay={0.2} className="relative mx-auto aspect-square w-full max-w-lg">
           <motion.div style={{ rotate }} className="absolute -inset-6 rounded-full border border-dashed border-primary/40" />
           <div className="absolute -inset-12 rounded-full border border-border" />
-          <img src={spares} alt="Marine spare parts: cylinder liner, pistons, pump, valves and electronics" loading="lazy" className="relative h-full w-full rounded-full object-cover shadow-glow" />
+          <img src={PLACEMENT_IMAGES["network-parts"].src} alt="Marine spare parts: cylinder liner, pistons, pump, valves and electronics" loading="lazy" className="relative h-full w-full rounded-full object-cover shadow-glow" />
           <p className="mt-14 text-center text-xs uppercase tracking-[0.25em] text-muted-foreground">Cylinder liners · Pistons · Pumps · Valves · Electronics</p>
         </Reveal>
       </div>

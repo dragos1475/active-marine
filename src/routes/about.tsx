@@ -5,7 +5,8 @@ import { CtaBand } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
 import { MaritimeImage } from "@/components/site/MaritimeImage";
-import deck from "@/assets/marine-drydock-daylight.jpg";
+import { PAGE_IMAGES } from "@/components/site/imagery";
+const deck = PAGE_IMAGES.about;
 
 export const Route = createFileRoute("/about")({
   head: () => seo("About ActivMarine | Former seafarers in China", "Who we are: former mariners, engineers and surveyors supporting ship owners and managers across China."),

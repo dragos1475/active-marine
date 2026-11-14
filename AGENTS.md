@@ -40,4 +40,4 @@ use the editor.
 - ThemeProvider owns the light/medium/dark choice at the root and restores browser storage after hydration; theme overrides include the homepage's scoped wash — keeps navigation persistent without SSR browser access or mismatched markup.
 - Interior page imagery uses PageHero's theme-aware image wash or MaritimeImage's compact photo band, with generated scenes described as illustrative where descriptive alt text is present — adds restrained maritime color without obscuring text or implying verified company photography.
 
-- Use the shared imagery module for service thumbnails and service-page photos so each subject remains consistent across navigation touchpoints.
+- Allocate imagery by page and placement in the shared imagery module, with separate maps for homepage, service listing, detail hero and each related-service pair; never reuse a source across placements — keeps subjects relevant while making duplication testable.

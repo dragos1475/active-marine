@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FaqList, PageHero } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
-import vessel from "@/assets/china-daylight-vessel.jpg";
+import { PAGE_IMAGES } from "@/components/site/imagery";
+const vessel = PAGE_IMAGES.faq;
 
 export const Route = createFileRoute("/faq")({
   head: () => seo("FAQ | ActivMarine — Delivery, customs, payment, warranty", "Answers on ports covered, genuine parts, response times, customs, payment terms and warranty."),

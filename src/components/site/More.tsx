@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { MessageCircle, X, MapPin, ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { TEAM, CASES, MAKERS, CERTS, PORTS, CONTACT } from "./content";
-import { MARITIME_IMAGES } from "./imagery";
+import { PLACEMENT_IMAGES } from "./imagery";
 
 export function MockLabel({ children = "Illustrative mockup" }: { children?: string }) {
   return <span className="inline-block border border-input px-2 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-muted-foreground">{children}</span>;
@@ -52,7 +52,7 @@ export function Cases() {
         <div className="grid gap-4 lg:grid-cols-3">
           {CASES.map((c, i) => (
             <Reveal key={c.title} delay={i * 0.12} className="group flex flex-col border border-border bg-card p-8 transition-colors hover:border-primary">
-              <img src={[MARITIME_IMAGES.spares, MARITIME_IMAGES.machinery, MARITIME_IMAGES.drydock][i]} alt={["Illustrative marine spare parts", "Illustrative marine engine equipment", "Illustrative ship in dry dock"][i]} loading="lazy" width={1536} height={1024} className="mb-6 h-24 w-36 border border-border object-cover" />
+              <img src={PLACEMENT_IMAGES[`case-${i}` as "case-0" | "case-1" | "case-2"].src} alt={["Illustrative marine spare parts", "Illustrative marine engine equipment", "Illustrative ship in dry dock"][i]} loading="lazy" width={1536} height={1024} className="mb-6 h-24 w-36 border border-border object-cover" />
               <div className="flex items-center justify-between">
                 <span className="eyebrow">{c.tag}</span>
                 <span className="flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3 w-3" />{c.port}</span>

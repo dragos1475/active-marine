@@ -6,7 +6,7 @@ import { Reveal } from "./Reveal";
 import { Button } from "@/components/ui/button";
 import { MockLabel } from "./More";
 import { FAQ, SERVICES, STATS, TESTIMONIALS, TIMELINE } from "./content";
-import { SERVICE_IMAGES, MARITIME_IMAGES } from "./imagery";
+import { HOME_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 
 export function PageHero({ eyebrow, title, accent, text, image }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined }) {
   return (
@@ -67,7 +67,7 @@ export function ServicesTeaser() {
         {SERVICES.map((s, i) => (
           <Reveal key={s.slug} delay={(i % 3) * 0.08} className="bg-background">
             <Link to="/services/$slug" params={{ slug: s.slug }} className="group flex h-full flex-col p-8 transition-colors hover:bg-card">
-              <div className="flex items-start justify-between gap-4"><span className="font-display text-5xl text-muted-foreground transition-colors group-hover:text-mustard">{s.n}</span><img src={SERVICE_IMAGES[s.slug]?.src} alt={SERVICE_IMAGES[s.slug]?.alt} width={1536} height={1024} loading="lazy" className="h-20 w-28 shrink-0 border border-border object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" /></div>
+              <div className="flex items-start justify-between gap-4"><span className="font-display text-5xl text-muted-foreground transition-colors group-hover:text-mustard">{s.n}</span><img src={HOME_SERVICE_IMAGES[s.slug]?.src} alt={HOME_SERVICE_IMAGES[s.slug]?.alt} width={1536} height={1024} loading="lazy" className="h-20 w-28 shrink-0 border border-border object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" /></div>
               <span className="mt-6 font-display text-3xl uppercase">{s.title}</span>
               <span className="mt-3 text-sm text-muted-foreground">{s.tag}</span>
               <ArrowUpRight className="mt-6 h-5 w-5 text-primary transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
@@ -134,13 +134,13 @@ export function Testimonials() {
   );
 }
 
-export function PartsSearch() {
+export function PartsSearch({ placement = "home-parts" }: { placement?: "home-parts" | "services-parts" }) {
   const [q, setQ] = useState("");
   const navigate = useNavigate();
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <Reveal className="glass relative overflow-hidden border border-border p-10 md:p-16">
-        <img src={MARITIME_IMAGES.spares} alt="Illustrative marine piston and precision spare parts" width={1536} height={1024} loading="lazy" className="mb-6 h-24 w-36 border border-border object-cover md:float-right md:mb-0 md:ml-8 md:h-32 md:w-48" />
+        <img src={PLACEMENT_IMAGES[placement].src} alt={PLACEMENT_IMAGES[placement].alt} width={1536} height={1024} loading="lazy" className="mb-6 h-24 w-36 border border-border object-cover md:float-right md:mb-0 md:ml-8 md:h-32 md:w-48" />
         <p className="eyebrow">Quick parts enquiry</p>
         <h2 className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] uppercase">Know the part number?</h2>
         <p className="mt-4 max-w-lg text-muted-foreground">Type the part number, maker or model and send it straight to our sourcing desk.</p>
