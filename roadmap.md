@@ -1,4 +1,5 @@
 # Roadmap
+- [x] Add a persistent Light / Medium / Dark selector to desktop and mobile navigation, covering all pages and the homepage image wash.
 - [x] Apply the daylight palette across all pages, navigation, forms, map, footer and opening intro; retain restrained marine, mustard and burgundy accents.
 - [x] Simplify and brighten homepage; remove illustrative figures and team, update China wording, network map, FAQ and company; remove Gallery tab; use normal cursor and full enquiry page.
 - [x] 1. Quote form — user chose mockup only for now (no database); keeps copy-to-email

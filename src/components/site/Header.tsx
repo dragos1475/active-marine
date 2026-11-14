@@ -5,6 +5,7 @@ import { Menu, X, ArrowUpRight, ChevronDown } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { NAV, SERVICES, CONTACT } from "./content";
 import { Logo } from "./Reveal";
+import { ThemeSelector } from "./ThemeSelector";
 
 const linkCls = "text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:text-primary";
 
@@ -22,15 +23,15 @@ export function Header({ onQuote }: { onQuote: () => void }) {
       className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid || mega ? "glass border-b border-border" : "bg-background border-b border-border"}`}
       onMouseLeave={() => setMega(false)}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
         <Link to="/" className="flex items-center gap-3" aria-label="ActivMarine home">
           <Logo />
           <span className="leading-none">
             <span className="block font-display text-2xl tracking-[0.12em]">ACTIVMARINE</span>
-            <span className="block text-[0.55rem] tracking-[0.3em] text-muted-foreground">ENGINEERING · SUPPLY · SOLUTIONS</span>
+            <span className="hidden text-[0.55rem] tracking-[0.3em] text-muted-foreground min-[400px]:block">ENGINEERING · SUPPLY · SOLUTIONS</span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-6 xl:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-4 xl:flex" aria-label="Main navigation">
           {NAV.map((n) =>
             n.to === "/services" ? (
               <button key={n.to} onMouseEnter={() => setMega(true)} onClick={() => setMega(!mega)} aria-expanded={mega} className={`${linkCls} inline-flex items-center gap-1`}>
@@ -42,6 +43,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
           )}
         </nav>
         <div className="flex items-center gap-3">
+          <ThemeSelector />
           <Button onClick={onQuote} className="h-auto rounded-none group hidden items-center gap-2 bg-primary px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-all hover:shadow-glow sm:inline-flex">
             Request a Quote <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Button>
