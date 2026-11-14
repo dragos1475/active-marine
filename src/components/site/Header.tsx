@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 import { HEADER_NAV, SERVICES, CONTACT } from "./content";
 import { Logo } from "./Reveal";
 
-const linkCls = "text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:text-primary";
+const linkCls = "text-base font-medium tracking-wide text-muted-foreground transition-colors hover:text-primary";
 
 export function Header({ onQuote }: { onQuote: () => void }) {
   const [solid, setSolid] = useState(false);
@@ -22,8 +22,9 @@ export function Header({ onQuote }: { onQuote: () => void }) {
       className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid || mega ? "glass border-b border-border" : "bg-background border-b border-border"}`}
       onMouseLeave={() => setMega(false)}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 3xl:mx-0 3xl:max-w-none 3xl:px-[7vw]">
-        <div className="flex min-w-0 items-center gap-6 3xl:gap-12">
+      {/* Full-width bar: logo at the left edge, menu centred, enquiry button at the right edge. */}
+      <div className="flex h-20 items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 xl:grid xl:grid-cols-[1fr_auto_1fr] 3xl:px-10">
+        <div className="flex min-w-0 items-center">
           <Link to="/" className="flex items-center gap-3" aria-label="Activ Marine home">
             <Logo />
             <span className="leading-none">
@@ -31,19 +32,19 @@ export function Header({ onQuote }: { onQuote: () => void }) {
               <span className="hidden text-[0.55rem] tracking-[0.3em] text-muted-foreground min-[400px]:block">ENGINEERING · SUPPLY · SOLUTIONS</span>
             </span>
           </Link>
-          <nav className="hidden items-center gap-4 xl:flex 3xl:gap-8" aria-label="Main navigation">
+        </div>
+        <nav className="hidden items-center gap-8 xl:flex 3xl:gap-12" aria-label="Main navigation">
             {HEADER_NAV.map((n) =>
               n.to === "/services" ? (
                 <button key={n.to} onMouseEnter={() => setMega(true)} onClick={() => setMega(!mega)} aria-expanded={mega} className={`${linkCls} inline-flex items-center gap-1`}>
-                  {n.label} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${mega ? "rotate-180" : ""}`} />
+                  {n.label} <ChevronDown className={`h-4 w-4 transition-transform ${mega ? "rotate-180" : ""}`} />
                 </button>
               ) : (
                 <Link key={n.to} to={n.to} onMouseEnter={() => setMega(false)} className={linkCls} activeProps={{ className: "text-primary" }}>{n.label}</Link>
               ),
             )}
-          </nav>
-        </div>
-        <div className="flex shrink-0 items-center gap-3">
+        </nav>
+        <div className="flex shrink-0 items-center justify-end gap-3">
           <Button onClick={onQuote} className="h-auto rounded-none group hidden items-center gap-2 bg-primary px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-all hover:shadow-glow sm:inline-flex">
             Send enquiry <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Button>

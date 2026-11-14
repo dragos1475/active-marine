@@ -26,19 +26,12 @@ function bar() {
   return { container, logo, nav, quote };
 }
 
-it("keeps the logo and the menu together as the left group", () => {
-  const { logo, nav } = bar();
-  const leftGroup = logo.parentElement as HTMLElement;
-  expect(leftGroup).toBe(nav.parentElement);
-});
-
-it("puts the enquiry button in a separate right group", () => {
-  const { container, logo, quote } = bar();
+it("places the menu on its own between the logo and the enquiry button", () => {
+  const { container, logo, nav, quote } = bar();
   const leftGroup = logo.parentElement as HTMLElement;
   const rightGroup = quote.parentElement as HTMLElement;
-  expect(rightGroup).not.toBe(leftGroup);
-  expect(rightGroup.parentElement).toBe(container);
-  expect(leftGroup.parentElement).toBe(container);
+  expect([...container.children]).toEqual([leftGroup, nav, rightGroup]);
+  expect(container.className).toContain("xl:grid-cols-[1fr_auto_1fr]");
 });
 
 it("keeps the header to five destinations and leaves the theme choice to the footer", () => {
@@ -54,8 +47,8 @@ it("keeps the header to five destinations and leaves the theme choice to the foo
   expect(within(footer).getByRole("link", { name: "Insights" })).toBeInTheDocument();
 });
 
-it("lets the bar span the screen on very wide monitors instead of a centred column", () => {
+it("lets the bar span the screen so the logo and the button sit near the edges", () => {
   const { container } = bar();
-  expect(container.className).toContain("3xl:max-w-none");
-  expect(container.className).toContain("3xl:px-[7vw]");
+  expect(container.className).not.toContain("max-w-7xl");
+  expect(container.className).not.toContain("mx-auto");
 });
