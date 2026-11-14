@@ -141,8 +141,8 @@
 
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-@keyframes intro-fade { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
-.am-intro { animation: intro-fade 5s ease-out forwards; }
+@keyframes intro-fade { from { opacity: 1; } to { opacity: 0; } }
+.am-intro-leaving { animation: intro-fade 0.75s ease-out forwards; }
 @keyframes intro-wave { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 .am-intro-wave {
   stroke-dasharray: 1;

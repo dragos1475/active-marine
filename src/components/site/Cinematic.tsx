@@ -3,21 +3,29 @@ import { useEffect, useRef, useState } from "react";
 const INTRO_MS = 5000;
 
 /** First-visit cinematic intro (once per browser session). */
-export function Intro() {
+export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () => void }) {
   const [show, setShow] = useState(false);
+  const [elapsed, setElapsed] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   useEffect(() => {
-    if (sessionStorage.getItem("am-intro")) return;
+    if (sessionStorage.getItem("am-intro")) { onDone?.(); return; }
     sessionStorage.setItem("am-intro", "1");
     setShow(true);
-    const t = setTimeout(() => setShow(false), INTRO_MS);
+    const t = setTimeout(() => setElapsed(true), INTRO_MS - 750);
     return () => clearTimeout(t);
-  }, []);
+  }, [onDone]);
+  useEffect(() => {
+    if (!show || !elapsed || !ready) return;
+    setLeaving(true);
+    const t = setTimeout(() => { setShow(false); onDone?.(); }, 750);
+    return () => clearTimeout(t);
+  }, [show, elapsed, ready, onDone]);
   return (
     <>
       {show && (
         <div
-          className="am-intro fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background px-6"
-          onClick={() => setShow(false)}
+          className={`am-intro ${leaving ? "am-intro-leaving" : ""} fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background px-6`}
+          onClick={() => { setShow(false); onDone?.(); }}
         >
           <svg viewBox="0 0 52 52" className="h-24 w-24" aria-hidden="true">
             <path d="M25.5 4 47 42H36L25.5 22 15.5 42H5Z" className="fill-primary" />

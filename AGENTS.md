@@ -35,3 +35,4 @@ use the editor.
 - Keep homepage text outside animated transforms and opacity layers; the intro exits by fading rather than translating — prevents abrupt title motion and preserves sharp text above the videos.
 - Animate the intro wave and horizon with CSS, separate from static text and without a grain overlay — keeps the title crisp and the line animation independent of Motion scheduling.
 - Keep Vercel's asset-prefix rewrite pointing to the original Lovable media service — asset pointers contain relative URLs that otherwise resolve to missing files on external hosting; page routes must remain untouched.
+- Coordinate homepage intro and playlist through PlaybackContext: prioritize the first clip, reveal after its playback advances, and start rotation only after reveal — avoids exposing an unloaded or frozen clip at startup.

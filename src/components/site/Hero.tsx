@@ -6,6 +6,7 @@ import v2 from "@/assets/ship_golden_hour_aerial.mp4.asset.json";
 import v3 from "@/assets/shanghai_port_aerial.mp4.asset.json";
 import v4 from "@/assets/engine_room_cinematic.mp4.asset.json";
 import poster from "@/assets/hero.png.asset.json";
+import { usePlayback } from "./Playback";
 
 const words = ["Marine", "Expertise"];
 const CLIPS = [
@@ -18,15 +19,21 @@ const HOLD_MS = 5000; // time each clip stays on screen
 const FADE_MS = 2500; // slow crossfade between clips
 
 export function Hero({ onQuote }: { onQuote: () => void }) {
+  const { ready, revealed, markReady } = usePlayback();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.25]);
   const [active, setActive] = useState(0);
   const vids = useRef<(HTMLVideoElement | null)[]>([]);
   useEffect(() => {
-    const t = setInterval(() => setActive((a) => (a + 1) % CLIPS.length), HOLD_MS);
+    if (!ready || !revealed) return;
+    const t = setInterval(() => setActive((a) => {
+      const next = (a + 1) % CLIPS.length;
+      const video = vids.current[next];
+      return video && video.readyState >= 3 && !video.paused ? next : a;
+    }), HOLD_MS);
     return () => clearInterval(t);
-  }, []);
+  }, [ready, revealed]);
   // Restart the incoming clip while it is still invisible, so its full 8 s fits the on-screen
   // window (fade-in + hold + fade-out = 7.5 s) and its own loop point is never seen.
   useEffect(() => {
@@ -49,7 +56,9 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
             <video
               key={c.src}
               ref={(el) => { vids.current[i] = el; }}
-              src={c.src}
+              src={i === 0 || ready ? c.src : undefined}
+              onTimeUpdate={(e) => { if (i === 0 && e.currentTarget.currentTime > 0 && !e.currentTarget.paused) markReady(); }}
+              onError={() => { if (i === 0) markReady(); }}
               poster={i === 0 ? poster.url : undefined}
               autoPlay muted loop playsInline
               preload="auto"
@@ -101,7 +110,7 @@ export function Hero({ onQuote }: { onQuote: () => void }) {
 
       <div className="absolute bottom-10 right-6 z-10 hidden gap-4 md:flex">
         {CLIPS.map((c, i) => (
-          <button key={c.label} onClick={() => setActive(i)} aria-label={`Show ${c.label}`} className="group w-24 text-left">
+          <button key={c.label} onClick={() => { const video = vids.current[i]; if (video && video.readyState >= 3) setActive(i); }} aria-label={`Show ${c.label}`} className="group w-24 text-left">
             <span className="block h-px w-full overflow-hidden bg-input">
               <span
                 className={`block h-full bg-primary ${i === active ? "w-full transition-[width] ease-linear" : "w-0"}`}

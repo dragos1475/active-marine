@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <PageShell>
+    <PageShell waitForVideo>
       {(open) => (
         <>
           <Hero onQuote={open} />
