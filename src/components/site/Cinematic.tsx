@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const INTRO_MS = 5000;
+const INTRO_MS = 3000;
 const INTRO_SESSION_KEY = "am-intro-daylight";
 
 /** First-visit cinematic intro (once per browser session). */
@@ -8,7 +8,7 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
   const [show, setShow] = useState(false);
   const [elapsed, setElapsed] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(5);
+  const [secondsLeft, setSecondsLeft] = useState(INTRO_MS / 1000);
   useEffect(() => {
     if (sessionStorage.getItem(INTRO_SESSION_KEY)) { onDone?.(); return; }
     sessionStorage.setItem(INTRO_SESSION_KEY, "1");
@@ -24,6 +24,14 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
   }, [show, elapsed, ready, onDone]);
   useEffect(() => {
     if (!show) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { setShow(false); onDone?.(); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [show, onDone]);
+  useEffect(() => {
+    if (!show) return;
     const started = Date.now();
     const timer = setInterval(() => {
       setSecondsLeft(Math.max(0, Math.ceil((INTRO_MS - (Date.now() - started)) / 1000)));
@@ -37,6 +45,9 @@ export function Intro({ ready = true, onDone }: { ready?: boolean; onDone?: () =
           className={`am-intro ${leaving ? "am-intro-leaving" : ""} fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-background px-6 text-foreground`}
           onClick={() => { setShow(false); onDone?.(); }}
         >
+          <button type="button" className="absolute right-6 top-6 border border-border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground hover:border-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+            Skip intro
+          </button>
           <svg viewBox="0 0 52 52" className="h-24 w-24" aria-hidden="true">
             <path d="M25.5 4 47 42H36L25.5 22 15.5 42H5Z" className="fill-primary" />
             <path d="M8 43c10-8 18-8 28-2 4 2 8 3 12 1" className="am-intro-wave stroke-foreground" strokeWidth="4" fill="none" pathLength="1" />

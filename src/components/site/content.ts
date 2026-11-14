@@ -1,4 +1,6 @@
-type Svc = { n: string; slug: string; tag: string; title: string; text: string; points: string[] };
+// ask: how a client would phrase the need; enquiry: the matching entry in ENQUIRY_TYPES;
+// need: what the client should send so the first reply can be a useful one.
+type Svc = { n: string; slug: string; tag: string; title: string; text: string; points: string[]; ask: string; enquiry: string; need: string[] };
 export const CONTACT = {
   email: "office@activ-marine.com",
   // Placeholder details from the handover — replace when the owner supplies verified ones.
@@ -21,12 +23,12 @@ export const NAV = [
 ] as const;
 
 export const SERVICES: readonly [Svc, Svc, Svc, Svc, Svc, Svc] = [
-  { n: "01", slug: "ship-spares", tag: "Supply", title: "Ship Spares & Equipment", text: "Machinery parts, deck equipment, consumables and technical supplies for day-to-day operations.", points: ["Engine, pump and compressor spares", "Deck and mooring equipment", "Consumables and safety items", "Genuine, OEM and quality alternatives"] },
-  { n: "02", slug: "technical-services", tag: "Service", title: "Technical Services", text: "Engineering support, troubleshooting and repairs for propulsion engines, generators, cranes, engine and deck machinery, piping and steel work. Electrical and electronic repairs, including control systems, automation and fault diagnosis.", points: ["Main and auxiliary engine overhauls", "Crane and deck machinery repairs", "Piping and steel work", "Electrical, automation and PLC fault diagnosis"] },
-  { n: "03", slug: "china-sourcing", tag: "Sourcing", title: "China Sourcing & Procurement", text: "Direct contact with manufacturers in China, connecting your technical requirements with suitable products, competitive quotations and coordinated delivery.", points: ["Direct access to Chinese manufacturers", "Technical matching to drawings and maker references", "Competitive, transparent quotations", "Pre-shipment inspection"] },
-  { n: "04", slug: "logistics", tag: "Delivery", title: "Logistics & Coordination", text: "Shipment planning and communication to bring marine requirements closer to the vessel.", points: ["Consolidation in Shanghai", "Customs clearance coordination", "Launch and truck delivery to vessel", "Live status updates to superintendents"] },
-  { n: "05", slug: "docking-supervision", tag: "Docking", title: "Docking Agency & Supervision", text: "Shipyard coordination, docking agency support and on-site repair supervision, keeping scope, quality, progress and costs in focus throughout the docking.", points: ["Yard selection and specification review", "Docking agency on site", "Daily progress and cost reports", "Quality checks and sign-off"] },
-  { n: "06", slug: "marine-surveys", tag: "Inspection", title: "Marine Surveys & Inspections", text: "Vessel condition surveys, pre-purchase inspections and repair assessments, with clear findings to support maintenance, purchasing and operational decisions.", points: ["Condition and pre-purchase surveys", "Damage and repair assessments", "On/off-hire surveys", "Clear photo-documented reports"] },
+  { n: "01", slug: "ship-spares", tag: "Supply", title: "Ship Spares & Equipment", text: "Machinery parts, deck equipment, consumables and technical supplies for day-to-day operations.", points: ["Engine, pump and compressor spares", "Deck and mooring equipment", "Consumables and safety items", "Genuine, OEM and quality alternatives"], ask: "I need a part or equipment", enquiry: "Ship spares & equipment", need: ["Maker, model and serial number of the equipment", "Part numbers, or a marked-up drawing or manual page", "Quantities, delivery port and vessel ETA", "Photos of the nameplate or the old part, if available"] },
+  { n: "02", slug: "technical-services", tag: "Service", title: "Technical Services", text: "Engineering support, troubleshooting and repairs for propulsion engines, generators, cranes, engine and deck machinery, piping and steel work. Electrical and electronic repairs, including control systems, automation and fault diagnosis.", points: ["Main and auxiliary engine overhauls", "Crane and deck machinery repairs", "Piping and steel work", "Electrical, automation and PLC fault diagnosis"], ask: "Something has broken down", enquiry: "Technical services", need: ["Equipment maker and model", "Fault description, alarms and what has already been tried", "Photos, logs or drawings", "Port, ETA and the time available alongside or at anchorage"] },
+  { n: "03", slug: "china-sourcing", tag: "Sourcing", title: "China Sourcing & Procurement", text: "Direct contact with manufacturers in China, connecting your technical requirements with suitable products, competitive quotations and coordinated delivery.", points: ["Direct access to Chinese manufacturers", "Technical matching to drawings and maker references", "Competitive, transparent quotations", "Pre-shipment inspection"], ask: "I want to buy direct from Chinese makers", enquiry: "China sourcing", need: ["Technical specification, drawings or maker references", "Quantities and target delivery date", "Any class, certificate or material requirements", "Destination: vessel, port or warehouse"] },
+  { n: "04", slug: "logistics", tag: "Delivery", title: "Logistics & Coordination", text: "Shipment planning and communication to bring marine requirements closer to the vessel.", points: ["Consolidation in Shanghai", "Customs clearance coordination", "Launch and truck delivery to vessel", "Live status updates to superintendents"], ask: "I need it delivered to the vessel", enquiry: "Logistics & coordination", need: ["What is being shipped: weights, dimensions and origin", "Vessel name, port and ETA", "Contact details of the local agent", "Customs status, for example ship's spares in transit"] },
+  { n: "05", slug: "docking-supervision", tag: "Docking", title: "Docking Agency & Supervision", text: "Shipyard coordination, docking agency support and on-site repair supervision, keeping scope, quality, progress and costs in focus throughout the docking.", points: ["Yard selection and specification review", "Docking agency on site", "Daily progress and cost reports", "Quality checks and sign-off"], ask: "The vessel is going into dock", enquiry: "Docking agency & supervision", need: ["Repair specification or work list", "Vessel particulars and class status", "Planned docking window and any preferred yards", "Budget and reporting expectations"] },
+  { n: "06", slug: "marine-surveys", tag: "Inspection", title: "Marine Surveys & Inspections", text: "Vessel condition surveys, pre-purchase inspections and repair assessments, with clear findings to support maintenance, purchasing and operational decisions.", points: ["Condition and pre-purchase surveys", "Damage and repair assessments", "On/off-hire surveys", "Clear photo-documented reports"], ask: "I need a survey or inspection", enquiry: "Marine surveys & inspections", need: ["Type of survey and its purpose", "Vessel particulars and current location", "Preferred dates and access arrangements", "Reports, certificates or records already available"] },
 ];
 
 export const STEPS = [
@@ -39,6 +41,13 @@ export const ENQUIRY_TYPES = [
   "Ship spares & equipment", "Technical services", "Electrical & electronic repairs", "China sourcing",
   "Logistics & coordination", "Docking agency & supervision", "Marine surveys & inspections",
 ];
+
+// Homepage hero facts. Each one restates a commitment already made in FAQ below — keep them in step.
+export const HERO_FACTS = [
+  { value: "2 h", label: "Enquiries acknowledged" },
+  { value: "48 h", label: "Target for availability & pricing" },
+  { value: "All ports", label: "China, including Hong Kong" },
+] as const;
 
 export const TAGS = ["Merchant Shipping", "Ship Management", "Marine Engineering", "Technical Procurement", "Spare Parts"];
 
@@ -60,18 +69,19 @@ export const CASES = [
 export const MAKERS = ["MAN Energy Solutions", "Wärtsilä", "Yanmar", "Daihatsu", "ABB", "Alfa Laval", "Hyundai HiMSEN", "Schneider Electric"];
 export const CERTS = ["ISO 9001 (planned)", "IMPA member (planned)", "IIMS surveyor"];
 
-// Ports positioned in % on the stylised map (x, y).
+// Ports positioned in % on the stylised map (x, y). lat/lon are approximate port approaches, used
+// only to ask for the wind forecast there (4 decimals at most: the weather service rejects more).
 export const PORTS = [
-  { name: "Dalian", x: 73, y: 19 },
-  { name: "Tianjin", x: 61, y: 26 },
-  { name: "Qingdao", x: 68, y: 38 },
-  { name: "Shanghai", x: 74, y: 52, hq: true },
-  { name: "Ningbo", x: 75, y: 57 },
-  { name: "Zhoushan", x: 79, y: 55 },
-  { name: "Xiamen", x: 68, y: 75 },
-  { name: "Guangzhou", x: 56, y: 84 },
-  { name: "Shenzhen", x: 59, y: 87 },
-  { name: "Hong Kong", x: 61, y: 91 },
+  { name: "Dalian", x: 73, y: 19, lat: 38.92, lon: 121.65 },
+  { name: "Tianjin", x: 61, y: 26, lat: 38.98, lon: 117.78 },
+  { name: "Qingdao", x: 68, y: 38, lat: 36.05, lon: 120.32 },
+  { name: "Shanghai", x: 74, y: 52, hq: true, lat: 31.35, lon: 121.65 },
+  { name: "Ningbo", x: 75, y: 57, lat: 29.93, lon: 121.85 },
+  { name: "Zhoushan", x: 79, y: 55, lat: 30.0, lon: 122.1 },
+  { name: "Xiamen", x: 68, y: 75, lat: 24.45, lon: 118.07 },
+  { name: "Guangzhou", x: 56, y: 84, lat: 22.75, lon: 113.6 },
+  { name: "Shenzhen", x: 59, y: 87, lat: 22.57, lon: 114.27 },
+  { name: "Hong Kong", x: 61, y: 91, lat: 22.3, lon: 114.17 },
 ];
 
 export const CLIENTS = [

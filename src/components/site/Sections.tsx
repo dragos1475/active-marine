@@ -1,54 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight, Check, Mail } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Reveal, Logo } from "./Reveal";
 import { CONTACT, SERVICES, STEPS, TAGS, NAV } from "./content";
 import { LIST_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 import approachWide from "@/assets/about-logistics-underway.jpg";
-
-const MARQUEE = [
-  { t: "Ship Spares", d: "OEM & genuine parts" },
-  { t: "Technical Services", d: "Riding squads, on call" },
-  { t: "China Sourcing", d: "Direct from the makers" },
-  { t: "Logistics", d: "Port-side delivery" },
-  { t: "Docking Supervision", d: "Owner's representation" },
-  { t: "Marine Surveys", d: "Condition & damage" },
-];
-
-export function Marquee() {
-  const items = [...MARQUEE, ...MARQUEE];
-  return (
-    <section aria-label="Capabilities" className="am-ticker relative overflow-hidden border-y border-border bg-abyss">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-5 text-[0.65rem] uppercase tracking-[0.35em] text-muted-foreground">
-        <span>Capabilities — Index</span>
-        <span className="hidden sm:inline">All Chinese ports · incl. Hong Kong</span>
-        <span className="text-burgundy">N° 01—06</span>
-      </div>
-      <div className="am-ticker-mask py-6">
-        <div className="flex w-max animate-marquee items-baseline gap-14 hover:[animation-play-state:paused]">
-          {items.map((m, i) => (
-            <span key={i} className="flex items-baseline gap-5">
-              <sup className="font-sans text-xs font-medium tracking-[0.2em] text-primary">{String((i % MARQUEE.length) + 1).padStart(2, "0")}</sup>
-              <span className={`font-display text-6xl uppercase leading-none tracking-[0.02em] md:text-7xl ${i % 2 ? "am-outline" : "text-foreground"}`}>{m.t}</span>
-              <span aria-hidden className="mx-2 h-px w-16 self-center bg-mustard/70" />
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="am-ticker-mask border-t border-border/60 py-3">
-        <div className="flex w-max animate-marquee-slow gap-10">
-          {items.map((m, i) => (
-            <span key={i} className="flex items-center gap-10 font-sans text-sm italic tracking-wide text-muted-foreground">
-              {m.d} <span className="not-italic text-mustard">/</span>
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export function About() {
   return (
@@ -81,51 +39,38 @@ export function About() {
   );
 }
 
-function ServiceCard({ s, className = "", image }: { s: (typeof SERVICES)[0]; className?: string; image?: string | undefined }) {
-  return (
-    <motion.article
-      whileHover={{ y: -6 }}
-      transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className={`group relative flex flex-col justify-end overflow-hidden border border-border bg-card p-8 shadow-deep ${className}`}
-    >
-      {!image && LIST_SERVICE_IMAGES[s.slug] && <img src={LIST_SERVICE_IMAGES[s.slug]?.src} alt={LIST_SERVICE_IMAGES[s.slug]?.alt} loading="lazy" width={1536} height={1024} className="mb-6 h-24 w-36 border border-border object-cover" />}
-      {image && (
-        <>
-          <img src={image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-[1.5s] group-hover:scale-110" />
-          <div className="absolute inset-0 bg-veil" />
-        </>
-      )}
-      <div className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-tide transition-transform duration-700 group-hover:scale-x-100" />
-      <div className="relative">
-        <div className="flex items-center justify-between">
-          <span className="eyebrow">{s.n} / {s.tag}</span>
-          <ArrowUpRight className="h-5 w-5 text-primary transition-transform duration-500 group-hover:rotate-45" />
-        </div>
-        <h3 className="mt-6 text-4xl uppercase md:text-5xl">{s.title}</h3>
-        <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">{s.text}</p>
-      </div>
-    </motion.article>
-  );
-}
-
+/** Services overview as a dense list: what it is, what it covers, and the two next steps. */
 export function Services() {
-  const [a, b, c, d, e, f] = SERVICES;
   return (
-    <section id="solutions" className="mx-auto max-w-7xl px-6 py-32">
-      <Reveal className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+    <section id="solutions" className="mx-auto max-w-7xl px-6 pb-16 pt-20 md:pt-24">
+      <Reveal className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <p className="eyebrow">What we do</p>
-          <h2 className="mt-6 text-[clamp(3rem,7vw,6rem)] uppercase">Solutions for every<br />operational challenge.</h2>
+          <h1 className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] uppercase">Solutions for every<br />operational challenge.</h1>
         </div>
         <p className="max-w-xs text-muted-foreground">Six connected areas of support designed around the practical demands of shipping and ship management.</p>
       </Reveal>
-      <div className="grid auto-rows-[minmax(280px,auto)] gap-4 md:grid-cols-6">
-        <Reveal className="md:col-span-4 md:row-span-2"><ServiceCard s={b} image={LIST_SERVICE_IMAGES[b.slug]?.src} className="h-full min-h-[560px]" /></Reveal>
-        <Reveal delay={0.1} className="md:col-span-2"><ServiceCard s={a} className="h-full" /></Reveal>
-        <Reveal delay={0.2} className="md:col-span-2"><ServiceCard s={d} className="h-full bg-secondary" /></Reveal>
-        <Reveal className="md:col-span-3"><ServiceCard s={c} image={LIST_SERVICE_IMAGES[c.slug]?.src} className="h-full min-h-[380px]" /></Reveal>
-        <Reveal delay={0.1} className="md:col-span-3"><ServiceCard s={e} image={LIST_SERVICE_IMAGES[e.slug]?.src} className="h-full min-h-[380px]" /></Reveal>
-        <Reveal className="md:col-span-6"><ServiceCard s={f} className="h-full bg-tide [&_p]:text-primary-foreground [&_*]:text-primary-foreground" /></Reveal>
+      <div className="border-t border-border">
+        {SERVICES.map((s) => (
+          <article key={s.slug} className="grid gap-5 border-b border-border py-7 md:grid-cols-[9rem_1fr_1.3fr_10rem] md:gap-8">
+            <img src={LIST_SERVICE_IMAGES[s.slug]?.src} alt={LIST_SERVICE_IMAGES[s.slug]?.alt} loading="lazy" width={1536} height={1024} className="hidden h-24 w-36 border border-border object-cover md:block" />
+            <div>
+              <p className="eyebrow">{s.n} / {s.tag}</p>
+              <h2 className="mt-3 text-3xl uppercase">{s.title}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">{s.ask}</p>
+            </div>
+            <div>
+              <p className="text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+              <ul className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+                {s.points.map((point) => <li key={point} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-mustard" />{point}</li>)}
+              </ul>
+            </div>
+            <div className="flex flex-wrap items-start gap-x-6 gap-y-3 md:flex-col">
+              <Link to="/enquiry" search={{ part: "", type: s.enquiry }} className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary hover:text-foreground">Send enquiry <ArrowUpRight className="h-4 w-4" /></Link>
+              <Link to="/services/$slug" params={{ slug: s.slug }} className="text-sm text-muted-foreground underline underline-offset-4 hover:text-primary">Service sheet</Link>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CONTACT, FAQ } from "@/components/site/content";
+import { CONTACT, FAQ, HERO_FACTS } from "@/components/site/content";
 
 describe("Confirmed company rules", () => {
   it("uses the confirmed company name", () => {
@@ -13,5 +13,10 @@ describe("Confirmed company rules", () => {
     expect(response).toContain("acknowledge all enquiries within 2 hours");
     expect(response).toContain("trying our best");
     expect(response).toContain("availability and pricing within 48 hours");
+  });
+  it("states only the confirmed response times and port coverage on the homepage hero", () => {
+    expect(HERO_FACTS.map((fact) => fact.value)).toEqual(["2 h", "48 h", "All ports"]);
+    expect(HERO_FACTS[1].label).toContain("Target");
+    expect(HERO_FACTS[2].label).toContain("Hong Kong");
   });
 });

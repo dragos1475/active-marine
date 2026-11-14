@@ -216,7 +216,7 @@
 @keyframes loading-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes loading-wait { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 @keyframes loading-beacon { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-.am-loading-progress { animation: loading-progress 5s linear both; }
+.am-loading-progress { animation: loading-progress 3s linear both; }
 .am-loading-wait { animation: loading-wait 1.8s ease-in-out infinite; }
 .am-loading-beacon { animation: loading-beacon 1.8s ease-in-out infinite; }
 
@@ -299,9 +299,25 @@
   .daylight-hero { --hero-wash: linear-gradient(90deg, oklch(0.98 0.01 220 / 95%), oklch(0.97 0.01 220 / 75%)); }
   :root[data-theme="medium"] .daylight-hero { --hero-wash: linear-gradient(90deg, oklch(0.87 0.014 220 / 97%), oklch(0.87 0.014 220 / 85%)); }
   :root[data-theme="dark"] .daylight-hero { --hero-wash: linear-gradient(90deg, oklch(0.19 0.025 245 / 97%), oklch(0.19 0.025 245 / 85%)); }
-  .daylight-hero > div:last-child { min-height: 720px; }
+  /* On phones the hero is as tall as its content, so the key figures stay on the first screen. */
+  .daylight-hero > div:last-child { min-height: 0; padding-top: 7.5rem; padding-bottom: 2.5rem; }
 }
 
-.am-outline { color: transparent; -webkit-text-stroke: 1px var(--foreground); opacity: 0.75; }
-.am-ticker-mask { -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
-@media (prefers-reduced-motion: reduce) { .am-ticker .animate-marquee, .am-ticker .animate-marquee-slow { animation: none; } }
+
+/* Printing and "save as PDF": the page content only, dark text on white, nothing hidden by scroll animations. */
+@media print {
+  @page { margin: 16mm; }
+  header, footer, .am-intro { display: none !important; }
+  body { background: #fff !important; }
+  main, main * {
+    color: #111 !important;
+    background: transparent !important;
+    border-color: #bbb !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    backdrop-filter: none !important;
+  }
+}

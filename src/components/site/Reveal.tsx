@@ -1,12 +1,13 @@
 import { motion, type HTMLMotionProps } from "motion/react";
 
-export function Reveal({ delay = 0, y = 40, ...props }: HTMLMotionProps<"div"> & { delay?: number; y?: number }) {
+/** Brings a block in as it scrolls into view. Kept short and blur-free so text is readable at once. */
+export function Reveal({ delay = 0, y = 14, ...props }: HTMLMotionProps<"div"> & { delay?: number; y?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 1, delay, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: Math.min(delay, 0.12), ease: [0.16, 1, 0.3, 1] }}
       {...props}
     />
   );

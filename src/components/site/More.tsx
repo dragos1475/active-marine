@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { MessageCircle, X, MapPin, ArrowUpRight } from "lucide-react";
+import { MessageCircle, X, MapPin, ArrowUp, ArrowUpRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getPortWind } from "@/lib/port-wind.functions";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Reveal } from "./Reveal";
 import { TEAM, CASES, MAKERS, CERTS, PORTS, CONTACT } from "./content";
 import { PLACEMENT_IMAGES } from "./imagery";
@@ -97,7 +100,16 @@ export function Makers() {
 // Very simplified, stylised outline of China's eastern coast (decorative, not to scale).
 
 
+const chinaTime = (iso: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Shanghai", weekday: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
+
 export function PortsMap() {
+  const navigate = useNavigate();
+  const enquire = (port: string) => { void navigate({ to: "/enquiry", search: { part: "", port } }); };
+  // Fetched in the browser after the page is up, so a slow or failed forecast never holds the page back.
+  const { data, isPending, isError } = useQuery({ queryKey: ["port-wind"], queryFn: () => getPortWind(), staleTime: 30 * 60 * 1000, retry: 1 });
+  const wind = new Map((data?.ports ?? []).map((entry) => [entry.name, entry]));
+  const validAt = data?.ports[0]?.validAt;
+  const cellHead = "px-2 py-3 text-left sm:px-3 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
   return (
     <section id="network" className="mx-auto max-w-7xl px-6 py-20">
       <Reveal className="mb-10">
@@ -112,24 +124,81 @@ export function PortsMap() {
             const x = p.x * 5.5;
             const y = p.y * 7;
             const labelY = 75 + i * 66;
-            return <g key={p.name}>
-              <path d={`M${x} ${y} L475 ${labelY} H510`} fill="none" className="stroke-border" strokeWidth="2" />
+            const here = wind.get(p.name);
+            // Clicking a port on the map is a shortcut; the table under the map is the accessible route.
+            return <g key={p.name} onClick={() => enquire(p.name)} className="group cursor-pointer">
+              <path d={`M${x} ${y} L475 ${labelY} H510`} fill="none" className="stroke-border group-hover:stroke-primary" strokeWidth="2" />
               <circle cx={x} cy={y} r="6" className="fill-primary" />
-              <text x="525" y={labelY + 8} className="fill-foreground" fontSize="24">{p.name}</text>
+              <rect x="505" y={labelY - 24} width="190" height="56" fill="transparent" />
+              <text x="525" y={labelY + 8} className="fill-foreground group-hover:fill-primary" fontSize="24">{p.name}</text>
+              {here && <text x="525" y={labelY + 28} className="fill-muted-foreground" fontSize="15">{here.speedKn} kn {here.compass}</text>}
             </g>;
           })}
         </svg>
         <p className="mt-4 text-xs text-muted-foreground">Selected ports shown · Schematic coast, not to scale · Coverage throughout China</p>
       </div>
+      <div className="mx-auto mt-10 max-w-4xl">
+        <p className="eyebrow">Wind at the ports</p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          {validAt ? `Forecast for the hour from ${chinaTime(validAt)}, China time.` : isPending ? "Loading the wind forecast…" : "The wind forecast is not available right now."}
+          {" "}Pick a port to start an enquiry with it already filled in; for any other Chinese port, name it in the enquiry.
+        </p>
+        <div className="mt-5 border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead className="border-b border-border bg-muted">
+              <tr>
+                <th scope="col" className={cellHead}>Port</th>
+                <th scope="col" className={cellHead}>Wind</th>
+                <th scope="col" className={cellHead}>From</th>
+                <th scope="col" className={cellHead}><span className="sm:hidden">Bft</span><span className="hidden sm:inline">Beaufort</span></th>
+                <th scope="col" className={cellHead}><span className="sr-only">Enquiry</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              {PORTS.map((p) => {
+                const here = wind.get(p.name);
+                const blank = isPending ? "…" : "—";
+                return (
+                  <tr key={p.name} className="border-b border-border last:border-0">
+                    <th scope="row" className="px-2 py-3 text-left font-semibold text-foreground sm:px-3">{p.name}</th>
+                    <td className="px-2 py-3 tabular-nums sm:px-3">{here ? `${here.speedKn} kn` : blank}</td>
+                    <td className="px-2 py-3 sm:px-3">
+                      {here ? (
+                        <span className="inline-flex items-center gap-2">
+                          {/* The arrow points where the wind is going, as on a weather chart. */}
+                          <ArrowUp aria-hidden="true" className="h-4 w-4 text-primary" style={{ transform: `rotate(${here.directionDeg + 180}deg)` }} />
+                          {here.compass} <span className="hidden text-muted-foreground tabular-nums sm:inline">{here.directionDeg}°</span>
+                        </span>
+                      ) : blank}
+                    </td>
+                    <td className="px-2 py-3 tabular-nums sm:px-3">{here ? <><span className="hidden sm:inline">Force </span>{here.beaufort}</> : blank}</td>
+                    <td className="px-2 py-3 text-right sm:px-3">
+                      <Link to="/enquiry" search={{ part: "", port: p.name }} className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-bold uppercase tracking-[0.18em] text-primary hover:text-foreground">
+                        <span className="sr-only sm:not-sr-only">Enquiry</span> <ArrowUpRight className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          {isError && "The forecast could not be loaded. "}
+          Indicative forecast at the port approaches, not for navigation. Wind data from{" "}
+          <a href="https://api.met.no/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">MET Norway</a>, licensed under{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">CC BY 4.0</a>.
+        </p>
+      </div>
     </section>
   );
 }
 
-export function FloatingChat() {
+export function FloatingChat({ raised = false }: { raised?: boolean }) {
   const [open, setOpen] = useState(false);
   const wa = CONTACT.whatsapp.replace(/\D/g, "");
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
+    <div className={`fixed right-6 z-40 flex flex-col items-end gap-3 print:hidden ${raised ? "bottom-24 sm:bottom-6" : "bottom-6"}`}>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10 }} className="glass w-72 border border-border p-5 shadow-deep">

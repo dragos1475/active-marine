@@ -19,7 +19,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
     <motion.header
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid || mega ? "glass border-b border-border" : "bg-background border-b border-border"}`}
       onMouseLeave={() => setMega(false)}
     >

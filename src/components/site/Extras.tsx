@@ -5,23 +5,24 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Reveal } from "./Reveal";
 import { Button } from "@/components/ui/button";
 import { MockLabel } from "./More";
-import { FAQ, SERVICES, STATS, TESTIMONIALS, TIMELINE } from "./content";
+import { FAQ, PORTS, SERVICES, STATS, TESTIMONIALS, TIMELINE } from "./content";
 import { HOME_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 
-export function PageHero({ eyebrow, title, accent, text, image }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined }) {
+/** compact: a smaller title and less height, for pages where the content below matters more than the heading. */
+export function PageHero({ eyebrow, title, accent, text, image, compact = false }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined; compact?: boolean }) {
   return (
-    <section className="relative overflow-hidden pb-20 pt-40">
+    <section className={`relative overflow-hidden print:pb-4 print:pt-0 ${compact ? "pb-12 pt-32" : "pb-20 pt-40"}`}>
       {image && (
         <>
-          <motion.img src={image} alt="" initial={{ scale: 1.05 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full object-cover object-right" />
-          <div className="page-image-wash absolute inset-0" />
+          <motion.img src={image} alt="" initial={{ scale: 1.05 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full object-cover object-right print:hidden" />
+          <div className="page-image-wash absolute inset-0 print:hidden" />
         </>
       )}
       <div className="relative mx-auto max-w-7xl px-6">
         <Reveal>
           <p className="eyebrow">{eyebrow}</p>
-          <h1 className="mt-6 text-[clamp(3.5rem,10vw,9rem)] uppercase">{title}<br /><span className="text-tide">{accent}</span></h1>
-          {text && <p className="mt-8 max-w-xl text-lg text-muted-foreground">{text}</p>}
+          <h1 className={`mt-6 uppercase print:text-5xl ${compact ? "text-[clamp(2.5rem,5vw,4.5rem)]" : "text-[clamp(3.5rem,10vw,9rem)]"}`}>{title}{accent && <><br /><span className="text-tide">{accent}</span></>}</h1>
+          {text && <p className={`max-w-xl text-lg text-muted-foreground ${compact ? "mt-5" : "mt-8"}`}>{text}</p>}
         </Reveal>
       </div>
     </section>
@@ -56,22 +57,49 @@ export function Stats() {
   );
 }
 
-export function ServicesTeaser() {
+/** Homepage entry by situation: the client picks the problem, or the port and date, not a department. */
+export function Situations() {
+  const navigate = useNavigate();
+  const [port, setPort] = useState("");
+  const [eta, setEta] = useState("");
+  const control = "w-full border border-input bg-muted px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary";
+  const caption = "flex flex-col gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
-      <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6">
-        <h2 className="text-[clamp(3rem,7vw,6rem)] uppercase">Six ways<br />we keep you moving.</h2>
+    <section className="mx-auto max-w-7xl px-6 py-14 md:py-24">
+      <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="eyebrow">Start from your situation</p>
+          <h2 className="mt-6 text-[clamp(2.75rem,6vw,5rem)] uppercase">What does the vessel need?</h2>
+        </div>
         <Link to="/services" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">All services <ArrowUpRight className="h-4 w-4" /></Link>
       </Reveal>
+      <form
+        onSubmit={(e) => { e.preventDefault(); void navigate({ to: "/enquiry", search: { part: "", ...(port ? { port } : {}), ...(eta ? { eta } : {}) } }); }}
+        className="mb-4 grid gap-4 border border-border bg-card p-6 md:grid-cols-[1.2fr_1fr_1fr_auto] md:items-end"
+      >
+        <p className="font-display text-2xl uppercase leading-none md:pb-3">Vessel calling China?</p>
+        <label className={caption}>Port
+          <select value={port} onChange={(e) => setPort(e.target.value)} className={control}>
+            <option value="">Any port or not sure yet</option>
+            {PORTS.map((p) => <option key={p.name}>{p.name}</option>)}
+          </select>
+        </label>
+        <label className={caption}>Vessel ETA<input type="date" value={eta} onChange={(e) => setEta(e.target.value)} className={control} /></label>
+        <Button type="submit" className="h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em]">Start enquiry <ArrowUpRight /></Button>
+      </form>
       <div className="grid gap-px border border-border bg-border md:grid-cols-3">
         {SERVICES.map((s, i) => (
           <Reveal key={s.slug} delay={(i % 3) * 0.08} className="bg-background">
-            <Link to="/services/$slug" params={{ slug: s.slug }} className="group flex h-full flex-col p-8 transition-colors hover:bg-card">
-              <div className="flex items-start justify-between gap-4"><span className="font-display text-5xl text-muted-foreground transition-colors group-hover:text-mustard">{s.n}</span><img src={HOME_SERVICE_IMAGES[s.slug]?.src} alt={HOME_SERVICE_IMAGES[s.slug]?.alt} width={1536} height={1024} loading="lazy" className="h-20 w-28 shrink-0 border border-border object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" /></div>
-              <span className="mt-6 font-display text-3xl uppercase">{s.title}</span>
-              <span className="mt-3 text-sm text-muted-foreground">{s.tag}</span>
-              <ArrowUpRight className="mt-6 h-5 w-5 text-primary transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-            </Link>
+            <div className="flex h-full flex-col p-5 md:p-8">
+              {/* Phones get a compact list: the number sits in the heading and the photo is left out. */}
+              <div className="hidden items-start justify-between gap-4 md:flex"><span className="font-display text-5xl text-muted-foreground">{s.n}</span><img src={HOME_SERVICE_IMAGES[s.slug]?.src} alt={HOME_SERVICE_IMAGES[s.slug]?.alt} width={1536} height={1024} loading="lazy" className="h-20 w-28 shrink-0 border border-border object-cover" /></div>
+              <h3 className="font-display text-2xl uppercase md:mt-6 md:text-3xl"><span className="mr-3 text-muted-foreground md:hidden">{s.n}</span>{s.ask}</h3>
+              <p className="mt-1 text-sm text-muted-foreground md:mt-3">{s.title}</p>
+              <div className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-3 pt-4 md:pt-8">
+                <Link to="/enquiry" search={{ part: "", type: s.enquiry }} className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary hover:text-foreground">Send enquiry <ArrowUpRight className="h-4 w-4" /></Link>
+                <Link to="/services/$slug" params={{ slug: s.slug }} className="text-sm text-muted-foreground underline underline-offset-4 hover:text-primary">How it works</Link>
+              </div>
+            </div>
           </Reveal>
         ))}
       </div>
@@ -200,7 +228,7 @@ export function FaqList() {
 
 export function CtaBand({ onQuote, children = "Tell us what the vessel needs." }: { onQuote: () => void; children?: ReactNode }) {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
+    <section className="mx-auto max-w-7xl px-6 py-24 print:hidden">
       <Reveal className="flex flex-col items-start justify-between gap-8 border-t border-border pt-16 md:flex-row md:items-end">
         <h2 className="text-[clamp(3rem,7vw,6rem)] uppercase">{children}</h2>
         <Button onClick={onQuote} className="h-auto rounded-none inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Request a Quote <ArrowUpRight className="h-4 w-4" /></Button>
