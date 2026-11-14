@@ -3,7 +3,7 @@ import { Header } from "./Header";
 import { Footer } from "./Sections";
 import { QuoteDialog } from "./QuoteDialog";
 import { FloatingChat } from "./More";
-import { Intro, Cursor } from "./Cinematic";
+import { Intro } from "./Cinematic";
 
 export function PageShell({ children }: { children: (openQuote: () => void) => ReactNode }) {
   const [quote, setQuote] = useState(false);
@@ -16,7 +16,6 @@ export function PageShell({ children }: { children: (openQuote: () => void) => R
       <Footer />
       <FloatingChat />
       <Intro />
-      <Cursor />
       <QuoteDialog open={quote} onClose={close} />
     </div>
   );
