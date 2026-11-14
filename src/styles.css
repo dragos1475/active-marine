@@ -194,3 +194,7 @@
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+@media (pointer: fine) {
+  html.am-cursor, html.am-cursor * { cursor: none !important; }
+}
