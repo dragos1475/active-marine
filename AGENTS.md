@@ -36,3 +36,4 @@ use the editor.
 - Animate the intro wave and horizon with CSS, separate from static text and without a grain overlay — keeps the title crisp and the line animation independent of Motion scheduling.
 - Keep Vercel's asset-prefix rewrite pointing to the original Lovable media service — asset pointers contain relative URLs that otherwise resolve to missing files on external hosting; page routes must remain untouched.
 - The homepage uses a static daylight vessel image with locally scoped semantic light tokens, preceded by the logo and CSS-animated line intro once per browser session for five seconds; keep the native browser cursor and do not load legacy videos — preserves the opening identity without restoring the dark video background.
+- All site surfaces and photographic text washes inherit the shared daylight semantic tokens in src/styles.css; keep glass surfaces and shadows token-based — ensures every page, menu, form and map stays readable under the same theme.

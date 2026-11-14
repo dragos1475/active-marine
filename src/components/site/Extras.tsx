@@ -139,7 +139,6 @@ export function PartsSearch() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <Reveal className="glass relative overflow-hidden border border-border p-10 md:p-16">
-        <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-burgundy opacity-30 blur-3xl" />
         <p className="eyebrow">Quick parts enquiry</p>
         <h2 className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] uppercase">Know the part number?</h2>
         <p className="mt-4 max-w-lg text-muted-foreground">Type the part number, maker or model and send it straight to our sourcing desk.</p>

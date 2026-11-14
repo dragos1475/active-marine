@@ -182,7 +182,6 @@ export function China() {
 export function Contact({ onQuote }: { onQuote: () => void }) {
   return (
     <section id="contact" className="relative overflow-hidden py-32">
-      <div className="absolute -right-40 top-0 h-[600px] w-[600px] rounded-full bg-tide opacity-20 blur-3xl" />
       <div className="relative mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2">
         <Reveal>
           <p className="eyebrow">Contact ActivMarine</p>
