@@ -38,7 +38,7 @@ export function Marquee() {
         </div>
       </div>
       <div className="am-ticker-mask border-t border-border/60 py-3">
-        <div className="flex w-max animate-marquee-rev gap-10">
+        <div className="flex w-max animate-marquee-slow gap-10">
           {items.map((m, i) => (
             <span key={i} className="flex items-center gap-10 font-sans text-sm italic tracking-wide text-muted-foreground">
               {m.d} <span className="not-italic text-mustard">/</span>
