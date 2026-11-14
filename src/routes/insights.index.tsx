@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { Reveal } from "@/components/site/Reveal";
 import { ARTICLES } from "@/components/site/content";
-import shipyard from "@/assets/shipyard-night.jpg";
+import shipyard from "@/assets/china-port-daylight.jpg";
 
 export const Route = createFileRoute("/insights/")({
   head: () => ({

@@ -12,8 +12,8 @@ export function PageHero({ eyebrow, title, accent, text, image }: { eyebrow: str
     <section className="relative overflow-hidden pb-20 pt-40">
       {image && (
         <>
-          <motion.img src={image} alt="" initial={{ scale: 1.15 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full object-cover opacity-35" />
-          <div className="absolute inset-0 bg-veil" />
+          <motion.img src={image} alt="" initial={{ scale: 1.05 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full object-cover object-right" />
+          <div className="page-image-wash absolute inset-0" />
         </>
       )}
       <div className="relative mx-auto max-w-7xl px-6">

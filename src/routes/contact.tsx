@@ -3,6 +3,7 @@ import { Contact } from "@/components/site/Sections";
 import { PageHero, ShanghaiClock } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
+import deck from "@/assets/marine-deck-details.jpg";
 
 export const Route = createFileRoute("/contact")({
   head: () => seo("Contact ActivMarine | China enquiries", "Email, call or message ActivMarine in China for spares, repairs, sourcing, docking or surveys."),
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/contact")({
     <PageShell>
       {(open) => (
         <>
-          <PageHero eyebrow="Contact" title="Talk to" accent="our team." />
+          <PageHero eyebrow="Contact" title="Talk to" accent="our team." image={deck} />
           <div className="mx-auto max-w-7xl px-6"><div className="inline-block"><ShanghaiClock /></div></div>
           <Contact onQuote={open} />
         </>

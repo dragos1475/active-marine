@@ -125,6 +125,7 @@
   --gradient-veil: linear-gradient(180deg, oklch(0.985 0.004 220 / 65%) 0%, oklch(0.985 0.004 220 / 78%) 45%, var(--background) 100%);
   --gradient-side: linear-gradient(90deg, oklch(0.985 0.004 220 / 96%) 0%, oklch(0.985 0.004 220 / 50%) 60%, transparent);
   --surface-glass: oklch(0.995 0.003 220 / 94%);
+  --page-image-wash: linear-gradient(90deg, var(--background) 0%, oklch(0.985 0.004 220 / 94%) 35%, oklch(0.985 0.004 220 / 65%) 65%, oklch(0.985 0.004 220 / 25%) 100%);
   --shadow-glow: 0 8px 24px -8px oklch(0.4 0.065 200 / 22%);
   --shadow-deep: 0 16px 40px -20px oklch(0.25 0.055 252 / 20%);
 }
@@ -142,6 +143,7 @@
   --border: oklch(0.65 0.025 220);
   --input: oklch(0.59 0.03 220);
   --surface-glass: oklch(0.9 0.012 220 / 96%);
+  --page-image-wash: linear-gradient(90deg, var(--background), oklch(0.87 0.014 220 / 94%) 35%, oklch(0.87 0.014 220 / 65%) 65%, oklch(0.87 0.014 220 / 25%));
   --gradient-veil: linear-gradient(180deg, oklch(0.87 0.014 220 / 65%), oklch(0.87 0.014 220 / 78%) 45%, var(--background));
 }
 
@@ -163,6 +165,7 @@
   --border: oklch(0.42 0.025 235);
   --input: oklch(0.5 0.025 235);
   --surface-glass: oklch(0.22 0.025 245 / 96%);
+  --page-image-wash: linear-gradient(90deg, var(--background), oklch(0.19 0.025 245 / 96%) 35%, oklch(0.19 0.025 245 / 78%) 65%, oklch(0.19 0.025 245 / 45%));
   --gradient-tide: linear-gradient(135deg, var(--primary), oklch(0.74 0.075 215) 70%, var(--mustard));
   --gradient-veil: linear-gradient(180deg, oklch(0.19 0.025 245 / 40%), oklch(0.19 0.025 245 / 65%) 45%, var(--background));
   --shadow-deep: 0 16px 40px -20px oklch(0.08 0.02 245 / 60%);
@@ -217,6 +220,10 @@
 .am-loading-beacon { animation: loading-beacon 1.8s ease-in-out infinite; }
 
 @utility bg-tide { background-image: var(--gradient-tide); }
+.page-image-wash { background: var(--page-image-wash); }
+@media (max-width: 639px) {
+  .page-image-wash { background: color-mix(in oklab, var(--background) 87%, transparent); }
+}
 @utility bg-veil { background-image: var(--gradient-veil); }
 @utility bg-side { background-image: var(--gradient-side); }
 @utility shadow-glow { box-shadow: var(--shadow-glow); }
