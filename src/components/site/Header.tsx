@@ -23,26 +23,28 @@ export function Header({ onQuote }: { onQuote: () => void }) {
       className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid || mega ? "glass border-b border-border" : "bg-background border-b border-border"}`}
       onMouseLeave={() => setMega(false)}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-3" aria-label="ActivMarine home">
-          <Logo />
-          <span className="leading-none">
-            <span className="block font-display text-2xl tracking-[0.12em]">ACTIVMARINE</span>
-            <span className="hidden text-[0.55rem] tracking-[0.3em] text-muted-foreground min-[400px]:block">ENGINEERING · SUPPLY · SOLUTIONS</span>
-          </span>
-        </Link>
-        <nav className="hidden items-center gap-4 xl:flex" aria-label="Main navigation">
-          {NAV.map((n) =>
-            n.to === "/services" ? (
-              <button key={n.to} onMouseEnter={() => setMega(true)} onClick={() => setMega(!mega)} aria-expanded={mega} className={`${linkCls} inline-flex items-center gap-1`}>
-                {n.label} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${mega ? "rotate-180" : ""}`} />
-              </button>
-            ) : (
-              <Link key={n.to} to={n.to} onMouseEnter={() => setMega(false)} className={linkCls} activeProps={{ className: "text-primary" }}>{n.label}</Link>
-            ),
-          )}
-        </nav>
-        <div className="flex items-center gap-3">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 3xl:mx-0 3xl:max-w-none 3xl:px-[7vw]">
+        <div className="flex min-w-0 items-center gap-6 3xl:gap-12">
+          <Link to="/" className="flex items-center gap-3" aria-label="ActivMarine home">
+            <Logo />
+            <span className="leading-none">
+              <span className="block font-display text-2xl tracking-[0.12em]">ACTIVMARINE</span>
+              <span className="hidden text-[0.55rem] tracking-[0.3em] text-muted-foreground min-[400px]:block">ENGINEERING · SUPPLY · SOLUTIONS</span>
+            </span>
+          </Link>
+          <nav className="hidden items-center gap-4 xl:flex 3xl:gap-8" aria-label="Main navigation">
+            {NAV.map((n) =>
+              n.to === "/services" ? (
+                <button key={n.to} onMouseEnter={() => setMega(true)} onClick={() => setMega(!mega)} aria-expanded={mega} className={`${linkCls} inline-flex items-center gap-1`}>
+                  {n.label} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${mega ? "rotate-180" : ""}`} />
+                </button>
+              ) : (
+                <Link key={n.to} to={n.to} onMouseEnter={() => setMega(false)} className={linkCls} activeProps={{ className: "text-primary" }}>{n.label}</Link>
+              ),
+            )}
+          </nav>
+        </div>
+        <div className="flex shrink-0 items-center gap-3">
           <ThemeSelector />
           <Button onClick={onQuote} className="h-auto rounded-none group hidden items-center gap-2 bg-primary px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-all hover:shadow-glow sm:inline-flex">
             Request a Quote <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -56,7 +58,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
       <AnimatePresence>
         {mega && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35 }} className="hidden border-t border-border xl:block">
-            <div className="mx-auto grid max-w-7xl grid-cols-4 gap-8 px-6 py-10">
+            <div className="mx-auto grid max-w-7xl grid-cols-4 gap-8 px-6 py-10 3xl:mx-0 3xl:max-w-none 3xl:px-[7vw]">
               <div>
                 <p className="eyebrow">Services</p>
                 <p className="mt-4 text-sm text-muted-foreground">Six connected areas of support, across China.</p>
