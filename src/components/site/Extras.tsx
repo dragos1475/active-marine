@@ -11,7 +11,7 @@ import { HOME_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 /** compact: a smaller title and less height, for pages where the content below matters more than the heading. */
 export function PageHero({ eyebrow, title, accent, text, image, compact = false }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined; compact?: boolean }) {
   return (
-    <section className={`relative overflow-hidden print:pb-4 print:pt-0 ${compact ? "pb-12 pt-40" : "pb-20 pt-44"}`}>
+    <section className={`relative overflow-hidden print:pb-4 print:pt-0 ${compact ? "pb-12 pt-32" : "pb-20 pt-40"}`}>
       {image && (
         <>
           <motion.img src={image} alt="" initial={{ scale: 1.05 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full object-cover object-right print:hidden" />

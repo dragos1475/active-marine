@@ -140,7 +140,7 @@ function ServicePage() {
               </dl>
               <p className="mt-6 hidden text-sm print:block">{CONTACT.company} · {CONTACT.email}</p>
             </div>
-            <aside className="glass self-start border border-border p-8 lg:sticky lg:top-36 print:hidden">
+            <aside className="glass self-start border border-border p-8 lg:sticky lg:top-28 print:hidden">
               <p className="eyebrow">{s.ask}?</p>
               <p className="mt-5 text-muted-foreground">Send what you have, even if it is incomplete. The enquiry form opens with this service already selected.</p>
               <Button asChild className="mt-7 h-auto w-full rounded-none py-4 text-xs font-bold uppercase tracking-[0.2em] hover:shadow-glow">

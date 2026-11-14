@@ -261,7 +261,7 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
 
       {/* Desktop only: the email exactly as it will be prepared, updated while the visitor types. */}
       <aside aria-label="Enquiry preview" className="hidden lg:block">
-        <div className="sticky top-36 border border-border bg-card p-6">
+        <div className="sticky top-28 border border-border bg-card p-6">
           <p className="eyebrow">Your enquiry so far</p>
           {gaps.length > 0 ? (
             <ul className="mt-5 grid gap-2 text-sm">

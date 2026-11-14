@@ -51,7 +51,7 @@ use the editor.
 - Fonts (Bebas Neue, Barlow) are bundled from @fontsource and imported in src/styles.css; do not load fonts from Google or any other host — the site must render the same from mainland China, where Google Fonts is unreachable.
 - One name per thing: the action that opens the enquiry form is always "Send enquiry", and the company is "Activ Marine" in running text and page titles, "Activ Marine Limited" in legal text; the ACTIVMARINE wordmark beside the logo is the only joined form.
 - The privacy policy describes what the site really does (email prepared in the browser, draft in local storage, wind fetched by the server) and stays marked as a draft until the company approves it; update it whenever the site starts storing or sending something new.
-- The header has a status strip (China time, the 2-hour acknowledgement, the email) above a five-entry menu from HEADER_NAV; FAQ, Insights and the theme selector live in the footer. Page top padding assumes this taller header (7rem).
+- The header menu has five entries from HEADER_NAV and no status strip above it (tried and removed at the owner's request); FAQ, Insights and the theme selector live in the footer.
 - On desktop the enquiry form shows a live preview of the email and a list of details still missing; missing details and past dates only warn, they never block sending.
 - Picking a port on the Network page opens PortPanel: local time, wind now and a 48-hour outlook in three-hour steps, plus the enquiry link for that port.
 - The ship spares page compares Genuine, OEM and Quality alternative from SPARE_TYPES in content.ts; that wording is general guidance awaiting the company's confirmation, so do not add prices, lead times or certificates to it.

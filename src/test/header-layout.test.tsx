@@ -20,7 +20,6 @@ function bar() {
   render(<Header onQuote={() => {}} />);
   const header = screen.getByRole("banner");
   const logo = screen.getByRole("link", { name: "Activ Marine home" });
-  // The main bar holds the logo group; the status strip sits above it.
   const container = logo.parentElement?.parentElement as HTMLElement;
   const nav = screen.getByRole("navigation", { name: "Main navigation" });
   const quote = screen.getByRole("button", { name: /send enquiry/i });
@@ -53,13 +52,6 @@ it("keeps the header to five destinations and leaves the theme choice to the foo
   expect(within(footer).getByLabelText("Choose theme")).toBeInTheDocument();
   expect(within(footer).getByRole("link", { name: "FAQ" })).toBeInTheDocument();
   expect(within(footer).getByRole("link", { name: "Insights" })).toBeInTheDocument();
-});
-
-it("shows the response commitment and the office email in the status strip", () => {
-  bar();
-  const header = screen.getByRole("banner");
-  expect(within(header).getByText("Enquiries acknowledged within 2 hours")).toBeInTheDocument();
-  expect(within(header).getAllByRole("link", { name: "office@activ-marine.com" }).length).toBeGreaterThan(0);
 });
 
 it("lets the bar span the screen on very wide monitors instead of a centred column", () => {
