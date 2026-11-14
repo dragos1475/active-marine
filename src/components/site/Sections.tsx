@@ -43,7 +43,7 @@ export function About() {
 /** Services overview as a dense list: what it is, what it covers, and the two next steps. */
 export function Services() {
   return (
-    <section id="solutions" className="mx-auto max-w-7xl px-6 pb-16 pt-20 md:pt-24">
+    <section id="solutions" className="mx-auto max-w-7xl px-6 pb-10 pt-20 md:pt-24">
       <Reveal className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <p className="eyebrow">What we do</p>
@@ -53,7 +53,7 @@ export function Services() {
       </Reveal>
       <div className="border-t border-border">
         {SERVICES.map((s) => (
-          <article key={s.slug} className="grid gap-5 border-b border-border py-7 md:grid-cols-[9rem_1fr_1.3fr_10rem] md:gap-8">
+          <article key={s.slug} className="grid gap-4 border-b border-border py-5 md:grid-cols-[9rem_1fr_1.3fr_10rem] md:gap-8 md:py-7">
             <img src={LIST_SERVICE_IMAGES[s.slug]?.src} alt={LIST_SERVICE_IMAGES[s.slug]?.alt} loading="lazy" width={1536} height={1024} className="hidden h-24 w-36 border border-border object-cover md:block" />
             <div>
               <p className="eyebrow">{s.n} / {s.tag}</p>
@@ -62,9 +62,16 @@ export function Services() {
             </div>
             <div>
               <p className="text-sm leading-relaxed text-muted-foreground">{s.text}</p>
-              <ul className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+              {/* The scope list is always shown from tablet up; phones open it on demand to keep the page short. */}
+              <ul className="mt-3 hidden gap-x-6 gap-y-1 text-sm sm:grid sm:grid-cols-2">
                 {s.points.map((point) => <li key={point} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-mustard" />{point}</li>)}
               </ul>
+              <details className="mt-3 text-sm sm:hidden">
+                <summary className="cursor-pointer font-semibold text-primary">What it covers</summary>
+                <ul className="mt-2 grid gap-1">
+                  {s.points.map((point) => <li key={point} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-mustard" />{point}</li>)}
+                </ul>
+              </details>
             </div>
             <div className="flex flex-wrap items-start gap-x-6 gap-y-3 md:flex-col">
               <Link to="/enquiry" search={{ part: "", type: s.enquiry }} className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary hover:text-foreground">Send enquiry <ArrowUpRight className="h-4 w-4" /></Link>
@@ -122,23 +129,23 @@ export function China() {
   const rotate = useTransform(scrollYProgress, [0, 1], [-25, 25]);
   const bgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
   return (
-    <section ref={ref} id="china" className="grain relative overflow-hidden py-40">
+    <section ref={ref} id="china" className="grain relative overflow-hidden py-16 md:py-24">
       <motion.img style={{ y: bgY }} src={PLACEMENT_IMAGES["network-background"].src} alt="" loading="lazy" className="absolute inset-0 h-[120%] w-full object-cover opacity-30" />
       <div className="absolute inset-0 bg-veil" />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1.4fr_1fr]">
         <Reveal>
           <p className="eyebrow">Based in China · Supporting you across China</p>
-          <h2 className="mt-6 text-[clamp(3rem,7vw,6.5rem)] uppercase">Closer to the source.<br /><span className="text-tide">A clear advantage for your fleet.</span></h2>
-          <p className="mt-8 max-w-lg text-lg font-light leading-relaxed text-muted-foreground">
+          <h2 className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] uppercase">Closer to the source.<br /><span className="text-tide">A clear advantage for your fleet.</span></h2>
+          <p className="mt-6 max-w-lg text-lg font-light leading-relaxed text-muted-foreground">
             Through direct contact with manufacturers and coordination with local suppliers and shipyards, we support spare-parts sourcing, repairs and docking wherever your vessel needs us in China.
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             {TAGS.map((t) => (
               <span key={t} className="glass border border-input px-4 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.2em]">{t}</span>
             ))}
           </div>
         </Reveal>
-        <Reveal delay={0.2} className="relative mx-auto aspect-square w-full max-w-lg">
+        <Reveal delay={0.2} className="relative mx-auto hidden aspect-square w-full max-w-xs lg:block">
           <motion.div style={{ rotate }} className="absolute -inset-6 rounded-full border border-dashed border-primary/40" />
           <div className="absolute -inset-12 rounded-full border border-border" />
           <img src={PLACEMENT_IMAGES["network-parts"].src} alt="Marine spare parts: cylinder liner, pistons, pump, valves and electronics" loading="lazy" className="relative h-full w-full rounded-full object-cover shadow-glow" />
@@ -194,26 +201,25 @@ export function Contact({ onQuote }: { onQuote: () => void }) {
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-abyss pt-20">
+    <footer className="border-t border-border bg-abyss pt-12">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 pb-16 md:grid-cols-3">
-          <div>
+        <div className="grid grid-cols-2 gap-x-8 gap-y-8 pb-10 md:grid-cols-3">
+          <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-3"><Logo /><span className="font-display text-2xl tracking-[0.12em]">ACTIVMARINE</span></div>
-            <p className="mt-6 max-w-xs text-sm text-muted-foreground">Marine engineering, supply and technical solutions shaped around operational needs.</p>
+            <p className="mt-4 max-w-xs text-sm text-muted-foreground">Marine engineering, supply and technical solutions shaped around operational needs.</p>
           </div>
           <div>
             <p className="eyebrow">Explore</p>
-            {NAV.map((n) => <Link key={n.to} to={n.to} className="mt-3 block text-sm text-muted-foreground hover:text-primary">{n.label}</Link>)}
-            <Link to="/privacy" className="mt-3 block text-sm text-muted-foreground hover:text-primary">Privacy policy</Link>
+            {NAV.map((n) => <Link key={n.to} to={n.to} className="mt-2 block text-sm text-muted-foreground hover:text-primary">{n.label}</Link>)}
+            <Link to="/privacy" className="mt-2 block text-sm text-muted-foreground hover:text-primary">Privacy policy</Link>
           </div>
           <div>
             <p className="eyebrow">Services</p>
-            {SERVICES.map((s) => <Link key={s.n} to="/services/$slug" params={{ slug: s.slug }} className="mt-3 block text-sm text-muted-foreground hover:text-primary">{s.title}</Link>)}
-            <a href={`mailto:${CONTACT.email}`} className="mt-3 block text-sm text-primary">{CONTACT.email}</a>
+            {SERVICES.map((s) => <Link key={s.n} to="/services/$slug" params={{ slug: s.slug }} className="mt-2 block text-sm text-muted-foreground hover:text-primary">{s.title}</Link>)}
+            <a href={`mailto:${CONTACT.email}`} className="mt-2 block text-sm text-primary">{CONTACT.email}</a>
           </div>
         </div>
-        <div className="select-none overflow-hidden font-display text-[22vw] leading-[0.8] text-muted opacity-60">ACTIVMARINE</div>
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border py-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border py-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">
           <span>© 2026 Activ Marine Limited · China</span>
           <span className="flex items-center gap-2">Appearance <ThemeSelector /></span>
           <span>Keeping the maritime world moving</span>

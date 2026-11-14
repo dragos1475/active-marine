@@ -75,9 +75,9 @@ export function Situations() {
       </Reveal>
       <form
         onSubmit={(e) => { e.preventDefault(); void navigate({ to: "/enquiry", search: { part: "", ...(port ? { port } : {}), ...(eta ? { eta } : {}) } }); }}
-        className="mb-4 grid gap-4 border border-border bg-card p-6 md:grid-cols-[1.2fr_1fr_1fr_auto] md:items-end"
+        className="mb-4 grid grid-cols-2 gap-4 border border-border bg-card p-6 md:grid-cols-[1.2fr_1fr_1fr_auto] md:items-end"
       >
-        <p className="font-display text-2xl uppercase leading-none md:pb-3">Vessel calling China?</p>
+        <p className="col-span-2 font-display text-2xl uppercase leading-none md:col-span-1 md:pb-3">Vessel calling China?</p>
         <label className={caption}>Port
           <select value={port} onChange={(e) => setPort(e.target.value)} className={control}>
             <option value="">Any port or not sure yet</option>
@@ -85,8 +85,9 @@ export function Situations() {
           </select>
         </label>
         <label className={caption}>Vessel ETA<input type="date" value={eta} onChange={(e) => setEta(e.target.value)} className={control} /></label>
-        <Button type="submit" className="h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em]">Send enquiry <ArrowUpRight /></Button>
+        <Button type="submit" className="col-span-2 h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] md:col-span-1">Send enquiry <ArrowUpRight /></Button>
       </form>
+      <PartsSearch className="mb-4" />
       <div className="grid gap-px border border-border bg-border md:grid-cols-3">
         {SERVICES.map((s, i) => (
           <Reveal key={s.slug} delay={(i % 3) * 0.08} className="bg-background">
@@ -162,25 +163,19 @@ export function Testimonials() {
   );
 }
 
-export function PartsSearch({ placement = "home-parts" }: { placement?: "home-parts" | "services-parts" }) {
+/** One-row shortcut into the enquiry for someone who already knows the part. */
+export function PartsSearch({ className = "" }: { className?: string }) {
   const [q, setQ] = useState("");
   const navigate = useNavigate();
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
-      <Reveal className="glass relative overflow-hidden border border-border p-10 md:p-16">
-        <img src={PLACEMENT_IMAGES[placement].src} alt={PLACEMENT_IMAGES[placement].alt} width={1536} height={1024} loading="lazy" className="mb-6 h-24 w-36 border border-border object-cover md:float-right md:mb-0 md:ml-8 md:h-32 md:w-48" />
-        <p className="eyebrow">Quick parts enquiry</p>
-        <h2 className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] uppercase">Know the part number?</h2>
-        <p className="mt-4 max-w-lg text-muted-foreground">Type the part number, maker or model and send it straight to our sourcing desk.</p>
-        <form onSubmit={(e) => { e.preventDefault(); void navigate({ to: "/enquiry", search: { part: q.trim() } }); }} className="relative mt-10 flex flex-col gap-3 sm:flex-row">
-          <label className="flex flex-1 items-center gap-3 border border-input bg-muted px-5">
-            <Search className="h-5 w-5 text-muted-foreground" />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="e.g. MAN B&W 90510-0123, Yanmar 6EY18 fuel pump" aria-label="Part number or maker" className="w-full bg-transparent py-4 text-foreground outline-none placeholder:text-muted-foreground" />
-          </label>
-          <Button type="submit" className="h-auto rounded-none px-8 py-4 text-xs font-bold uppercase tracking-[0.2em]">Send enquiry <ArrowUpRight /></Button>
-        </form>
-      </Reveal>
-    </section>
+    <form onSubmit={(e) => { e.preventDefault(); void navigate({ to: "/enquiry", search: { part: q.trim() } }); }} className={`grid gap-4 border border-border bg-card p-6 md:grid-cols-[1.2fr_2fr_auto] md:items-center ${className}`}>
+      <p className="font-display text-2xl uppercase leading-none">Know the part number?</p>
+      <label className="flex items-center gap-3 border border-input bg-muted px-4">
+        <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="e.g. MAN B&W 90510-0123, Yanmar 6EY18 fuel pump" aria-label="Part number, maker or model" className="w-full bg-transparent py-3 text-foreground outline-none placeholder:text-muted-foreground" />
+      </label>
+      <Button type="submit" className="h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em]">Send enquiry <ArrowUpRight /></Button>
+    </form>
   );
 }
 
@@ -226,12 +221,13 @@ export function FaqList() {
   );
 }
 
+/** Closing line of a page. Phones already carry the same action in the fixed bar, so it is desktop only. */
 export function CtaBand({ onQuote, children = "Tell us what the vessel needs." }: { onQuote: () => void; children?: ReactNode }) {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24 print:hidden">
-      <Reveal className="flex flex-col items-start justify-between gap-8 border-t border-border pt-16 md:flex-row md:items-end">
-        <h2 className="text-[clamp(3rem,7vw,6rem)] uppercase">{children}</h2>
-        <Button onClick={onQuote} className="h-auto rounded-none inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Send enquiry <ArrowUpRight className="h-4 w-4" /></Button>
+    <section className="mx-auto hidden max-w-7xl px-6 py-10 sm:block print:hidden">
+      <Reveal className="flex items-center justify-between gap-8 border-t border-border pt-10">
+        <h2 className="text-3xl uppercase md:text-4xl">{children}</h2>
+        <Button onClick={onQuote} className="h-auto shrink-0 rounded-none inline-flex items-center gap-3 bg-primary px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Send enquiry <ArrowUpRight className="h-4 w-4" /></Button>
       </Reveal>
     </section>
   );

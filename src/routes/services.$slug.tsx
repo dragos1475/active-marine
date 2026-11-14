@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, ArrowUpRight, Check, Printer } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check, ChevronDown, Printer } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { CtaBand, PageHero } from "@/components/site/Extras";
 import { CONTACT, FAQ, SERVICES, SPARE_TYPES, STEPS } from "@/components/site/content";
@@ -51,7 +52,8 @@ const COMMON_TERMS = [
 ];
 
 const sheetLabel = "text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground";
-const sheetRow = "grid gap-3 border-b border-border py-5 md:grid-cols-[13rem_1fr] md:gap-8 print:grid-cols-[11rem_1fr] print:gap-6 print:py-3";
+const sheetRowBase = "gap-3 border-b border-border py-5 md:grid-cols-[13rem_1fr] md:gap-8 print:grid-cols-[11rem_1fr] print:gap-6 print:py-3";
+const sheetRow = `grid ${sheetRowBase}`;
 
 const SPARE_ROWS = [
   { label: "What it is", key: "what" },
@@ -67,7 +69,7 @@ function SpareTypes() {
       <h2 className="mt-4 text-3xl uppercase md:text-4xl">Three kinds of part, one clear label.</h2>
       <p className="mt-4 max-w-2xl text-muted-foreground">Every item we quote is marked as one of these three, so you always know what you are buying. Tell us in the enquiry which you will accept.</p>
       {/* A real table from tablet up; on phones each kind of part becomes its own card. */}
-      <div className="mt-8 hidden border border-border md:block print:block">
+      <div className="mt-8 hidden border border-border md:block print:block print:break-inside-avoid">
         <table className="w-full border-collapse text-sm">
           <thead className="border-b border-border bg-muted">
             <tr>
@@ -85,14 +87,14 @@ function SpareTypes() {
           </tbody>
         </table>
       </div>
-      <div className="mt-8 grid gap-4 md:hidden print:hidden">
-        {SPARE_TYPES.map((type) => (
-          <div key={type.name} className="border border-border p-5">
-            <h3 className="font-display text-2xl uppercase">{type.name}</h3>
-            <dl className="mt-3 grid gap-3 text-sm">
+      <div className="mt-6 grid gap-2 md:hidden print:hidden">
+        {SPARE_TYPES.map((type, index) => (
+          <details key={type.name} open={index === 0} className="border border-border">
+            <summary className="cursor-pointer px-4 py-3 font-display text-xl uppercase">{type.name}</summary>
+            <dl className="grid gap-3 px-4 pb-4 text-sm">
               {SPARE_ROWS.map((row) => <div key={row.key}><dt className={sheetLabel}>{row.label}</dt><dd className="mt-1 leading-relaxed">{type[row.key]}</dd></div>)}
             </dl>
-          </div>
+          </details>
         ))}
       </div>
       <p className="mt-5 text-sm text-muted-foreground print:hidden">
@@ -104,6 +106,8 @@ function SpareTypes() {
 
 function ServicePage() {
   const s = Route.useLoaderData();
+  // Phones keep the standing terms folded until asked for; desktop and print always show them.
+  const [showTerms, setShowTerms] = useState(false);
   const others = SERVICES.filter((x) => x.slug !== s.slug);
   const terms = [...(SHEET_TERMS[s.slug] ?? []), ...COMMON_TERMS].flatMap((term) => {
     const answer = faq(term.question);
@@ -115,7 +119,7 @@ function ServicePage() {
       {(open) => (
         <>
           <PageHero eyebrow={`${s.n} · ${s.tag}`} title={s.title} accent="" text={s.text} image={SERVICE_IMAGES[s.slug]?.src} compact />
-          <section className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1fr_20rem] print:block print:py-0">
+          <section className="mx-auto grid max-w-7xl gap-10 px-6 py-10 lg:grid-cols-[1fr_20rem] print:block print:py-0">
             <div>
               <p className="eyebrow">Service sheet</p>
               <dl className="mt-6 border-t border-border">
@@ -132,12 +136,16 @@ function ServicePage() {
                   <dd><ol className="grid gap-3">{STEPS.map((step) => <li key={step.n} className="grid grid-cols-[2rem_1fr]"><span className="font-display text-lg leading-tight text-mustard">{step.n}</span><span><span className="font-semibold">{step.title}.</span> <span className="text-muted-foreground">{step.text}</span></span></li>)}</ol></dd>
                 </div>
                 {terms.map((term) => (
-                  <div key={term.label} className={sheetRow}>
+                  <div key={term.label} className={`${showTerms ? "grid" : "hidden md:grid print:grid"} ${sheetRowBase}`}>
                     <dt className={sheetLabel}>{term.label}</dt>
                     <dd>{term.answer}</dd>
                   </div>
                 ))}
               </dl>
+              <button type="button" onClick={() => setShowTerms(!showTerms)} aria-expanded={showTerms} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary md:hidden print:hidden">
+                {showTerms ? "Hide terms" : `Show terms: ${terms.map((term) => term.label.toLowerCase()).join(", ")}`}
+                <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${showTerms ? "rotate-180" : ""}`} />
+              </button>
               <p className="mt-6 hidden text-sm print:block">{CONTACT.company} · {CONTACT.email}</p>
             </div>
             <aside className="glass self-start border border-border p-8 lg:sticky lg:top-28 print:hidden">
@@ -153,18 +161,18 @@ function ServicePage() {
             </aside>
           </section>
           {s.slug === "ship-spares" && <SpareTypes />}
-          <section className="mx-auto max-w-7xl px-6 py-16 print:hidden">
+          <section className="mx-auto max-w-7xl px-6 py-10 print:hidden">
             <p className="eyebrow">Other services</p>
-            <div className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
+            <div className="mt-6 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
               {others.map((o) => (
-                <Link key={o.slug} to="/services/$slug" params={{ slug: o.slug }} className="group bg-background p-6 hover:bg-card">
-                  <img src={RELATED_SERVICE_IMAGES[s.slug]?.[o.slug]?.src} alt={RELATED_SERVICE_IMAGES[s.slug]?.[o.slug]?.alt} loading="lazy" width={1536} height={1024} className="mb-4 h-20 w-full border border-border object-cover" />
+                <Link key={o.slug} to="/services/$slug" params={{ slug: o.slug }} className="group flex items-baseline gap-3 bg-background px-4 py-3 hover:bg-card sm:block sm:p-6">
+                  <img src={RELATED_SERVICE_IMAGES[s.slug]?.[o.slug]?.src} alt={RELATED_SERVICE_IMAGES[s.slug]?.[o.slug]?.alt} loading="lazy" width={1536} height={1024} className="mb-4 hidden h-20 w-full border border-border object-cover sm:block" />
                   <span className="font-display text-lg text-muted-foreground group-hover:text-mustard">{o.n}</span>
-                  <span className="mt-2 block font-display text-2xl uppercase leading-none">{o.title}</span>
+                  <span className="block font-display text-xl uppercase leading-none sm:mt-2 sm:text-2xl">{o.title}</span>
                 </Link>
               ))}
             </div>
-            <Link to="/services" className="mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"><ArrowLeft className="h-4 w-4" /> All services</Link>
+            <Link to="/services" className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"><ArrowLeft className="h-4 w-4" /> All services</Link>
           </section>
           <CtaBand onQuote={open} />
         </>

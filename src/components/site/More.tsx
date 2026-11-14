@@ -111,12 +111,14 @@ export function PortsMap() {
   const validAt = data?.ports[0]?.validAt;
   const cellHead = "px-2 py-3 text-left sm:px-3 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
   return (
-    <section id="network" className="mx-auto max-w-7xl px-6 py-20">
-      <Reveal className="mb-10">
+    <section id="network" className="mx-auto max-w-7xl px-6 py-12">
+      <Reveal className="mb-8">
         <p className="eyebrow">Where we work</p>
-        <h2 className="mt-6 text-4xl uppercase md:text-6xl">All Chinese ports.<br /><span className="text-tide">Including Hong Kong.</span></h2>
+        <h2 className="mt-4 text-3xl uppercase md:text-5xl">All Chinese ports.<br /><span className="text-tide">Including Hong Kong.</span></h2>
       </Reveal>
-      <div className="mx-auto max-w-4xl border border-border bg-abyss p-4 sm:p-8">
+      {/* Map and wind table sit side by side on wide screens, so both are visible without scrolling. */}
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
+      <div className="border border-border bg-abyss p-4 sm:p-6">
         <svg viewBox="0 0 700 740" role="img" aria-label="China coast with Dalian, Tianjin, Qingdao, Shanghai, Ningbo, Zhoushan, Xiamen, Guangzhou, Shenzhen and Hong Kong">
           <path d="M30 20H290L340 75L400 115L430 145L390 175L350 190L370 230L420 265L390 300L420 350L450 395L435 440L410 480L380 530L335 575L300 615L230 655L160 690H30Z" className="fill-muted stroke-primary" strokeWidth="2" />
           <text x="130" y="340" className="fill-muted-foreground" fontSize="35">CHINA</text>
@@ -137,7 +139,7 @@ export function PortsMap() {
         </svg>
         <p className="mt-4 text-xs text-muted-foreground">Selected ports shown · Schematic coast, not to scale · Coverage throughout China</p>
       </div>
-      <div className="mx-auto mt-10 max-w-4xl">
+      <div>
         <p className="eyebrow">Wind at the ports</p>
         <p className="mt-3 text-sm text-muted-foreground">
           {validAt ? `Forecast for the hour from ${chinaTime(validAt)}, China time.` : isPending ? "Loading the wind forecast…" : "The wind forecast is not available right now."}
@@ -191,6 +193,7 @@ export function PortsMap() {
           <a href="https://api.met.no/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">MET Norway</a>, licensed under{" "}
           <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">CC BY 4.0</a>.
         </p>
+      </div>
       </div>
       <PortPanel port={selected} wind={selected ? wind.get(selected) : undefined} loading={isPending} onClose={() => setSelected(null)} />
     </section>

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/services/")({
       {(open) => (
         <div className="pt-16">
           <Services />
-          <PartsSearch placement="services-parts" />
+          <div className="mx-auto max-w-7xl px-6 pb-10"><PartsSearch /></div>
           <CtaBand onQuote={open} />
         </div>
       )}

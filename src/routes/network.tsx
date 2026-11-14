@@ -13,7 +13,7 @@ export const Route = createFileRoute("/network")({
     <PageShell>
       {(open) => (
         <>
-          <PageHero eyebrow="Network" title="Every major port" accent="on the China coast." text="All Chinese ports including Hong Kong" image={port} />
+          <PageHero eyebrow="Network" title="Every major port" accent="on the China coast." text="All Chinese ports including Hong Kong" image={port} compact />
           <div className="mx-auto max-w-7xl px-6"><div className="inline-block"><ShanghaiClock /></div></div>
           <PortsMap />
           <China />

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/site/Hero";
 import { Makers } from "@/components/site/More";
-import { CtaBand, PartsSearch, Situations } from "@/components/site/Extras";
+import { CtaBand, Situations } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { Intro } from "@/components/site/Cinematic";
 import { seo } from "@/lib/seo";
@@ -23,7 +23,6 @@ function Index() {
           <Hero onQuote={open} />
           <Situations />
           <Makers />
-          <PartsSearch />
           <CtaBand onQuote={open} />
         </>
       )}

@@ -155,26 +155,26 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
   const dateIssues = today ? dateWarnings(fields, today) : [];
 
   return (
-    <form onSubmit={submit} className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+    <form onSubmit={submit} className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <div className="flex min-w-0 flex-col gap-10">
-      <fieldset className="grid gap-5 md:grid-cols-2">
+      <fieldset className="grid grid-cols-2 gap-5">
         <legend className={legend}>01 · Vessel &amp; delivery</legend>
-        <label className={label}>Vessel<input name="vessel" value={fields.vessel} onChange={setField("vessel")} required placeholder="Vessel name" className={field} /></label>
-        <label className={label}>IMO number
+        <label className={`${label} col-span-2 md:col-span-1`}>Vessel<input name="vessel" value={fields.vessel} onChange={setField("vessel")} required placeholder="Vessel name" className={field} /></label>
+        <label className={`${label} col-span-2 md:col-span-1`}>IMO number
           <input name="imo" value={fields.imo} onChange={setField("imo")} inputMode="numeric" placeholder="7 digits, optional" aria-describedby={imoWarning ? "imo-warning" : undefined} className={field} />
           {imoWarning && <span id="imo-warning" role="status" className="text-sm font-normal normal-case tracking-normal text-burgundy">This does not look like a valid IMO number. Please check it; you can still send the enquiry.</span>}
         </label>
-        <label className={label}>Port or yard in China
+        <label className={`${label} col-span-2 md:col-span-1`}>Port or yard in China
           <input name="port" value={fields.port} onChange={setField("port")} list="enquiry-ports" placeholder="Where the vessel will be" className={field} />
           <datalist id="enquiry-ports">{PORTS.map((p) => <option key={p.name} value={p.name} />)}</datalist>
         </label>
-        <label className={label}>Enquiry type
+        <label className={`${label} col-span-2 md:col-span-1`}>Enquiry type
           <select name="type" value={fields.type} onChange={setField("type")} className={field}>{ENQUIRY_TYPES.map((t) => <option key={t}>{t}</option>)}</select>
         </label>
         <label className={label}>Vessel ETA<input name="eta" type="date" value={fields.eta} onChange={setField("eta")} className={field} /></label>
         <label className={label}>Required by<input name="requiredBy" type="date" value={fields.requiredBy} onChange={setField("requiredBy")} className={field} /></label>
-        {dateIssues.length > 0 && <p role="status" className="text-sm text-burgundy md:col-span-2">{dateIssues.join(" ")} Please check; you can still send the enquiry.</p>}
-        <label className="flex cursor-pointer items-start gap-3 border border-input bg-muted px-4 py-3 md:col-span-2">
+        {dateIssues.length > 0 && <p role="status" className="col-span-2 text-sm text-burgundy">{dateIssues.join(" ")} Please check; you can still send the enquiry.</p>}
+        <label className="col-span-2 flex cursor-pointer items-start gap-3 border border-input bg-muted px-4 py-3">
           <input name="urgent" type="checkbox" checked={fields.urgent} onChange={(e) => { const urgent = e.target.checked; setState((current) => ({ ...current, fields: { ...current.fields, urgent } })); }} className="mt-1 h-4 w-4 accent-[var(--burgundy)]" />
           <span><span className="block text-sm font-semibold text-foreground">Urgent</span><span className="block text-sm text-muted-foreground">The vessel is waiting or at risk of delay. The email subject is marked URGENT.</span></span>
         </label>
