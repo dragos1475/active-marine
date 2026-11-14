@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { MessageCircle, X, MapPin, Ship, ArrowUpRight } from "lucide-react";
+import { MessageCircle, X, MapPin, ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
-import { TEAM, CASES, MAKERS, CERTS, PORTS, CLIENTS, CONTACT } from "./content";
+import { TEAM, CASES, MAKERS, CERTS, PORTS, CONTACT } from "./content";
 
 export function MockLabel({ children = "Illustrative mockup" }: { children?: string }) {
   return <span className="inline-block border border-input px-2 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-muted-foreground">{children}</span>;
@@ -93,68 +93,31 @@ export function Makers() {
 }
 
 // Very simplified, stylised outline of China's eastern coast (decorative, not to scale).
-const COAST = "M0 0 L58 0 L64 10 L72 16 L74 21 L69 24 L63 24 L60 28 L64 33 L69 35 L66 40 L68 46 L73 50 L74 55 L75 59 L72 64 L69 72 L66 77 L60 82 L56 86 L50 89 L42 92 L34 96 L28 100 L0 100 Z";
+
 
 export function PortsMap() {
-  const [hover, setHover] = useState<string | null>(null);
   return (
-    <section id="network" className="mx-auto max-w-7xl px-6 py-32">
-      <Reveal className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-        <div>
-          <p className="eyebrow">Where we work</p>
-          <h2 className="mt-6 text-[clamp(3rem,7vw,6rem)] uppercase">Every major port.<br /><span className="text-tide">One point of contact.</span></h2>
-        </div>
-        <MockLabel>Client names illustrative</MockLabel>
+    <section id="network" className="mx-auto max-w-7xl px-6 py-20">
+      <Reveal className="mb-10">
+        <p className="eyebrow">Where we work</p>
+        <h2 className="mt-6 text-4xl uppercase md:text-6xl">All Chinese ports.<br /><span className="text-tide">Including Hong Kong.</span></h2>
       </Reveal>
-      <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-        <Reveal className="relative aspect-[4/3] overflow-hidden border border-border bg-abyss">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-            <defs>
-              <pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M5 0H0V5" className="stroke-border" strokeWidth="0.15" fill="none" /></pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#grid)" />
-            <motion.path d={COAST} className="fill-muted stroke-primary" strokeWidth="0.3" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 3, ease: "easeInOut" }} />
-            {PORTS.filter((p) => !p.hq).map((p) => {
-              const hq = PORTS.find((x) => x.hq)!;
-              return <motion.path key={p.name} d={`M${hq.x} ${hq.y} Q ${(hq.x + p.x) / 2 + 10} ${(hq.y + p.y) / 2} ${p.x} ${p.y}`} className="stroke-accent" strokeWidth="0.25" strokeDasharray="1 1" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 2, delay: 1.5 }} />;
-            })}
-          </svg>
+      <div className="mx-auto max-w-4xl border border-border bg-abyss p-4 sm:p-8">
+        <svg viewBox="0 0 700 740" role="img" aria-label="China coast with Dalian, Tianjin, Qingdao, Shanghai, Ningbo, Zhoushan, Xiamen, Guangzhou, Shenzhen and Hong Kong">
+          <path d="M30 20H290L340 75L400 115L430 145L390 175L350 190L370 230L420 265L390 300L420 350L450 395L435 440L410 480L380 530L335 575L300 615L230 655L160 690H30Z" className="fill-muted stroke-primary" strokeWidth="2" />
+          <text x="130" y="340" className="fill-muted-foreground" fontSize="35">CHINA</text>
           {PORTS.map((p, i) => {
-            const clients = CLIENTS.filter((c) => c.port === p.name);
-            const active = hover === p.name;
-            return (
-              <motion.button
-                key={p.name}
-                initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.2 + i * 0.12, type: "spring" }}
-                onMouseEnter={() => setHover(p.name)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(p.name)} onBlur={() => setHover(null)}
-                className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${p.x}%`, top: `${p.y}%` }} aria-label={p.name}
-              >
-                <span className={`relative flex items-center justify-center rounded-full ${p.hq ? "h-5 w-5 bg-primary shadow-glow" : "h-3 w-3 bg-accent"}`}>
-                  <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-40" />
-                </span>
-                <span className={`absolute left-5 top-1/2 -translate-y-1/2 whitespace-nowrap text-[0.65rem] uppercase tracking-[0.2em] ${p.hq ? "text-primary" : "text-foreground"}`}>{p.name}{p.hq ? " · HQ" : ""}</span>
-                <AnimatePresence>
-                  {active && clients.length > 0 && (
-                    <motion.span initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="glass absolute bottom-6 left-1/2 z-10 block w-44 -translate-x-1/2 border border-border p-3 text-left">
-                      {clients.map((c) => <span key={c.name} className="block text-xs"><Ship className="mr-1 inline h-3 w-3 text-primary" />{c.name} <span className="text-muted-foreground">· {c.vessel}</span></span>)}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            );
+            const x = p.x * 5.5;
+            const y = p.y * 7;
+            const labelY = 75 + i * 66;
+            return <g key={p.name}>
+              <path d={`M${x} ${y} L475 ${labelY} H510`} fill="none" className="stroke-border" strokeWidth="2" />
+              <circle cx={x} cy={y} r="6" className="fill-primary" />
+              <text x="525" y={labelY + 8} className="fill-foreground" fontSize="24">{p.name}</text>
+            </g>;
           })}
-        </Reveal>
-        <Reveal delay={0.2} className="flex flex-col gap-3">
-          {CLIENTS.map((c) => (
-            <div key={c.name} onMouseEnter={() => setHover(c.port)} onMouseLeave={() => setHover(null)} className={`flex items-center justify-between border p-5 transition-colors ${hover === c.port ? "border-primary bg-card" : "border-border"}`}>
-              <div className="flex items-center gap-4">
-                <span className="flex h-10 w-10 items-center justify-center bg-secondary font-display text-xl text-primary">{c.name.split(" ").map((w) => w[0]).join("")}</span>
-                <div><div className="font-semibold">{c.name}</div><div className="text-xs text-muted-foreground">{c.vessel}</div></div>
-              </div>
-              <span className="flex items-center gap-1 text-xs uppercase tracking-[0.2em] text-muted-foreground"><MapPin className="h-3 w-3 text-primary" />{c.port}</span>
-            </div>
-          ))}
-        </Reveal>
+        </svg>
+        <p className="mt-4 text-xs text-muted-foreground">Selected ports shown · Schematic coast, not to scale · Coverage throughout China</p>
       </div>
     </section>
   );

@@ -5,7 +5,7 @@ export const CONTACT = {
   phone: "+86 21 0000 0000",
   wechat: "ActivMarine_Demo",
   whatsapp: "+86 000 0000 0000",
-  company: "Activ Marine (Shanghai) Co., Ltd.",
+  company: "Activ Marine Limited",
   address: ["Suite 608, Marine Business Centre", "88 Harbour Avenue, Pudong New Area", "Shanghai 200120, China"],
   placeholder: true,
 };
@@ -15,7 +15,6 @@ export const NAV = [
   { to: "/services", label: "Services" },
   { to: "/cases", label: "Projects" },
   { to: "/network", label: "Network" },
-  { to: "/gallery", label: "Gallery" },
   { to: "/insights", label: "Insights" },
   { to: "/faq", label: "FAQ" },
   { to: "/contact", label: "Contact" },
@@ -72,6 +71,7 @@ export const PORTS = [
   { name: "Xiamen", x: 68, y: 75 },
   { name: "Guangzhou", x: 56, y: 84 },
   { name: "Shenzhen", x: 59, y: 87 },
+  { name: "Hong Kong", x: 61, y: 91 },
 ];
 
 export const CLIENTS = [
@@ -117,9 +117,9 @@ export const TESTIMONIALS = [
 ];
 
 export const FAQ = [
-  { q: "Which ports do you cover?", a: "Shanghai, Ningbo-Zhoushan, Qingdao, Tianjin, Dalian, Xiamen, Guangzhou and other Chinese ports, by launch, truck or air." },
+  { q: "Which ports do you cover?", a: "All Chinese ports including Hong Kong" },
   { q: "Do you supply genuine maker parts?", a: "Yes. We supply genuine, OEM and quality alternatives, always stating clearly which one you are getting." },
-  { q: "How fast can you respond?", a: "We answer most enquiries within two hours, around the clock, and can attend on board at short notice." },
+  { q: "How fast can you respond?", a: "We acknowledge all enquiries within 2 hours, while trying our best to have you an indication on availability and pricing within 48 hours." },
   { q: "How are customs and delivery handled?", a: "We coordinate customs clearance, ship's spares in transit and final delivery to the vessel with the local agent." },
   { q: "What payment terms do you offer?", a: "Bank transfer in USD, EUR or CNY. Credit terms are available for established clients." },
   { q: "Is there a warranty?", a: "Parts carry the manufacturer's warranty; our repair work is covered by our own workmanship guarantee." },

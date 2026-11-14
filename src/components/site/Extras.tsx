@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { animate, motion, useInView, AnimatePresence } from "motion/react";
 import { ArrowUpRight, Plus, Search, Quote } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Reveal } from "./Reveal";
+import { Button } from "@/components/ui/button";
 import { MockLabel } from "./More";
-import { CONTACT, FAQ, SERVICES, STATS, TESTIMONIALS, TIMELINE } from "./content";
+import { FAQ, SERVICES, STATS, TESTIMONIALS, TIMELINE } from "./content";
 
 export function PageHero({ eyebrow, title, accent, text, image }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined }) {
   return (
@@ -109,7 +110,8 @@ export function Testimonials() {
     const t = setInterval(() => setI((x) => (x + 1) % TESTIMONIALS.length), 6500);
     return () => clearInterval(t);
   }, []);
-  const t = TESTIMONIALS[i]!;
+  const t = TESTIMONIALS[i];
+  if (!t) return null;
   return (
     <section className="mx-auto max-w-5xl px-6 py-32 text-center">
       <Quote className="mx-auto h-10 w-10 text-burgundy-bright" />
@@ -133,7 +135,7 @@ export function Testimonials() {
 
 export function PartsSearch() {
   const [q, setQ] = useState("");
-  const href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(`Part enquiry: ${q}`)}&body=${encodeURIComponent(`Part number / maker: ${q}\nVessel:\nQuantity:\nDelivery port:\n`)}`;
+  const navigate = useNavigate();
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <Reveal className="glass relative overflow-hidden border border-border p-10 md:p-16">
@@ -141,12 +143,12 @@ export function PartsSearch() {
         <p className="eyebrow">Quick parts enquiry</p>
         <h2 className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] uppercase">Know the part number?</h2>
         <p className="mt-4 max-w-lg text-muted-foreground">Type the part number, maker or model and send it straight to our sourcing desk.</p>
-        <form onSubmit={(e) => { e.preventDefault(); if (q.trim()) window.location.href = href; }} className="relative mt-10 flex flex-col gap-3 sm:flex-row">
+        <form onSubmit={(e) => { e.preventDefault(); void navigate({ to: "/enquiry", search: { part: q.trim() } }); }} className="relative mt-10 flex flex-col gap-3 sm:flex-row">
           <label className="flex flex-1 items-center gap-3 border border-input bg-muted px-5">
             <Search className="h-5 w-5 text-muted-foreground" />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="e.g. MAN B&W 90510-0123, Yanmar 6EY18 fuel pump" aria-label="Part number or maker" className="w-full bg-transparent py-4 text-foreground outline-none placeholder:text-muted-foreground" />
           </label>
-          <button type="submit" className="bg-primary px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Send enquiry</button>
+          <Button type="submit" className="h-auto rounded-none px-8 py-4 text-xs font-bold uppercase tracking-[0.2em]">Send enquiry <ArrowUpRight /></Button>
         </form>
       </Reveal>
     </section>
@@ -165,8 +167,8 @@ export function ShanghaiClock() {
     <div className="flex items-center gap-4 border border-border px-5 py-4">
       <span className="relative flex h-3 w-3"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" /><span className="relative inline-flex h-3 w-3 rounded-full bg-primary" /></span>
       <div>
-        <p className="font-display text-3xl leading-none tabular-nums">{time} <span className="text-base text-muted-foreground">Shanghai</span></p>
-        <p className="mt-1 text-[0.65rem] uppercase tracking-[0.25em] text-mustard">Available now · 24/7 response</p>
+        <p className="font-display text-3xl leading-none tabular-nums">{time} <span className="text-base text-muted-foreground">China</span></p>
+        <p className="mt-1 text-[0.65rem] uppercase tracking-[0.25em] text-mustard">Enquiries acknowledged within 2 hours</p>
       </div>
     </div>
   );
@@ -200,7 +202,7 @@ export function CtaBand({ onQuote, children = "Tell us what the vessel needs." }
     <section className="mx-auto max-w-7xl px-6 py-24">
       <Reveal className="flex flex-col items-start justify-between gap-8 border-t border-border pt-16 md:flex-row md:items-end">
         <h2 className="text-[clamp(3rem,7vw,6rem)] uppercase">{children}</h2>
-        <button onClick={onQuote} className="inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Request a Quote <ArrowUpRight className="h-4 w-4" /></button>
+        <Button onClick={onQuote} className="h-auto rounded-none inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Request a Quote <ArrowUpRight className="h-4 w-4" /></Button>
       </Reveal>
     </section>
   );

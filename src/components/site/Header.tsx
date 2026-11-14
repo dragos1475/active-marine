@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { Menu, X, ArrowUpRight, ChevronDown } from "lucide-react";
@@ -18,7 +19,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid || mega ? "glass border-b border-border" : ""}`}
+      className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${solid || mega ? "glass border-b border-border" : "bg-background border-b border-border"}`}
       onMouseLeave={() => setMega(false)}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6">
@@ -41,9 +42,9 @@ export function Header({ onQuote }: { onQuote: () => void }) {
           )}
         </nav>
         <div className="flex items-center gap-3">
-          <button onClick={onQuote} className="group hidden items-center gap-2 bg-primary px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-all hover:shadow-glow sm:inline-flex">
+          <Button onClick={onQuote} className="h-auto rounded-none group hidden items-center gap-2 bg-primary px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-all hover:shadow-glow sm:inline-flex">
             Request a Quote <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </button>
+          </Button>
           <button className="p-2 xl:hidden" aria-label="Toggle navigation" aria-expanded={open} onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
           </button>
@@ -56,7 +57,7 @@ export function Header({ onQuote }: { onQuote: () => void }) {
             <div className="mx-auto grid max-w-7xl grid-cols-4 gap-8 px-6 py-10">
               <div>
                 <p className="eyebrow">Services</p>
-                <p className="mt-4 text-sm text-muted-foreground">Six connected areas of support, from one Shanghai desk.</p>
+                <p className="mt-4 text-sm text-muted-foreground">Six connected areas of support, across China.</p>
                 <Link to="/services" onClick={() => setMega(false)} className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">Overview <ArrowUpRight className="h-4 w-4" /></Link>
               </div>
               <div className="col-span-3 grid grid-cols-3 gap-px bg-border">

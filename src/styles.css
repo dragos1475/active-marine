@@ -206,6 +206,21 @@
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-@media (pointer: fine) {
-  html.am-cursor, html.am-cursor * { cursor: none !important; }
+/* The native pointer stays immediate and visible on every control. */
+.daylight-hero {
+  --background: oklch(0.97 0.008 220);
+  --foreground: oklch(0.25 0.055 252);
+  --muted-foreground: oklch(0.35 0.05 252);
+  --primary: oklch(0.4 0.065 200);
+  --primary-foreground: oklch(0.98 0.005 220);
+  --accent: oklch(0.9 0.02 200);
+  --accent-foreground: oklch(0.25 0.055 252);
+  --input: oklch(0.4 0.04 252 / 30%);
+  --burgundy: oklch(0.43 0.12 15);
+  --hero-wash: linear-gradient(90deg, oklch(0.98 0.01 220 / 96%) 0%, oklch(0.97 0.01 220 / 87%) 32%, oklch(0.97 0.01 220 / 10%) 68%, transparent 100%);
+}
+.daylight-wash { background: var(--hero-wash); }
+@media (max-width: 639px) {
+  .daylight-hero { --hero-wash: linear-gradient(90deg, oklch(0.98 0.01 220 / 95%), oklch(0.97 0.01 220 / 75%)); }
+  .daylight-hero > div:last-child { min-height: 720px; }
 }

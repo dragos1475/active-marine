@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as CasesRouteImport } from './routes/cases'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as EnquiryRouteImport } from './routes/enquiry'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as InsightsRouteImport } from './routes/insights'
@@ -47,6 +48,11 @@ const ContactRoute = ContactRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnquiryRoute = EnquiryRouteImport.update({
+  id: '/enquiry',
+  path: '/enquiry',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/cases': typeof CasesRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/enquiry': typeof EnquiryRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/insights': typeof InsightsRouteWithChildren
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/cases': typeof CasesRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/enquiry': typeof EnquiryRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/network': typeof NetworkRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/cases': typeof CasesRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/enquiry': typeof EnquiryRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/insights': typeof InsightsRouteWithChildren
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/cases'
     | '/contact'
     | '/dashboard'
+    | '/enquiry'
     | '/faq'
     | '/gallery'
     | '/insights'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/cases'
     | '/contact'
     | '/dashboard'
+    | '/enquiry'
     | '/faq'
     | '/gallery'
     | '/network'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/cases'
     | '/contact'
     | '/dashboard'
+    | '/enquiry'
     | '/faq'
     | '/gallery'
     | '/insights'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   CasesRoute: typeof CasesRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
+  EnquiryRoute: typeof EnquiryRoute
   FaqRoute: typeof FaqRoute
   GalleryRoute: typeof GalleryRoute
   InsightsRoute: typeof InsightsRouteWithChildren
@@ -243,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/enquiry': {
+      id: '/enquiry'
+      path: '/enquiry'
+      fullPath: '/enquiry'
+      preLoaderRoute: typeof EnquiryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -331,6 +351,7 @@ const rootRouteChildren: RootRouteChildren = {
   CasesRoute: CasesRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
+  EnquiryRoute: EnquiryRoute,
   FaqRoute: FaqRoute,
   GalleryRoute: GalleryRoute,
   InsightsRoute: InsightsRouteWithChildren,

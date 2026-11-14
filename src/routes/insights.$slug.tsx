@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
@@ -45,7 +46,7 @@ function Article() {
           </div>
           <div className="mt-16 border-l-2 border-primary bg-muted p-8">
             <p className="font-display text-3xl uppercase">Facing this on your vessel?</p>
-            <button onClick={open} className="mt-4 bg-primary px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground">Request a Quote</button>
+            <Button onClick={open} className="h-auto rounded-none mt-4 bg-primary px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground">Request a Quote</Button>
           </div>
         </article>
       )}

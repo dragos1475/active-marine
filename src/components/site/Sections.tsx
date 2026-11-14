@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight, Mail } from "lucide-react";
@@ -134,7 +135,7 @@ export function Approach() {
         </div>
       </div>
       <div ref={ref} className="relative mt-32 h-[80vh] overflow-hidden">
-        <motion.img style={{ y }} src={office.url} alt="Illustrative ActivMarine Shanghai office with staff collaborating on marine technical work" loading="lazy" className="absolute inset-0 h-[130%] w-full -translate-y-[15%] object-cover" />
+        <motion.img style={{ y }} src={office.url} alt="Illustrative ActivMarine China office with staff collaborating on marine technical work" loading="lazy" className="absolute inset-0 h-[130%] w-full -translate-y-[15%] object-cover" />
         <div className="absolute inset-0 bg-veil" />
         <div className="absolute bottom-10 left-6 right-6 mx-auto max-w-7xl">
           <p className="font-display text-[clamp(2.5rem,6vw,5rem)] uppercase">Keeping the maritime world moving.</p>
@@ -156,7 +157,7 @@ export function China() {
       <div className="absolute inset-0 bg-veil" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
         <Reveal>
-          <p className="eyebrow">Based in Shanghai · Supporting you across China</p>
+          <p className="eyebrow">Based in China · Supporting you across China</p>
           <h2 className="mt-6 text-[clamp(3rem,7vw,6.5rem)] uppercase">Closer to the source.<br /><span className="text-tide">A clear advantage for your fleet.</span></h2>
           <p className="mt-8 max-w-lg text-lg font-light leading-relaxed text-muted-foreground">
             Through direct contact with manufacturers and coordination with local suppliers and shipyards, we support spare-parts sourcing, repairs and docking wherever your vessel needs us in China.
@@ -191,13 +192,13 @@ export function Contact({ onQuote }: { onQuote: () => void }) {
             <Mail className="h-8 w-8" /> {CONTACT.email}
           </a>
           <div className="mt-8">
-            <button onClick={onQuote} className="group inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:shadow-glow">
+            <Button onClick={onQuote} className="h-auto rounded-none group inline-flex items-center gap-3 bg-primary px-8 py-5 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:shadow-glow">
               Request a Quote <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-            </button>
+            </Button>
           </div>
         </Reveal>
         <Reveal delay={0.2} className="glass self-end border border-border p-10 shadow-deep">
-          <p className="eyebrow">Shanghai office</p>
+          <p className="eyebrow">China office</p>
           <h3 className="mt-4 text-4xl uppercase">{CONTACT.company}</h3>
           <dl className="mt-8 grid gap-6 sm:grid-cols-2">
             {[["Telephone", CONTACT.phone], ["Email", CONTACT.email], ["WeChat", CONTACT.wechat], ["WhatsApp", CONTACT.whatsapp]].map(([k, v]) => (
@@ -213,7 +214,7 @@ export function Contact({ onQuote }: { onQuote: () => void }) {
           </dl>
           {CONTACT.placeholder && (
             <p className="mt-8 border-t border-border pt-4 text-xs text-muted-foreground">
-              Company name, telephone, WeChat, WhatsApp and address are illustrative placeholders. Email shown as supplied.
+              Telephone, WeChat, WhatsApp and address are illustrative placeholders. Company name and email are confirmed.
             </p>
           )}
         </Reveal>
@@ -244,7 +245,7 @@ export function Footer() {
         </div>
         <div className="select-none overflow-hidden font-display text-[22vw] leading-[0.8] text-muted opacity-60">ACTIVMARINE</div>
         <div className="flex flex-wrap justify-between gap-4 border-t border-border py-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          <span>© 2026 ActivMarine · Shanghai, China</span>
+          <span>© 2026 Activ Marine Limited · China</span>
           <span>Keeping the maritime world moving</span>
         </div>
       </div>

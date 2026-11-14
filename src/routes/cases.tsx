@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Cases } from "@/components/site/More";
-import { CtaBand, PageHero, Testimonials, Timeline } from "@/components/site/Extras";
+import { CtaBand, PageHero, Testimonials } from "@/components/site/Extras";
 import { PageShell } from "@/components/site/PageShell";
 import { seo } from "@/lib/seo";
 import shipyard from "@/assets/shipyard-night.jpg";
@@ -13,7 +13,6 @@ export const Route = createFileRoute("/cases")({
         <>
           <PageHero eyebrow="Projects" title="Problems solved," accent="vessels sailing." image={shipyard} />
           <Cases />
-          <Timeline />
           <Testimonials />
           <CtaBand onQuote={open} />
         </>

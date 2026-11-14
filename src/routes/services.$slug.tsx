@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/services/$slug")({
     return s;
   },
   head: ({ loaderData }) => {
-    const t = loaderData ? `${loaderData.title} | ActivMarine Shanghai` : "Service not found | ActivMarine";
+    const t = loaderData ? `${loaderData.title} | ActivMarine China` : "Service not found | ActivMarine";
     const d = loaderData?.text ?? "This service page does not exist.";
     return { meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, ...(loaderData ? [] : [{ name: "robots", content: "noindex" }])] };
   },
@@ -55,7 +56,7 @@ function ServicePage() {
             <Reveal delay={0.15} className="glass border border-border p-10">
               <p className="eyebrow">How it works</p>
               <p className="mt-6 text-muted-foreground">Send us the maker, model, drawings or a short description. We confirm the technical requirement, propose options with clear pricing and coordinate everything up to the vessel.</p>
-              <button onClick={open} className="mt-8 inline-flex items-center gap-3 bg-primary px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Request a quote <ArrowUpRight className="h-4 w-4" /></button>
+              <Button onClick={open} className="h-auto rounded-none mt-8 inline-flex items-center gap-3 bg-primary px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">Request a quote <ArrowUpRight className="h-4 w-4" /></Button>
             </Reveal>
           </section>
           <section className="mx-auto max-w-7xl px-6 py-16">
