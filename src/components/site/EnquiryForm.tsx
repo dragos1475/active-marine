@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Check, ChevronDown, CircleAlert, Copy, Plus, X } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, CircleAlert, Copy, Mail, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTACT, ENQUIRY_TYPES, PORTS } from "./content";
 import {
-  DRAFT_STORAGE_KEY, ITEM_COLUMNS, MAX_ITEMS, applyPaste, buildEnquiry, dateWarnings, emptyFields, emptyItem, enquiryGaps, fitsInMailto, formatWhen, hasContent, isValidImo,
-  localDate, mailtoHref, makeReference, nextEnquiry, parseDraft, parsePastedCells, responseTimes, type EnquiryFields, type EnquiryItem, type FieldKey, type ItemKey,
+  DRAFT_STORAGE_KEY, ENQUIRY_DELIVERY, ITEM_COLUMNS, MAX_ITEMS, applyPaste, buildEnquiry, dateWarnings, emptyFields, emptyItem, enquiryGaps, fitsInMailto, formatWhen, hasContent,
+  isValidImo, localDate, mailtoHref, makeReference, netlifyFormBody, nextEnquiry, parseDraft, parsePastedCells, responseTimes, sendEnquiry,
+  type Delivery, type EnquiryFields, type EnquiryItem, type FieldKey, type ItemKey,
 } from "@/lib/enquiry";
 
 const field = "w-full border border-input bg-muted px-4 py-3 text-base font-normal tracking-normal text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary";
@@ -15,16 +16,23 @@ const hint = "text-sm font-normal normal-case tracking-normal text-muted-foregro
 const itemGrid = "grid grid-cols-2 gap-2 md:grid-cols-[1fr_1fr_0.8fr_1fr_1.6fr_4.5rem_2.5rem]";
 const textLink = "text-sm text-primary underline underline-offset-4 hover:text-foreground";
 
-type Result = { reference: string; subject: string; text: string; copied: boolean; emailed: boolean; fits: boolean; preparedAt: Date };
+// outcome: "sent" reached the office through the site; "failed" tried and did not; the other two leave the sending to the visitor.
+type Result = { reference: string; subject: string; text: string; outcome: "sent" | "failed" | "emailed" | "copied"; copied: boolean; fits: boolean; preparedAt: Date };
 type Start = { part?: string; type?: string; port?: string; eta?: string };
 
 function resultMessage(result: Result): string {
   const attach = "attach any drawings, then send";
-  if (result.emailed && result.fits) {
+  if (result.outcome === "sent") {
+    return `Your enquiry has been sent to our office. Email any drawings or photos to ${CONTACT.email}, quoting the reference.`;
+  }
+  if (result.outcome === "failed") {
+    return `We could not send the enquiry from this page, so nothing has reached us yet. Use Open in Email or Copy Text above, or copy the text below into an email to ${CONTACT.email}.`;
+  }
+  if (result.outcome === "emailed" && result.fits) {
     return `Your email app should open with the enquiry addressed to ${CONTACT.email}: ${attach}. If it does not open, use the text below.`;
   }
   const source = result.copied ? "paste the copied text" : "your browser blocked copying, so select the text below and paste it";
-  if (result.emailed) {
+  if (result.outcome === "emailed") {
     return `Your email app should open addressed to ${CONTACT.email}. The enquiry is too long for the link: ${source} into the email, ${attach}.`;
   }
   return result.copied
@@ -45,11 +53,12 @@ function withStart(fields: EnquiryFields, items: EnquiryItem[], start: Start): {
 }
 
 function WhatHappensNext({ result }: { result: Result }) {
+  const sent = result.outcome === "sent";
   const { acknowledgeBy, indicationBy } = responseTimes(result.preparedAt);
   const steps = [
-    { when: "Now", text: `Send the email from your own email app. Quote reference ${result.reference} if you call or write again.` },
-    { when: "Within 2 hours", text: `We acknowledge the enquiry. If you send it now, that is by ${formatWhen(acknowledgeBy)} your time (${formatWhen(acknowledgeBy, "Asia/Shanghai")} in China).` },
-    { when: "Within 48 hours, as a target", text: `We aim to give you an indication on availability and pricing. If you send it now, that is by ${formatWhen(indicationBy)} your time.` },
+    { when: "Now", text: sent ? `Your enquiry is with our office. Quote reference ${result.reference} if you call or write again.` : `Send the email from your own email app. Quote reference ${result.reference} if you call or write again.` },
+    { when: "Within 2 hours", text: `We acknowledge the enquiry. ${sent ? "That" : "If you send it now, that"} is by ${formatWhen(acknowledgeBy)} your time (${formatWhen(acknowledgeBy, "Asia/Shanghai")} in China).` },
+    { when: "Within 48 hours, as a target", text: `We aim to give you an indication on availability and pricing. ${sent ? "That" : "If you send it now, that"} is by ${formatWhen(indicationBy)} your time.` },
   ];
   return (
     <div className="mt-5 border-t border-border pt-4">
@@ -66,14 +75,18 @@ function WhatHappensNext({ result }: { result: Result }) {
   );
 }
 
-export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start) {
+/** delivery: how the enquiry leaves the page. Defaults to what the build was made for; tests pass it in. */
+export function EnquiryForm({ part = "", type = "", port = "", eta = "", delivery = ENQUIRY_DELIVERY }: Start & { delivery?: Delivery }) {
   const [state, setState] = useState(() => withStart(emptyFields(), [emptyItem()], { part, type, port, eta }));
   const [files, setFiles] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [result, setResult] = useState<Result | null>(null);
   const [restored, setRestored] = useState(false);
   const [saved, setSaved] = useState(false);
-  const action = useRef<"email" | "copy">("email");
+  const [sending, setSending] = useState(false);
+  const action = useRef<"send" | "email" | "copy">(delivery === "netlify" ? "send" : "email");
+  // Spam trap for Netlify Forms: people never see or fill it, bots do, and Netlify discards those.
+  const botField = useRef<HTMLInputElement>(null);
   // Reference and today's date are only known in the browser, so they are set after hydration.
   const [reference, setReference] = useState("");
   const [today, setToday] = useState("");
@@ -136,7 +149,16 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
       return;
     }
     setError("");
-    const enquiry = buildEnquiry({ ...fields, reference, items, files });
+    const input = { ...fields, reference, items, files };
+    const enquiry = buildEnquiry(input);
+    const base = { reference, subject: enquiry.subject, text: enquiry.body, fits: fitsInMailto(enquiry.body), preparedAt: new Date() };
+    if (action.current === "send") {
+      setSending(true);
+      const accepted = await sendEnquiry(netlifyFormBody(input, botField.current?.value ?? ""));
+      setSending(false);
+      setResult({ ...base, outcome: accepted ? "sent" : "failed", copied: false });
+      return;
+    }
     let copied = true;
     try {
       await navigator.clipboard.writeText(enquiry.body);
@@ -145,7 +167,7 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
     }
     const emailed = action.current === "email";
     if (emailed) window.location.href = mailtoHref(CONTACT.email, enquiry, reference);
-    setResult({ reference, subject: enquiry.subject, text: enquiry.body, copied, emailed, fits: fitsInMailto(enquiry.body), preparedAt: new Date() });
+    setResult({ ...base, outcome: emailed ? "emailed" : "copied", copied });
   }
 
   const filled = items.filter(hasContent).length;
@@ -176,6 +198,9 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
         </label>
         <label className={label}>Vessel ETA<input name="eta" type="date" value={fields.eta} onChange={setField("eta")} className={field} /></label>
         <label className={label}>Required by<input name="requiredBy" type="date" value={fields.requiredBy} onChange={setField("requiredBy")} className={field} /></label>
+        <label className={`${label} col-span-2`}>Local agent's details
+          <textarea name="agent" value={fields.agent} onChange={setField("agent")} rows={2} placeholder="Agency name, contact person, phone or email, if already appointed" className={field} />
+        </label>
         {dateIssues.length > 0 && <p role="status" className="col-span-2 text-sm text-burgundy">{dateIssues.join(" ")} Please check; you can still send the enquiry.</p>}
         <label className="col-span-2 flex cursor-pointer items-start gap-3 border border-input bg-muted px-4 py-3">
           <input name="urgent" type="checkbox" checked={fields.urgent} onChange={(e) => { const urgent = e.target.checked; setState((current) => ({ ...current, fields: { ...current.fields, urgent } })); }} className="mt-1 h-4 w-4 accent-[var(--burgundy)]" />
@@ -219,7 +244,7 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
         </label>
         <label className={label}>Drawings &amp; photos
           <input type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.tif,.tiff,.dwg,.dxf,.xls,.xlsx" onChange={(e) => setFiles(Array.from(e.target.files ?? []).map((f) => f.name))} className={field} />
-          <span className={hint}>Nameplate photos, drawings, PDF, DWG, DXF or Excel lists. Files stay on your device: attach them to the email yourself.</span>
+          <span className={hint}>Nameplate photos, drawings, PDF, DWG, DXF or Excel lists. {delivery === "netlify" ? `Files are not uploaded from this page: email them to ${CONTACT.email}, quoting your reference.` : "Files stay on your device: attach them to the email yourself."}</span>
         </label>
         {files.length > 0 && <ul className="list-disc pl-5 text-sm text-muted-foreground">{files.map((f) => <li key={f}>{f}</li>)}</ul>}
       </fieldset>
@@ -234,11 +259,21 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
 
       <div className="flex flex-col gap-3">
         {error && <p role="alert" className="border-l-2 border-burgundy bg-muted p-4 text-sm text-foreground">{error}</p>}
-        <div className="grid gap-3 md:grid-cols-[2fr_1fr]">
-          <Button type="submit" onClick={() => { action.current = "email"; }} className="group h-auto rounded-none py-5 text-xs font-bold uppercase tracking-[0.2em] transition-all hover:shadow-glow">
-            Open in Email <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+        {delivery === "netlify" && (
+          <p className="hidden">
+            <label>Leave this field empty<input ref={botField} name="bot-field" tabIndex={-1} autoComplete="off" /></label>
+          </p>
+        )}
+        <div className={`grid gap-3 ${delivery === "netlify" ? "md:grid-cols-[2fr_1fr_1fr]" : "md:grid-cols-[2fr_1fr]"}`}>
+          {delivery === "netlify" && (
+            <Button type="submit" disabled={sending} onClick={() => { action.current = "send"; }} className="group h-auto rounded-none py-5 text-xs font-bold uppercase tracking-[0.2em] transition-all hover:shadow-glow">
+              {sending ? "Sending…" : "Send enquiry"} <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+            </Button>
+          )}
+          <Button type="submit" variant={delivery === "netlify" ? "outline" : "default"} disabled={sending} onClick={() => { action.current = "email"; }} className={`group h-auto rounded-none py-5 text-xs font-bold uppercase tracking-[0.2em] ${delivery === "netlify" ? "" : "transition-all hover:shadow-glow"}`}>
+            Open in Email {delivery === "netlify" ? <Mail className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />}
           </Button>
-          <Button type="submit" variant="outline" onClick={() => { action.current = "copy"; }} className="h-auto rounded-none py-5 text-xs font-bold uppercase tracking-[0.2em]">
+          <Button type="submit" variant="outline" disabled={sending} onClick={() => { action.current = "copy"; }} className="h-auto rounded-none py-5 text-xs font-bold uppercase tracking-[0.2em]">
             Copy Text <Copy className="h-4 w-4" />
           </Button>
         </div>
@@ -249,10 +284,10 @@ export function EnquiryForm({ part = "", type = "", port = "", eta = "" }: Start
           </p>
         )}
         {result && (
-          <div className="border-l-2 border-primary bg-muted p-4 text-sm" aria-live="polite">
-            <p className="font-semibold text-foreground">Reference {result.reference}</p>
+          <div className={`border-l-2 bg-muted p-4 text-sm ${result.outcome === "failed" ? "border-burgundy" : "border-primary"}`} role={result.outcome === "failed" ? "alert" : undefined} aria-live="polite">
+            <p className="font-semibold text-foreground">{result.outcome === "sent" ? "Enquiry sent · " : result.outcome === "failed" ? "Not sent · " : ""}Reference {result.reference}</p>
             <p className="mt-2 text-muted-foreground">{resultMessage(result)}</p>
-            <WhatHappensNext result={result} />
+            {result.outcome !== "failed" && <WhatHappensNext result={result} />}
             <label className={`${label} mt-5`}>Enquiry text
               <textarea readOnly value={`Subject: ${result.subject}\n\n${result.text}`} rows={8} className={`${field} font-mono text-xs normal-case tracking-normal`} />
             </label>

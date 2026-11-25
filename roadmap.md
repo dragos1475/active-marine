@@ -6,7 +6,7 @@
 - [x] Apply the daylight palette across all pages, navigation, forms, map, footer and opening intro; retain restrained marine, mustard and burgundy accents.
 - [x] Simplify and brighten homepage; remove illustrative figures and team, update China wording, network map, FAQ and company; remove Gallery tab; use normal cursor and full enquiry page.
 - [x] 1. Quote form — user chose mockup only for now (no database); keeps copy-to-email
-- [ ] 2. Real contact details — blocked: waiting for owner's verified phone/WeChat/WhatsApp/address (company name confirmed)
+- [x] 2. Real contact details — supplied by the owner on 2026-11-25: phone, WeChat, address and the enquiry@ email; no WhatsApp number given, so none is shown
 - [x] 3. Floating WhatsApp / WeChat button
 - [x] 4. Privacy policy page
 - [x] 5. Team section (illustrative mockup)

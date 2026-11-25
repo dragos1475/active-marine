@@ -138,12 +138,13 @@ export const RELATED_SERVICE_IMAGES: Record<string, Record<string, MaritimePhoto
 };
 export const PLACEMENT_IMAGES = {
   "home-parts": { src: engineering7, alt: "Illustrative maritime engineering equipment and operations" },
-  "services-parts": { src: supply14, alt: "Illustrative maritime supply equipment and operations" },
+  "services-parts": { src: engineering8, alt: "Illustrative maritime engineering equipment and operations" },
   "approach-0": { src: inspection7, alt: "Illustrative maritime inspection equipment and operations" },
   "approach-1": { src: inspection8, alt: "Illustrative maritime inspection equipment and operations" },
   "approach-2": { src: inspection9, alt: "Illustrative maritime inspection equipment and operations" },
   "network-background": { src: port14, alt: "Illustrative maritime port equipment and operations" },
-  "network-parts": { src: engineering8, alt: "Illustrative maritime engineering equipment and operations" },
+  // Spare parts on purpose: the company asked for parts here, not plant pipework.
+  "network-parts": { src: supply14, alt: "Illustrative marine filter elements ready for supply" },
   "case-0": { src: engineering9, alt: "Illustrative maritime engineering equipment and operations" },
   "case-1": { src: engineering10, alt: "Illustrative maritime engineering equipment and operations" },
   "case-2": { src: inspection10, alt: "Illustrative maritime inspection equipment and operations" },

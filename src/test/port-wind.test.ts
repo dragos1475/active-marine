@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { PORTS } from "@/components/site/content";
-import { beaufort, cacheUntil, compassPoint, readWind, strongest, toKnots } from "@/lib/port-wind";
+import { beaufort, cacheUntil, compassPoint, readSky, readWind, strongest, toKnots } from "@/lib/port-wind";
 
 const forecast = {
   properties: {
     timeseries: [
       { time: "2026-11-14T21:00:00Z", data: { instant: { details: { wind_speed: 5, wind_from_direction: 10, wind_speed_of_gust: 8 } } } },
-      { time: "2026-11-14T22:00:00Z", data: { instant: { details: { wind_speed: 8.4, wind_from_direction: 344.9, wind_speed_of_gust: 12.1 } } } },
+      { time: "2026-11-14T22:00:00Z", data: { instant: { details: { wind_speed: 8.4, wind_from_direction: 344.9, wind_speed_of_gust: 12.1, air_temperature: 10.4 } }, next_1_hours: { summary: { symbol_code: "partlycloudy_night" } } } },
       { time: "2026-11-14T23:00:00Z", data: { instant: { details: { wind_speed: 9, wind_from_direction: 350 } } } },
     ],
   },
@@ -38,6 +38,29 @@ describe("Port wind", () => {
   it("reads the forecast hour that has already started", () => {
     const wind = readWind("Ningbo", forecast, new Date("2026-11-14T22:40:00Z"));
     expect(wind).toMatchObject({ name: "Ningbo", speedKn: 16, gustKn: 24, directionDeg: 345, compass: "NNW", beaufort: 4, validAt: "2026-11-14T22:00:00Z" });
+  });
+
+  it("reads the temperature and the sky state for the same hour", () => {
+    const wind = readWind("Ningbo", forecast, new Date("2026-11-14T22:40:00Z"));
+    expect(wind?.temperatureC).toBe(10);
+    expect(wind?.sky).toEqual({ kind: "fair", label: "Partly cloudy", night: true });
+    const earlier = readWind("Ningbo", forecast, new Date("2026-11-14T21:10:00Z"));
+    expect(earlier?.temperatureC).toBeNull();
+    expect(earlier?.sky).toBeNull();
+  });
+
+  it("names the sky state from the service's weather symbols", () => {
+    expect(readSky("clearsky_day")).toEqual({ kind: "clear", label: "Clear", night: false });
+    expect(readSky("cloudy")).toEqual({ kind: "cloudy", label: "Cloudy", night: false });
+    expect(readSky("fog")?.label).toBe("Fog");
+    expect(readSky("lightrain")).toEqual({ kind: "rain", label: "Light rain", night: false });
+    expect(readSky("heavyrainshowers_day")?.label).toBe("Heavy rain showers");
+    expect(readSky("lightsleet")).toEqual({ kind: "sleet", label: "Light sleet", night: false });
+    expect(readSky("snow")?.kind).toBe("snow");
+    expect(readSky("rainshowersandthunder_night")).toEqual({ kind: "thunder", label: "Rain showers and thunder", night: true });
+    expect(readSky("lightssleetshowersandthunder_day")?.label).toBe("Light sleet showers and thunder");
+    expect(readSky("somethingnew")).toBeNull();
+    expect(readSky(undefined)).toBeNull();
   });
 
   it("builds a two-day outlook in three-hour steps from the current hour", () => {

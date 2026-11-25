@@ -1,0 +1,16 @@
+# Netlify build settings. The build detects Netlify by itself and emits the pages to dist/
+# and the server (SSR and the wind forecast function) to .netlify/functions-internal/.
+
+[build]
+  command = "bun run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Turns on sending through Netlify Forms. Without it (on every other host) the enquiry form
+  # prepares an email instead. The form itself is declared in public/__forms.html.
+  VITE_ENQUIRY_DELIVERY = "netlify-forms"
+
+# No rewrite for /__l5e/assets-v1/* here, on purpose. On Netlify the site's server function
+# answers every non-static path before redirects are evaluated, so a rule copied from
+# vercel.json would never run. See AGENTS.md for the state of those media pointers.

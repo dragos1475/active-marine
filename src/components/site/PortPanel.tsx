@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-import { ArrowUp, ArrowUpRight } from "lucide-react";
+import { ArrowUp, ArrowUpRight, Cloud, CloudFog, CloudLightning, CloudMoon, CloudRain, CloudSnow, CloudSun, Moon, Sun, type LucideIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { strongest, type PortWind } from "@/lib/port-wind";
+import { strongest, type PortWind, type Sky } from "@/lib/port-wind";
 
 const CHINA = "Asia/Shanghai";
 const clock = new Intl.DateTimeFormat("en-GB", { timeZone: CHINA, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 const hourOf = new Intl.DateTimeFormat("en-GB", { timeZone: CHINA, hour: "2-digit", hourCycle: "h23" });
 const dayOf = new Intl.DateTimeFormat("en-GB", { timeZone: CHINA, weekday: "short" });
+
+const SKY_ICONS: Record<Sky["kind"], LucideIcon> = { clear: Sun, fair: CloudSun, cloudy: Cloud, fog: CloudFog, rain: CloudRain, sleet: CloudSnow, snow: CloudSnow, thunder: CloudLightning };
+
+/** The sky state as a small icon; clear and fair skies switch to a moon at night. */
+export function SkyIcon({ sky, className = "h-4 w-4" }: { sky: Sky; className?: string }) {
+  const Icon = sky.night && sky.kind === "clear" ? Moon : sky.night && sky.kind === "fair" ? CloudMoon : SKY_ICONS[sky.kind];
+  return <Icon aria-hidden="true" className={className} />;
+}
 
 /** Current time in China as HH:MM; null until the page is running in the browser. */
 export function useChinaTime(): string | null {
@@ -69,7 +77,7 @@ export function PortPanel({ port, wind, loading, onClose }: { port: string | nul
         <div>
           <p className="eyebrow">Port · China</p>
           <DialogTitle className="mt-3 font-display text-5xl font-normal uppercase leading-none tracking-normal">{port}</DialogTitle>
-          <DialogDescription className="mt-3">Local time {time ?? "--:--"}. Wind forecast at the port approach: indicative only, not for navigation.</DialogDescription>
+          <DialogDescription className="mt-3">Local time {time ?? "--:--"}. Weather forecast at the port approach: indicative only, not for navigation.</DialogDescription>
         </div>
         {wind ? (
           <>
@@ -80,11 +88,17 @@ export function PortPanel({ port, wind, loading, onClose }: { port: string | nul
                 From {wind.compass} <span className="tabular-nums text-muted-foreground">{wind.directionDeg}°</span>
               </p>
               <p className="text-lg text-foreground">Force {wind.beaufort}</p>
+              {(wind.sky || wind.temperatureC !== null) && (
+                <p className="flex items-center gap-2 text-lg text-foreground">
+                  {wind.sky && <SkyIcon sky={wind.sky} className="h-5 w-5 text-primary" />}
+                  {[wind.sky?.label, wind.temperatureC !== null ? `${wind.temperatureC}°C` : null].filter(Boolean).join(", ")}
+                </p>
+              )}
             </div>
             <Outlook wind={wind} />
           </>
         ) : (
-          <p className="border-y border-border py-5 text-sm text-muted-foreground">{loading ? "Loading the wind forecast…" : "The wind forecast is not available right now."}</p>
+          <p className="border-y border-border py-5 text-sm text-muted-foreground">{loading ? "Loading the forecast…" : "The forecast is not available right now."}</p>
         )}
         {port && (
           <Link to="/enquiry" search={{ part: "", port }} className="inline-flex items-center justify-center gap-2 bg-primary px-6 py-4 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:shadow-glow">
@@ -92,7 +106,7 @@ export function PortPanel({ port, wind, loading, onClose }: { port: string | nul
           </Link>
         )}
         <p className="text-xs text-muted-foreground">
-          Wind data from <a href="https://api.met.no/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">MET Norway</a>, licensed under{" "}
+          Weather data from <a href="https://api.met.no/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">MET Norway</a>, licensed under{" "}
           <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">CC BY 4.0</a>.
         </p>
       </DialogContent>

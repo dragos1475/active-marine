@@ -5,7 +5,7 @@ import { ArrowUpRight, Check, Mail } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Reveal, Logo } from "./Reveal";
 import { ThemeSelector } from "./ThemeSelector";
-import { CONTACT, SERVICES, STEPS, TAGS, NAV } from "./content";
+import { CONTACT, CONTACT_TEL, SERVICES, STEPS, TAGS, NAV } from "./content";
 import { LIST_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
 import approachWide from "@/assets/about-logistics-underway.jpg";
 
@@ -28,8 +28,8 @@ export function About() {
           </p>
         </Reveal>
       </div>
-      <div className="mt-24 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
-        {[["06", "Connected services"], ["CN", "Nationwide reach"], ["1:1", "Direct to manufacturers"], ["24/7", "Operational mindset"]].map(([k, v], i) => (
+      <div className="mt-24 grid grid-cols-2 gap-px bg-border md:grid-cols-5">
+        {[["06", "Connected services"], ["CN", "Nationwide reach"], ["WW", "Worldwide delivery"], ["1:1", "Direct to manufacturers"], ["24/7", "Operational mindset"]].map(([k, v], i) => (
           <Reveal key={v} delay={i * 0.1} className="bg-background p-8">
             <div className="text-tide font-display text-6xl">{k}</div>
             <div className="mt-2 text-xs uppercase tracking-[0.25em] text-muted-foreground">{v}</div>
@@ -134,7 +134,7 @@ export function China() {
       <div className="absolute inset-0 bg-veil" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1.4fr_1fr]">
         <Reveal>
-          <p className="eyebrow">Based in China · Supporting you across China</p>
+          <p className="eyebrow">Based in China · Supporting you across China · Delivering worldwide</p>
           <h2 className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] uppercase">Closer to the source.<br /><span className="text-tide">A clear advantage for your fleet.</span></h2>
           <p className="mt-6 max-w-lg text-lg font-light leading-relaxed text-muted-foreground">
             Through direct contact with manufacturers and coordination with local suppliers and shipyards, we support spare-parts sourcing, repairs and docking wherever your vessel needs us in China.
@@ -148,7 +148,7 @@ export function China() {
         <Reveal delay={0.2} className="relative mx-auto hidden aspect-square w-full max-w-xs lg:block">
           <motion.div style={{ rotate }} className="absolute -inset-6 rounded-full border border-dashed border-primary/40" />
           <div className="absolute -inset-12 rounded-full border border-border" />
-          <img src={PLACEMENT_IMAGES["network-parts"].src} alt="Marine spare parts: cylinder liner, pistons, pump, valves and electronics" loading="lazy" className="relative h-full w-full rounded-full object-cover shadow-glow" />
+          <img src={PLACEMENT_IMAGES["network-parts"].src} alt={PLACEMENT_IMAGES["network-parts"].alt} loading="lazy" className="relative h-full w-full rounded-full object-cover shadow-glow" />
           <p className="mt-14 text-center text-xs uppercase tracking-[0.25em] text-muted-foreground">Cylinder liners · Pistons · Pumps · Valves · Electronics</p>
         </Reveal>
       </div>
@@ -177,10 +177,10 @@ export function Contact({ onQuote }: { onQuote: () => void }) {
           <p className="eyebrow">China office</p>
           <h3 className="mt-4 text-4xl uppercase">{CONTACT.company}</h3>
           <dl className="mt-8 grid gap-6 sm:grid-cols-2">
-            {[["Telephone", CONTACT.phone], ["Email", CONTACT.email], ["WeChat", CONTACT.wechat], ["WhatsApp", CONTACT.whatsapp]].map(([k, v]) => (
+            {[["Telephone", CONTACT.phone, CONTACT_TEL], ["Email", CONTACT.email, `mailto:${CONTACT.email}`], ["WeChat", CONTACT.wechat, ""]].map(([k, v, href]) => (
               <div key={k}>
                 <dt className="text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground">{k}</dt>
-                <dd className="mt-1 break-words">{v}</dd>
+                <dd className="mt-1 break-words">{href ? <a href={href} className="underline decoration-border underline-offset-4 hover:text-primary hover:decoration-primary">{v}</a> : v}</dd>
               </div>
             ))}
             <div className="sm:col-span-2">
@@ -188,11 +188,6 @@ export function Contact({ onQuote }: { onQuote: () => void }) {
               <dd className="mt-1">{CONTACT.address.map((l) => <span key={l} className="block">{l}</span>)}</dd>
             </div>
           </dl>
-          {CONTACT.placeholder && (
-            <p className="mt-8 border-t border-border pt-4 text-xs text-muted-foreground">
-              Telephone, WeChat, WhatsApp and address are illustrative placeholders. Company name and email are confirmed.
-            </p>
-          )}
         </Reveal>
       </div>
     </section>

@@ -3,10 +3,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { MessageCircle, X, MapPin, ArrowUp, ArrowUpRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getPortWind } from "@/lib/port-wind.functions";
-import { Link } from "@tanstack/react-router";
-import { PortPanel } from "./PortPanel";
+import { PortPanel, SkyIcon } from "./PortPanel";
 import { Reveal } from "./Reveal";
-import { TEAM, CASES, MAKERS, CERTS, PORTS, CONTACT } from "./content";
+import { TEAM, CASES, MAKERS, CERTS, PORTS, CONTACT, CONTACT_TEL } from "./content";
 import { PLACEMENT_IMAGES } from "./imagery";
 
 export function MockLabel({ children = "Illustrative mockup" }: { children?: string }) {
@@ -133,16 +132,16 @@ export function PortsMap() {
               <circle cx={x} cy={y} r="6" className="fill-primary" />
               <rect x="505" y={labelY - 24} width="190" height="56" fill="transparent" />
               <text x="525" y={labelY + 8} className="fill-foreground group-hover:fill-primary" fontSize="24">{p.name}</text>
-              {here && <text x="525" y={labelY + 28} className="fill-muted-foreground" fontSize="15">{here.speedKn} kn {here.compass}</text>}
+              {here && <text x="525" y={labelY + 28} className="fill-muted-foreground" fontSize="15">{here.temperatureC !== null ? `${here.temperatureC}°C · ` : ""}{here.speedKn} kn {here.compass}</text>}
             </g>;
           })}
         </svg>
         <p className="mt-4 text-xs text-muted-foreground">Selected ports shown · Schematic coast, not to scale · Coverage throughout China</p>
       </div>
       <div>
-        <p className="eyebrow">Wind at the ports</p>
+        <p className="eyebrow">Weather at the ports</p>
         <p className="mt-3 text-sm text-muted-foreground">
-          {validAt ? `Forecast for the hour from ${chinaTime(validAt)}, China time.` : isPending ? "Loading the wind forecast…" : "The wind forecast is not available right now."}
+          {validAt ? `Forecast for the hour from ${chinaTime(validAt)}, China time.` : isPending ? "Loading the forecast…" : "The forecast is not available right now."}
           {" "}Select a port for its 48-hour outlook; for any other Chinese port, name it in the enquiry.
         </p>
         <div className="mt-5 border border-border">
@@ -150,10 +149,11 @@ export function PortsMap() {
             <thead className="border-b border-border bg-muted">
               <tr>
                 <th scope="col" className={cellHead}>Port</th>
+                <th scope="col" className={cellHead}>Sky</th>
+                <th scope="col" className={cellHead}>Temp</th>
                 <th scope="col" className={cellHead}>Wind</th>
                 <th scope="col" className={cellHead}>From</th>
                 <th scope="col" className={cellHead}><span className="sm:hidden">Bft</span><span className="hidden sm:inline">Beaufort</span></th>
-                <th scope="col" className={cellHead}><span className="sr-only">Enquiry</span></th>
               </tr>
             </thead>
             <tbody>
@@ -165,6 +165,15 @@ export function PortsMap() {
                     <th scope="row" className="px-2 py-3 text-left sm:px-3">
                       <button type="button" onClick={() => setSelected(p.name)} aria-haspopup="dialog" className="font-semibold text-foreground underline decoration-border underline-offset-4 hover:text-primary hover:decoration-primary">{p.name}</button>
                     </th>
+                    <td className="px-2 py-3 sm:px-3">
+                      {here?.sky ? (
+                        <span className="inline-flex items-center gap-2" title={here.sky.label}>
+                          <SkyIcon sky={here.sky} className="h-4 w-4 shrink-0 text-primary" />
+                          <span className="sr-only md:not-sr-only">{here.sky.label}</span>
+                        </span>
+                      ) : blank}
+                    </td>
+                    <td className="px-2 py-3 tabular-nums sm:px-3">{here && here.temperatureC !== null ? `${here.temperatureC}°C` : blank}</td>
                     <td className="px-2 py-3 tabular-nums sm:px-3">{here ? `${here.speedKn} kn` : blank}</td>
                     <td className="px-2 py-3 sm:px-3">
                       {here ? (
@@ -176,11 +185,6 @@ export function PortsMap() {
                       ) : blank}
                     </td>
                     <td className="px-2 py-3 tabular-nums sm:px-3">{here ? <><span className="hidden sm:inline">Force </span>{here.beaufort}</> : blank}</td>
-                    <td className="px-2 py-3 text-right sm:px-3">
-                      <Link to="/enquiry" search={{ part: "", port: p.name }} className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-bold uppercase tracking-[0.18em] text-primary hover:text-foreground">
-                        <span className="sr-only sm:not-sr-only">Enquiry</span> <ArrowUpRight className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
-                      </Link>
-                    </td>
                   </tr>
                 );
               })}
@@ -189,7 +193,7 @@ export function PortsMap() {
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
           {isError && "The forecast could not be loaded. "}
-          Indicative forecast at the port approaches, not for navigation. Wind data from{" "}
+          Indicative forecast at the port approaches, not for navigation. Weather data from{" "}
           <a href="https://api.met.no/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">MET Norway</a>, licensed under{" "}
           <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-primary">CC BY 4.0</a>.
         </p>
@@ -202,15 +206,14 @@ export function PortsMap() {
 
 export function FloatingChat({ raised = false }: { raised?: boolean }) {
   const [open, setOpen] = useState(false);
-  const wa = CONTACT.whatsapp.replace(/\D/g, "");
   return (
     <div className={`fixed right-6 z-40 flex flex-col items-end gap-3 print:hidden ${raised ? "bottom-24 sm:bottom-6" : "bottom-6"}`}>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10 }} className="glass w-72 border border-border p-5 shadow-deep">
             <p className="eyebrow">Talk to us now</p>
-            <a href={`https://wa.me/${wa}`} target="_blank" rel="noreferrer" className="mt-4 flex items-center justify-between border border-border p-4 transition-colors hover:border-primary">
-              <span><span className="block font-semibold">WhatsApp</span><span className="text-xs text-muted-foreground">{CONTACT.whatsapp}</span></span><ArrowUpRight className="h-4 w-4 text-primary" />
+            <a href={CONTACT_TEL} className="mt-4 flex items-center justify-between border border-border p-4 transition-colors hover:border-primary">
+              <span><span className="block font-semibold">Telephone</span><span className="text-xs text-muted-foreground">{CONTACT.phone}</span></span><ArrowUpRight className="h-4 w-4 text-primary" />
             </a>
             <div className="mt-2 border border-border p-4">
               <span className="block font-semibold">WeChat</span><span className="text-xs text-muted-foreground">ID: {CONTACT.wechat}</span>
@@ -218,7 +221,6 @@ export function FloatingChat({ raised = false }: { raised?: boolean }) {
             <a href={`mailto:${CONTACT.email}`} className="mt-2 flex items-center justify-between border border-border p-4 transition-colors hover:border-primary">
               <span><span className="block font-semibold">Email</span><span className="text-xs text-muted-foreground">{CONTACT.email}</span></span><ArrowUpRight className="h-4 w-4 text-primary" />
             </a>
-            {CONTACT.placeholder && <p className="mt-3 text-[0.65rem] text-muted-foreground">WhatsApp and WeChat are placeholders.</p>}
           </motion.div>
         )}
       </AnimatePresence>

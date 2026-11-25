@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { MockLabel } from "./More";
 import { FAQ, PORTS, SERVICES, STATS, TESTIMONIALS, TIMELINE } from "./content";
 import { HOME_SERVICE_IMAGES, PLACEMENT_IMAGES } from "./imagery";
+import { stashAgent } from "@/lib/enquiry";
 
 /** compact: a smaller title and less height, for pages where the content below matters more than the heading. */
 export function PageHero({ eyebrow, title, accent, text, image, compact = false }: { eyebrow: string; title: string; accent: string; text?: string | undefined; image?: string | undefined; compact?: boolean }) {
@@ -57,11 +58,27 @@ export function Stats() {
   );
 }
 
+/** Value of the "Other" entry in the port list; picking it reveals a free-text field. */
+const OTHER_PORT = "__other";
+
 /** Homepage entry by situation: the client picks the problem, or the port and date, not a department. */
 export function Situations() {
   const navigate = useNavigate();
   const [port, setPort] = useState("");
+  const [otherPort, setOtherPort] = useState("");
   const [eta, setEta] = useState("");
+  const [agent, setAgent] = useState("");
+  const [part, setPart] = useState("");
+  const start = (event: React.FormEvent) => {
+    event.preventDefault();
+    const where = port === OTHER_PORT ? otherPort.trim() : port;
+    try {
+      stashAgent(agent, localStorage);
+    } catch {
+      // Without browser storage the agent's details are simply typed again on the enquiry page.
+    }
+    void navigate({ to: "/enquiry", search: { part: part.trim(), ...(where ? { port: where } : {}), ...(eta ? { eta } : {}) } });
+  };
   const control = "w-full border border-input bg-muted px-4 py-3 text-base font-normal tracking-normal text-foreground outline-none transition-colors focus:border-primary";
   const caption = "flex flex-col gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
   return (
@@ -73,25 +90,34 @@ export function Situations() {
         </div>
         <Link to="/services" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">All services <ArrowUpRight className="h-4 w-4" /></Link>
       </Reveal>
-      <form
-        onSubmit={(e) => { e.preventDefault(); void navigate({ to: "/enquiry", search: { part: "", ...(port ? { port } : {}), ...(eta ? { eta } : {}) } }); }}
-        className="mb-4 grid grid-cols-2 gap-4 border border-border bg-card p-6 md:grid-cols-[1.2fr_1fr_1fr_auto] md:items-end"
-      >
-        <p className="col-span-2 font-display text-2xl uppercase leading-none md:col-span-1 md:pb-3">Vessel calling China?</p>
-        <label className={caption}>Port
-          {/* The browser's own arrow sits on the border; this one is drawn inside the field instead. */}
-          <span className="relative block">
-            <select value={port} onChange={(e) => setPort(e.target.value)} className={`${control} appearance-none pr-11`}>
-              <option value="">Any port</option>
-              {PORTS.map((p) => <option key={p.name}>{p.name}</option>)}
-            </select>
-            <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          </span>
-        </label>
-        <label className={caption}>Vessel ETA<input type="date" value={eta} onChange={(e) => setEta(e.target.value)} className={control} /></label>
-        <Button type="submit" className="col-span-2 h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] md:col-span-1">Send enquiry <ArrowUpRight /></Button>
+      {/* One box, one button: where the vessel will be, who the agent is and, if known, the part. */}
+      <form onSubmit={start} className="mb-4 border border-border bg-card">
+        <div className="grid grid-cols-2 gap-4 p-6 md:grid-cols-[1.1fr_1fr_1fr_1.5fr] md:items-start">
+          <p className="col-span-2 font-display text-2xl uppercase leading-none md:col-span-1 md:pt-9">Vessel calling China?</p>
+          <label className={caption}>Port
+            {/* The browser's own arrow sits on the border; this one is drawn inside the field instead. */}
+            <span className="relative block">
+              <select value={port} onChange={(e) => setPort(e.target.value)} className={`${control} appearance-none pr-11`}>
+                <option value="">Any port</option>
+                {PORTS.map((p) => <option key={p.name}>{p.name}</option>)}
+                <option value={OTHER_PORT}>Other</option>
+              </select>
+              <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            </span>
+            {port === OTHER_PORT && <input value={otherPort} onChange={(e) => setOtherPort(e.target.value)} placeholder="Port or yard name" aria-label="Other port or yard" autoFocus className={control} />}
+          </label>
+          <label className={caption}>Vessel ETA<input type="date" value={eta} onChange={(e) => setEta(e.target.value)} className={control} /></label>
+          <label className={`${caption} col-span-2 md:col-span-1`}>Local agent's details<input value={agent} onChange={(e) => setAgent(e.target.value)} placeholder="Agency, contact, phone or email" className={control} /></label>
+        </div>
+        <div className="grid gap-4 border-t border-border p-6 md:grid-cols-[1.1fr_2fr_auto] md:items-center">
+          <p className="font-display text-2xl uppercase leading-none">Know the part number?</p>
+          <label className="flex items-center gap-3 border border-input bg-muted px-4">
+            <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
+            <input value={part} onChange={(e) => setPart(e.target.value)} placeholder="e.g. MAN B&W 90510-0123, Yanmar 6EY18 fuel pump" aria-label="Part number, maker or model" className="w-full bg-transparent py-3 text-foreground outline-none placeholder:text-muted-foreground" />
+          </label>
+          <Button type="submit" className="h-auto rounded-none px-7 py-4 text-xs font-bold uppercase tracking-[0.2em]">Send enquiry <ArrowUpRight /></Button>
+        </div>
       </form>
-      <PartsSearch className="mb-4" />
       <div className="grid gap-px border border-border bg-border md:grid-cols-3">
         {SERVICES.map((s, i) => (
           <Reveal key={s.slug} delay={(i % 3) * 0.08} className="bg-background">

@@ -1,7 +1,9 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { EnquiryForm } from "@/components/site/EnquiryForm";
-import { DRAFT_STORAGE_KEY, applyPaste, buildEnquiry, emptyFields, emptyItem, formatWhen, isValidImo, mailtoHref, makeReference, nextEnquiry, parseDraft, parsePastedCells, responseTimes, type EnquiryInput } from "@/lib/enquiry";
+import { ENQUIRY_FORM_FIELDS, ENQUIRY_FORM_MARKER, ENQUIRY_FORM_NAME, ENQUIRY_FORM_PATH, netlifyFormBody, sendEnquiry, stashAgent, DRAFT_STORAGE_KEY, applyPaste, buildEnquiry, emptyFields, emptyItem, formatWhen, isValidImo, mailtoHref, makeReference, nextEnquiry, parseDraft, parsePastedCells, responseTimes, type EnquiryInput } from "@/lib/enquiry";
 
 afterEach(() => {
   cleanup();
@@ -21,6 +23,7 @@ const base: EnquiryInput = {
   port: "",
   eta: "",
   requiredBy: "",
+  agent: "",
   details: "",
   items: [],
   files: [],
@@ -189,5 +192,112 @@ describe("Enquiry form", () => {
     expect(screen.getByLabelText("Vessel")).toHaveValue("MV Example");
     expect(within(screen.getByRole("group", { name: "Item 1" })).getByLabelText("Description")).toHaveValue("");
     expect(screen.queryByText("What happens next")).toBeNull();
+  });
+});
+
+describe("Local agent's details", () => {
+  it("adds the agent to the delivery block and to the fields sent, when given", () => {
+    const withAgent = { ...base, port: "Ningbo", agent: "  Example Agency, Mr Li, +86 000  " };
+    expect(buildEnquiry(withAgent).body).toContain("Port: Ningbo\nLocal agent: Example Agency, Mr Li, +86 000");
+    expect(netlifyFormBody(withAgent).get("agent")).toBe("Example Agency, Mr Li, +86 000");
+    expect(buildEnquiry(base).body).not.toContain("Local agent");
+  });
+
+  it("carries the agent typed on the homepage into the form through browser storage, not the address", async () => {
+    stashAgent("Example Agency, Mr Li", localStorage);
+    expect(parseDraft(localStorage.getItem(DRAFT_STORAGE_KEY))?.fields.agent).toBe("Example Agency, Mr Li");
+    render(<EnquiryForm port="Dalian" />);
+    expect(await screen.findByDisplayValue("Example Agency, Mr Li")).toBeInTheDocument();
+    expect(screen.getByLabelText("Port or yard in China")).toHaveValue("Dalian");
+  });
+
+  it("keeps an existing draft when the agent is added, and does nothing for an empty agent", () => {
+    stashAgent("   ", localStorage);
+    expect(localStorage.getItem(DRAFT_STORAGE_KEY)).toBeNull();
+    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ fields: { ...emptyFields(), vessel: "MV Saved" }, items: [emptyItem()] }));
+    stashAgent("Example Agency", localStorage);
+    expect(parseDraft(localStorage.getItem(DRAFT_STORAGE_KEY))?.fields).toMatchObject({ vessel: "MV Saved", agent: "Example Agency" });
+  });
+});
+
+describe("Sending through Netlify Forms", () => {
+  const blueprint = readFileSync(resolve(process.cwd(), "public/__forms.html"), "utf8");
+
+  it("declares every field it sends in the static form Netlify reads at deploy time", () => {
+    expect(blueprint).toContain(`<form name="${ENQUIRY_FORM_NAME}"`);
+    expect(blueprint).toContain('data-netlify="true"');
+    expect(blueprint).toContain('netlify-honeypot="bot-field"');
+    for (const field of ["bot-field", ...ENQUIRY_FORM_FIELDS]) expect(blueprint).toContain(`name="${field}"`);
+    expect(ENQUIRY_FORM_PATH).toBe("/__forms.html");
+  });
+
+  it("sends each detail as its own field, plus the full text", () => {
+    const body = netlifyFormBody({ ...base, urgent: true, imo: "IMO 9074729", port: "Ningbo", items: [{ ...emptyItem(), maker: "Yanmar", qty: "2" }, emptyItem()] });
+    expect(body.get("form-name")).toBe("enquiry");
+    expect(body.get("bot-field")).toBe("");
+    expect(body.get("subject")).toBe("URGENT Enquiry AM-261114-TEST — MV Example (IMO 9074729) — Ningbo");
+    expect(body.get("urgent")).toBe("yes");
+    expect(body.get("imo")).toBe("9074729");
+    expect(body.get("items")).toBe("1. Maker: Yanmar | Qty: 2");
+    expect(body.get("email")).toBe("jane@example.com");
+    expect(body.get("message")).toContain("ACTIV MARINE LIMITED — ENQUIRY");
+    expect([...body.keys()].sort()).toEqual(["bot-field", "form-name", ...ENQUIRY_FORM_FIELDS].sort());
+  });
+
+  it("reports success only when the service accepts the enquiry", async () => {
+    const body = netlifyFormBody(base);
+    const reply = (ok: boolean, text = "Thank you") => vi.fn().mockResolvedValue({ ok, text: async () => text });
+    const accepted = reply(true);
+    expect(await sendEnquiry(body, accepted)).toBe(true);
+    expect(accepted).toHaveBeenCalledWith("/__forms.html", expect.objectContaining({ method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" } }));
+    expect(String(accepted.mock.calls[0]?.[1]?.body)).toContain("form-name=enquiry");
+    expect(await sendEnquiry(body, reply(false))).toBe(false);
+    expect(await sendEnquiry(body, vi.fn().mockRejectedValue(new Error("offline")))).toBe(false);
+  });
+
+  it("does not take the declaration page served back for an accepted enquiry", async () => {
+    expect(blueprint).toContain(ENQUIRY_FORM_MARKER);
+    const echoed = vi.fn().mockResolvedValue({ ok: true, text: async () => blueprint });
+    expect(await sendEnquiry(netlifyFormBody(base), echoed)).toBe(false);
+  });
+
+  const fillRequired = () => {
+    const fill = (name: string, value: string) => fireEvent.change(screen.getByLabelText(name), { target: { value } });
+    fill("Vessel", "MV Example");
+    fill("Name", "Jane Doe");
+    fill("Company", "Example Ship Management");
+    fill("Contact email", "jane@example.com");
+    fill("Phone number", "+30 000 000");
+  };
+
+  it("keeps preparing an email when the site is not built for Netlify", () => {
+    render(<EnquiryForm />);
+    expect(screen.queryByRole("button", { name: /send enquiry/i })).toBeNull();
+    expect(screen.getByRole("button", { name: /open in email/i })).toBeInTheDocument();
+  });
+
+  it("sends the enquiry and says so when the service accepts it", async () => {
+    const send = vi.fn().mockResolvedValue({ ok: true, text: async () => "Thank you" });
+    vi.stubGlobal("fetch", send);
+    render(<EnquiryForm part="Fuel pump" delivery="netlify" />);
+    fillRequired();
+    fireEvent.click(screen.getByRole("button", { name: /send enquiry/i }));
+    expect(await screen.findByText(/^Enquiry sent · Reference AM-/)).toBeInTheDocument();
+    expect(screen.getByText(/has been sent to our office/)).toBeInTheDocument();
+    expect(screen.getByText("What happens next")).toBeInTheDocument();
+    expect(String(send.mock.calls[0]?.[1]?.body)).toContain("vessel=MV+Example");
+    vi.unstubAllGlobals();
+  });
+
+  it("never claims the enquiry was sent when the service refuses it", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, text: async () => "" }));
+    render(<EnquiryForm part="Fuel pump" delivery="netlify" />);
+    fillRequired();
+    fireEvent.click(screen.getByRole("button", { name: /send enquiry/i }));
+    expect(await screen.findByText(/^Not sent · Reference AM-/)).toBeInTheDocument();
+    expect(screen.getByText(/nothing has reached us yet/)).toBeInTheDocument();
+    expect(screen.queryByText("What happens next")).toBeNull();
+    expect(screen.queryByText(/has been sent to our office/)).toBeNull();
+    vi.unstubAllGlobals();
   });
 });

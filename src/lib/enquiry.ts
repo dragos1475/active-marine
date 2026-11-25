@@ -78,6 +78,8 @@ export type EnquiryInput = {
   port: string;
   eta: string;
   requiredBy: string;
+  /** The vessel's local agent at the port, as free text. */
+  agent: string;
   details: string;
   items: EnquiryItem[];
   files: string[];
@@ -88,6 +90,14 @@ const block = (title: string, lines: (string | null)[]) => {
   const kept = lines.filter((entry): entry is string => entry !== null);
   return kept.length ? `${title}\n${kept.join("\n")}` : null;
 };
+
+/** One numbered text line per filled item, naming only the columns that have a value. */
+export function itemLines(items: EnquiryItem[]): string[] {
+  return items.filter(hasContent).map((item, index) => {
+    const parts = ITEM_COLUMNS.map((column) => line(column.label, item[column.key])).filter(Boolean);
+    return `${index + 1}. ${parts.join(" | ")}`;
+  });
+}
 
 /** Builds the email subject and body for an enquiry, leaving out anything the client left empty. */
 export function buildEnquiry(input: EnquiryInput): { subject: string; body: string } {
@@ -102,10 +112,7 @@ export function buildEnquiry(input: EnquiryInput): { subject: string; body: stri
     .filter(Boolean)
     .join(" — ");
 
-  const items = input.items.filter(hasContent).map((item, index) => {
-    const parts = ITEM_COLUMNS.map((column) => line(column.label, item[column.key])).filter(Boolean);
-    return `${index + 1}. ${parts.join(" | ")}`;
-  });
+  const items = itemLines(input.items);
 
   const body = [
     [
@@ -123,6 +130,7 @@ export function buildEnquiry(input: EnquiryInput): { subject: string; body: stri
       line("Port", port),
       line("ETA", input.eta),
       line("Required by", input.requiredBy),
+      line("Local agent", input.agent),
     ]),
     items.length ? `ITEMS\n${items.join("\n")}` : null,
     input.details.trim() ? `REQUIREMENTS\n${input.details.trim()}` : null,
@@ -147,7 +155,7 @@ export function mailtoHref(email: string, enquiry: { subject: string; body: stri
 
 // ——— Draft kept in the visitor's browser, so a dropped connection does not lose the enquiry ———
 
-export const FIELD_KEYS = ["vessel", "imo", "port", "type", "eta", "requiredBy", "details", "name", "company", "email", "phone"] as const;
+export const FIELD_KEYS = ["vessel", "imo", "port", "type", "eta", "requiredBy", "agent", "details", "name", "company", "email", "phone"] as const;
 export type FieldKey = (typeof FIELD_KEYS)[number];
 export type EnquiryFields = Record<FieldKey, string> & { urgent: boolean };
 export type EnquiryDraft = { fields: EnquiryFields; items: EnquiryItem[] };
@@ -157,7 +165,7 @@ export const PROFILE_KEYS = ["vessel", "imo", "name", "company", "email", "phone
 
 export const DRAFT_STORAGE_KEY = "am-enquiry-draft";
 
-export const emptyFields = (): EnquiryFields => ({ vessel: "", imo: "", port: "", type: "", eta: "", requiredBy: "", details: "", name: "", company: "", email: "", phone: "", urgent: false });
+export const emptyFields = (): EnquiryFields => ({ vessel: "", imo: "", port: "", type: "", eta: "", requiredBy: "", agent: "", details: "", name: "", company: "", email: "", phone: "", urgent: false });
 
 const asText = (value: unknown) => (typeof value === "string" ? value : "");
 
@@ -184,6 +192,16 @@ export function parseDraft(raw: string | null): EnquiryDraft | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Carries the local agent's details from the homepage box into the form's draft. They can name a
+ * person, so they travel through browser storage and never appear in the page address.
+ */
+export function stashAgent(agent: string, storage: Pick<Storage, "getItem" | "setItem">): void {
+  if (!agent.trim()) return;
+  const draft = parseDraft(storage.getItem(DRAFT_STORAGE_KEY)) ?? { fields: emptyFields(), items: [emptyItem()] };
+  storage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ ...draft, fields: { ...draft.fields, agent: agent.trim() } }));
 }
 
 /** Starts the next enquiry: keeps who is asking and for which vessel, clears what was asked. */
@@ -232,4 +250,62 @@ export function dateWarnings(fields: Pick<EnquiryFields, "eta" | "requiredBy">, 
 export function localDate(now: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
+// ——— Sending through Netlify Forms ———
+// Only the Netlify build turns this on (VITE_ENQUIRY_DELIVERY in netlify.toml). Everywhere else the
+// form keeps preparing an email, because no other host has a form service behind it.
+
+export type Delivery = "email" | "netlify";
+export const ENQUIRY_DELIVERY: Delivery = import.meta.env["VITE_ENQUIRY_DELIVERY"] === "netlify-forms" ? "netlify" : "email";
+
+export const ENQUIRY_FORM_NAME = "enquiry";
+/** Static page that declares the form to Netlify, which reads plain HTML at deploy time. Submissions are posted to it. */
+export const ENQUIRY_FORM_PATH = "/__forms.html";
+/** Every field sent, as declared in public/__forms.html. A test keeps the two in step. */
+export const ENQUIRY_FORM_FIELDS = ["subject", "reference", "urgent", "type", "vessel", "imo", "port", "eta", "requiredBy", "agent", "items", "details", "name", "company", "email", "phone", "message"] as const;
+
+/** The enquiry as form fields: each detail on its own for the dashboard, plus the full text in `message`. */
+export function netlifyFormBody(input: EnquiryInput, botField = ""): URLSearchParams {
+  const enquiry = buildEnquiry(input);
+  const values: Record<(typeof ENQUIRY_FORM_FIELDS)[number], string> = {
+    subject: enquiry.subject,
+    reference: input.reference,
+    urgent: input.urgent ? "yes" : "no",
+    type: input.type,
+    vessel: input.vessel.trim(),
+    imo: input.imo.replace(/\D/g, ""),
+    port: input.port.trim(),
+    eta: input.eta,
+    requiredBy: input.requiredBy,
+    agent: input.agent.trim(),
+    items: itemLines(input.items).join("\n"),
+    details: input.details.trim(),
+    name: input.name.trim(),
+    company: input.company.trim(),
+    email: input.email.trim(),
+    phone: input.phone.trim(),
+    message: enquiry.body,
+  };
+  const body = new URLSearchParams({ "form-name": ENQUIRY_FORM_NAME, "bot-field": botField });
+  for (const field of ENQUIRY_FORM_FIELDS) body.set(field, values[field]);
+  return body;
+}
+
+/** Present in public/__forms.html only. Seeing it in a reply means the page was served back, not a submission accepted. */
+export const ENQUIRY_FORM_MARKER = "form-declaration";
+
+/**
+ * Posts the enquiry to Netlify Forms. True only when the service accepted it; never throws.
+ * A host without the form service (a dev server, a deploy where form detection is off) can answer
+ * the same POST with 200 and the declaration page itself. That is not a delivery, so it counts as failure.
+ */
+export async function sendEnquiry(body: URLSearchParams, send: typeof fetch = fetch): Promise<boolean> {
+  try {
+    const response = await send(ENQUIRY_FORM_PATH, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() });
+    if (!response.ok) return false;
+    return !(await response.text()).includes(ENQUIRY_FORM_MARKER);
+  } catch {
+    return false;
+  }
 }

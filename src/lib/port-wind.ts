@@ -1,9 +1,13 @@
-// Wind forecast at the ports, from MET Norway's Locationforecast (free, CC BY 4.0).
+// Wind and weather forecast at the ports, from MET Norway's Locationforecast (free, CC BY 4.0).
 // This file is pure: unit conversions and reading the forecast. The request itself is in
 // port-wind.functions.ts, which runs on the server only.
 
 /** One step of the outlook: the wind at the start of that hour. */
 export type WindPoint = { time: string; speedKn: number; directionDeg: number; compass: string; beaufort: number };
+
+/** What the sky is doing, reduced to the few kinds the site draws an icon for. */
+export type SkyKind = "clear" | "fair" | "cloudy" | "fog" | "rain" | "sleet" | "snow" | "thunder";
+export type Sky = { kind: SkyKind; label: string; night: boolean };
 
 export const OUTLOOK_HOURS = 48;
 export const OUTLOOK_STEP_HOURS = 3;
@@ -17,6 +21,10 @@ export type PortWind = {
   directionDeg: number;
   compass: string;
   beaufort: number;
+  /** Air temperature in whole degrees Celsius; null when the service did not give one. */
+  temperatureC: number | null;
+  /** Sky state for the coming hour; null when the service did not give one. */
+  sky: Sky | null;
   /** Start of the forecast hour, ISO 8601. */
   validAt: string;
   /** Every third hour for the next two days, starting with the current hour. */
@@ -38,8 +46,35 @@ export function beaufort(knots: number): number {
   return force === -1 ? 12 : force;
 }
 
-type Details = { wind_speed?: unknown; wind_from_direction?: unknown; wind_speed_of_gust?: unknown };
-type Entry = { time?: unknown; data?: { instant?: { details?: Details } } };
+type Details = { wind_speed?: unknown; wind_from_direction?: unknown; wind_speed_of_gust?: unknown; air_temperature?: unknown };
+type Summary = { summary?: { symbol_code?: unknown } };
+type Entry = { time?: unknown; data?: { instant?: { details?: Details }; next_1_hours?: Summary; next_6_hours?: Summary } };
+
+/**
+ * Turns the service's weather symbol (for example "partlycloudy_night" or "heavyrainshowersandthunder")
+ * into a kind and a short label. Unknown symbols give null rather than a guess.
+ */
+export function readSky(symbolCode: unknown): Sky | null {
+  if (typeof symbolCode !== "string" || !symbolCode) return null;
+  const [base = "", period = ""] = symbolCode.split("_");
+  const night = period === "night";
+  const simple: Record<string, { kind: SkyKind; label: string }> = {
+    clearsky: { kind: "clear", label: "Clear" },
+    fair: { kind: "fair", label: "Fair" },
+    partlycloudy: { kind: "fair", label: "Partly cloudy" },
+    cloudy: { kind: "cloudy", label: "Cloudy" },
+    fog: { kind: "fog", label: "Fog" },
+  };
+  const known = simple[base];
+  if (known) return { ...known, night };
+  // The service spells two symbols with a doubled "s" ("lightssleetshowersandthunder"); read them as intended.
+  const match = /^(light|heavy)?(rain|sleet|snow)(showers)?(andthunder)?$/.exec(base.replace(/^lightss/, "lights"));
+  if (!match) return null;
+  const [, intensity, type = "rain", showers, thunder] = match;
+  const words = [intensity, showers ? `${type} showers` : type].filter(Boolean).join(" ");
+  const label = `${words.charAt(0).toUpperCase()}${words.slice(1)}${thunder ? " and thunder" : ""}`;
+  return { kind: thunder ? "thunder" : (type as SkyKind), label, night };
+}
 
 const isNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 
@@ -63,6 +98,8 @@ export function readWind(name: string, forecast: unknown, now: Date): PortWind |
   const current = entry ? pointOf(entry) : null;
   if (!entry || !current) return null;
   const gust = entry.data?.instant?.details?.wind_speed_of_gust;
+  const temperature = entry.data?.instant?.details?.air_temperature;
+  const symbol = entry.data?.next_1_hours?.summary?.symbol_code ?? entry.data?.next_6_hours?.summary?.symbol_code;
   const start = Date.parse(current.time);
   const hour = 60 * 60 * 1000;
   const outlook = entries.flatMap((candidate) => {
@@ -79,6 +116,8 @@ export function readWind(name: string, forecast: unknown, now: Date): PortWind |
     directionDeg: current.directionDeg,
     compass: current.compass,
     beaufort: current.beaufort,
+    temperatureC: isNumber(temperature) ? Math.round(temperature) : null,
+    sky: readSky(symbol),
     validAt: current.time,
     outlook,
   };

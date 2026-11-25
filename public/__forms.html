@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <!-- The site checks for this name to tell "this page was served back" from "the enquiry was accepted". -->
+    <meta name="form-declaration" content="enquiry">
+    <title>Activ Marine enquiry form</title>
+  </head>
+  <body>
+    <!--
+      Declares the enquiry form to Netlify Forms, which finds forms by reading static HTML at deploy
+      time. The form people use is at /enquiry and posts its fields here. Keep the field names in
+      step with ENQUIRY_FORM_FIELDS in src/lib/enquiry.ts (a test checks this).
+    -->
+    <form name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input name="bot-field">
+      <input name="subject" data-remove-prefix>
+      <input name="reference">
+      <input name="urgent">
+      <input name="type">
+      <input name="vessel">
+      <input name="imo">
+      <input name="port">
+      <input name="eta">
+      <input name="requiredBy">
+      <textarea name="agent"></textarea>
+      <textarea name="items"></textarea>
+      <textarea name="details"></textarea>
+      <input name="name">
+      <input name="company">
+      <input name="email" type="email">
+      <input name="phone">
+      <textarea name="message"></textarea>
+    </form>
+    <p>This page only declares the enquiry form. <a href="/enquiry">Send an enquiry</a>.</p>
+  </body>
+</html>

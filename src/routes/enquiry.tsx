@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { EnquiryForm } from "@/components/site/EnquiryForm";
+import { ENQUIRY_DELIVERY } from "@/lib/enquiry";
 import { CONTACT } from "@/components/site/content";
 import { seo } from "@/lib/seo";
 import { PLACEMENT_IMAGES } from "@/components/site/imagery";
@@ -30,7 +31,11 @@ function Enquiry() {
         <p className="eyebrow">Activ Marine Limited · China</p>
         <h1 className="mt-4 text-4xl uppercase sm:text-5xl">Send an Enquiry</h1>
         <p className="mt-4 leading-relaxed text-muted-foreground">We acknowledge all enquiries within 2 hours, while trying our best to have you an indication on availability and pricing within 48 hours.</p>
-        <p className="mt-2 text-sm text-muted-foreground">This form prepares your enquiry as an email to <a className="text-primary underline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Nothing is sent automatically: open it in your email app or copy the text, attach any drawings, then send.</p>
+        {ENQUIRY_DELIVERY === "netlify" ? (
+          <p className="mt-2 text-sm text-muted-foreground">Press Send enquiry and it goes straight to our office. Drawings and photos are not uploaded from this page: email them to <a className="text-primary underline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>, quoting your reference.</p>
+        ) : (
+          <p className="mt-2 text-sm text-muted-foreground">This form prepares your enquiry as an email to <a className="text-primary underline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Nothing is sent automatically: open it in your email app or copy the text, attach any drawings, then send.</p>
+        )}
       </div>
       <img src={PLACEMENT_IMAGES.enquiry.src} alt="Illustrative marine piston, cylinder liner and precision spare parts" loading="lazy" width={1536} height={1024} className="hidden h-28 w-44 shrink-0 border border-border object-cover lg:block" />
     </div>

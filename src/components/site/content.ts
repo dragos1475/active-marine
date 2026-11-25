@@ -1,16 +1,17 @@
 // ask: how a client would phrase the need; enquiry: the matching entry in ENQUIRY_TYPES;
 // need: what the client should send so the first reply can be a useful one.
 type Svc = { n: string; slug: string; tag: string; title: string; text: string; points: string[]; ask: string; enquiry: string; need: string[] };
+// Confirmed by the company on 2026-11-25. No WhatsApp number was supplied, so none is shown.
 export const CONTACT = {
-  email: "office@activ-marine.com",
-  // Placeholder details from the handover — replace when the owner supplies verified ones.
-  phone: "+86 21 0000 0000",
-  wechat: "ActivMarine_Demo",
-  whatsapp: "+86 000 0000 0000",
+  email: "enquiry@activ-marine.com",
+  phone: "+86 166 2120 4292",
+  wechat: "ActivMarine",
   company: "Activ Marine Limited",
-  address: ["Suite 608, Marine Business Centre", "88 Harbour Avenue, Pudong New Area", "Shanghai 200120, China"],
-  placeholder: true,
+  address: ["2nd Floor, No. 25-1 Hongcao Road", "Xuhui District, Shanghai", "PR China"],
 };
+
+/** The phone number as a tel: link target. */
+export const CONTACT_TEL = `tel:${CONTACT.phone.replace(/[^+\d]/g, "")}`;
 
 // The header carries the five destinations a client needs; FAQ and Insights are reached from the footer.
 export const HEADER_NAV = [

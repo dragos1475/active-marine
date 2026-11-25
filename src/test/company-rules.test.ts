@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { CONTACT, FAQ, HERO_FACTS } from "@/components/site/content";
+import { CONTACT, CONTACT_TEL, FAQ, HERO_FACTS } from "@/components/site/content";
 
 describe("Confirmed company rules", () => {
   it("uses the confirmed company name", () => {
     expect(CONTACT.company).toBe("Activ Marine Limited");
+  });
+  it("shows the contact details the company confirmed, and no WhatsApp number", () => {
+    expect(CONTACT.email).toBe("enquiry@activ-marine.com");
+    expect(CONTACT.phone).toBe("+86 166 2120 4292");
+    expect(CONTACT_TEL).toBe("tel:+8616621204292");
+    expect(CONTACT.wechat).toBe("ActivMarine");
+    expect(CONTACT.address).toEqual(["2nd Floor, No. 25-1 Hongcao Road", "Xuhui District, Shanghai", "PR China"]);
+    expect(CONTACT).not.toHaveProperty("whatsapp");
   });
   it("covers all Chinese ports including Hong Kong", () => {
     expect(FAQ.find((item) => item.q === "Which ports do you cover?")?.a).toBe("All Chinese ports including Hong Kong");
